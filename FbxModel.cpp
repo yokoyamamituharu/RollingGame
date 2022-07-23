@@ -2,15 +2,35 @@
 
 
 
+FbxModel::~FbxModel()
+{
+	//FBXシーンの解放
+	fbxScene->Destroy();
+}
+
 void FbxModel::Draw(ID3D12GraphicsCommandList* cmdList)
 {	
+	//頂点バッファをセット(VBV)
+	cmdList->IASetVertexBuffers(0, 1, &vbView);
+	//インデックスバッファをセット(IBV)
+	cmdList->IASetIndexBuffer(&ibView);
+
+	//デスクリプタヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = { descHeapSRV.Get() };
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+	//シェーダリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(1,
+		descHeapSRV->GetGPUDescriptorHandleForHeapStart());
+
+	//描画コマンド
+	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);
 }
 
 void FbxModel::CreateBuffers(ID3D12Device* device)
 {
 	HRESULT result;
 
-	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUv) * vertices.size());
+	UINT sizeVB = static_cast<UINT>(sizeof(VertexPosNormalUvSkin) * vertices.size());
 	//頂点バッファ生成
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -21,7 +41,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device)
 		IID_PPV_ARGS(&vertBuff));
 
 	//頂点バッファへのデータ転送
-	VertexPosNormalUv* vertMap = nullptr;
+	VertexPosNormalUvSkin* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		std::copy(vertices.begin(), vertices.end(), vertMap);
@@ -92,7 +112,7 @@ void FbxModel::CreateBuffers(ID3D12Device* device)
 	result = device->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descHeapSRV));
 
 	//シェーダーリソースビュー(SRV)作成
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc={};
 	D3D12_RESOURCE_DESC rescDesc = texBuff->GetDesc();
 
 	srvDesc.Format = rescDesc.Format;

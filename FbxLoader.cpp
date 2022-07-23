@@ -16,6 +16,15 @@ FbxLoader* FbxLoader::GetInstance()
 	return &instance;
 }
 
+void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src)
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			dst->r[i].m128_f32[j] = (float)src.Get(i, j);
+		}
+	}
+}
+
 void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* parent)
 {
 	//モデルにノードを追加
@@ -52,7 +61,7 @@ void FbxLoader::ParseNodeRecursive(FbxModel* model, FbxNode* fbxNode, Node* pare
 	node.globalTransform *= matTranslation;	//ワールド行列に平行移動を反映
 
 	//グローバル変形行列の計算
-	node.globalTransform = node.globalTransform;
+	node.globalTransform = node.transfrom;
 	if (parent) {
 		node.parent = parent;
 		//親の変形を乗算
@@ -90,6 +99,8 @@ void FbxLoader::ParseMesh(FbxModel* model, FbxNode* fbxNode)
 	ParseMeshFaces(model, fbxMesh);
 	//マテリアルの読み取り
 	ParseMaterial(model, fbxNode);
+	//スキニング情報の読み取り
+	ParseSkin(model, fbxMesh);
 }
 
 void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
@@ -99,13 +110,13 @@ void FbxLoader::ParseMeshVertices(FbxModel* model, FbxMesh* fbxMesh)
 	//頂点座標データの数
 	const int controlPointsCount = fbxMesh->GetControlPointsCount();
 	//必要数だけ頂点データ配列を確保
-	FbxModel::VertexPosNormalUv vert{};
+	FbxModel::VertexPosNormalUvSkin vert{};
 	model->vertices.resize(controlPointsCount, vert);
 	//FBXメッシュの頂点座標配列を取得
 	FbxVector4* pCoord = fbxMesh->GetControlPoints();
 	//FBXメッシュの全頂点座標をモデル内の配列にコピーする
 	for (int i = 0; i < controlPointsCount; i++) {
-		FbxModel::VertexPosNormalUv& vertex = vertices[i];
+		FbxModel::VertexPosNormalUvSkin& vertex = vertices[i];
 		//座標のコピー
 		vertex.pos.x = (float)pCoord[i][0];
 		vertex.pos.y = (float)pCoord[i][1];
@@ -135,13 +146,13 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 		assert(polygonSize <= 4);
 
 		//頂点ずつ処理
-		for (int j = 0; j < polygonSize; i++) {
+		for (int j = 0; j < polygonSize; j++) {
 			//FBX頂点配列インデックス
 			int index = fbxMesh->GetPolygonVertex(i, j);
 			assert(index >= 0);
 
 			//頂点法線読込
-			FbxModel::VertexPosNormalUv& vertex = vertices[index];
+			FbxModel::VertexPosNormalUvSkin& vertex = vertices[index];
 			FbxVector4 normal;
 			if (fbxMesh->GetPolygonVertexNormal(i, j, normal))
 			{
@@ -150,8 +161,7 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 				vertex.normal.z = (float)normal[2];
 			}
 			//テクスチャUV読込
-			if (textureUVCount > 0)
-			{
+			if (textureUVCount > 0) {
 				FbxVector2 uvs;
 				bool lUnmappedUV;
 				//0番決め打ちで読込
@@ -180,6 +190,9 @@ void FbxLoader::ParseMeshFaces(FbxModel* model, FbxMesh* fbxMesh)
 		}
 	}
 }
+
+
+
 
 void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 {
@@ -217,6 +230,7 @@ void FbxLoader::ParseMaterial(FbxModel* model, FbxNode* fbxNode)
 					string name = ExtractFileName(path_str);
 
 					LoadTexture(model, baseDirectory + model->name + "/" + name);
+					textureLoaded = true;
 				}
 			}
 		}
@@ -261,6 +275,124 @@ std::string FbxLoader::ExtractFileName(const std::string& path)
 	return path;
 }
 
+
+
+void FbxLoader::ParseSkin(FbxModel* model, FbxMesh* fbxMesh)
+{
+	//スキニング情報
+	FbxSkin* fbxSkin =
+		static_cast<FbxSkin*>(fbxMesh->GetDeformer(0, FbxDeformer::eSkin));
+	//スキニング情報がなければ終了
+	if (fbxSkin == nullptr) {
+		//各頂点について処理
+		for (int i = 0; i < model->vertices.size(); i++) {
+			//最初のボーン(単位行列)の影響100%する
+			model->vertices[i].boneIndex[0] = 0;
+			model->vertices[i].boneWeight[0] = 1.0;
+		}
+		return;
+	}
+
+	//ボーン配列の参照
+	std::vector<FbxModel::Bone>& bones = model->bones;
+
+	//ボーンの数
+	int clusterCount = fbxSkin->GetClusterCount();
+	bones.reserve(clusterCount);
+
+	//すべてのボーンについて
+	for (int i = 0; i < clusterCount; i++) {
+		//FBXボーン情報
+		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
+
+		//ボーン自体のノードの名前を取得
+		const char* boneName = fbxCluster->GetLink()->GetName();
+
+		//新しくボーンを追加し、追加したボーンの参照を得る
+		bones.emplace_back(FbxModel::Bone(boneName));
+		FbxModel::Bone& bone = bones.back();
+		//自作ボーンとFBXのボーンを紐づける
+		bone.fbxCluster = fbxCluster;
+
+		//FBXから初期姿勢行列を取得する
+		FbxAMatrix fbxMat;
+		fbxCluster->GetTransformLinkMatrix(fbxMat);
+
+		//XMMatrix型に変換する
+		XMMATRIX initialPose;
+		ConvertMatrixFromFbx(&initialPose, fbxMat);
+
+		//初期姿勢行列の逆行列を得る
+		bone.invInitialPos = XMMatrixInverse(nullptr, initialPose);
+	}
+
+	//ボーン番号とスキンウェイトのペア
+	struct WeightSet {
+		UINT index;
+		float weight;
+	};
+
+	//二次元配列(ジャグ配列)
+	std::vector<std::list<WeightSet>> weightLists(model->vertices.size());
+
+	//すべてのボーンについて
+	for (int i = 0; i < clusterCount; i++)
+	{
+		//FBXボーン情報
+		FbxCluster* fbxCluster = fbxSkin->GetCluster(i);
+		//このボーンに影響を受ける頂点の数
+		int controlPointIndicesCount = fbxCluster->GetControlPointIndicesCount();
+		//このボーンに影響を受ける頂点の配列
+		int* controlPointIndeice = fbxCluster->GetControlPointIndices();
+		double* constrolPointWeight = fbxCluster->GetControlPointWeights();
+
+		//影響を受ける全頂点について
+		for (int j = 0; j < controlPointIndicesCount; j++) {
+			//頂点番号
+			int vertIndex = controlPointIndeice[j];
+			//スキンウエイト
+			float weight = (float)constrolPointWeight[j];
+			//その頂点の影響を受けるボーンリストに、ボーンとウエイトのペアを追加
+			weightLists[vertIndex].emplace_back(WeightSet{ (UINT)i,weight });
+		}
+	}
+
+	//頂点配列書き換え用の参照
+	auto& vertices = model->vertices;
+	//各頂点について処理
+	for (int i = 0; i < vertices.size(); i++)
+	{
+		//頂点のウエイトから最も大きい4つを選択
+		auto& weightList = weightLists[i];
+		//大証皮革用のラムダ式を指定して降順にソート
+		weightList.sort(
+			[](auto const& lhs, auto const& rhs) {
+				//左の要素のほうが大きければtrue、それでなければfalseを返す
+				return lhs.weight > rhs.weight;
+			});
+
+		int weightArrayIndex = 0;
+		//降順ソート済みのウエイトリストから
+		for (auto& weightSet : weightList) {
+			//頂点データに書き込み
+			vertices[i].boneIndex[weightArrayIndex] = weightSet.index;
+			vertices[i].boneWeight[weightArrayIndex] = weightSet.weight;
+			//4つに達したら終了
+			if (++weightArrayIndex >= FbxModel::MAX_BONE_INDICES) {
+				float weight = 0.0f;
+				//2番目以降のウェイトを合計
+				for (int j = 1; j < FbxModel::MAX_BONE_INDICES; j++) {
+					weight += vertices[i].boneWeight[j];
+				}
+				//合計で1.0f(100%)になるように調整
+				vertices[i].boneWeight[0] = 1.0f - weight;
+				break;
+			}
+		}
+	}
+
+}
+
 void FbxLoader::Initialize(ID3D12Device* device)
 {
 	//再初期化チェック
@@ -284,7 +416,7 @@ void FbxLoader::Finalize()
 }
 
 
-void FbxLoader::LoadModelFromFile(const string& modelName)
+FbxModel* FbxLoader::LoadModelFromFile(const string& modelName)
 {
 	//モデルと同じ名前のフォルダから読み込む
 	const string directoryPath = baseDirectory + modelName + "/";
@@ -315,9 +447,12 @@ void FbxLoader::LoadModelFromFile(const string& modelName)
 	//ルートノードから順に解析してモデルに流し込む
 	ParseNodeRecursive(model, fbxScene->GetRootNode());
 	//FBXシーン解放
-	fbxScene->Destroy();
+	//fbxScene->Destroy();
+	model->fbxScene = fbxScene;
 
 	//バッファの生成
 	model->CreateBuffers(device);
+
+	return model;
 }
 

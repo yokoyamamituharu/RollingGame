@@ -7,7 +7,7 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <d3dx12.h>
-
+#include <fbxsdk.h>
 
 struct Node
 {
@@ -27,20 +27,41 @@ struct Node
 	Node* parent = nullptr;
 };
 
+
+
 class FbxModel
 {
 public:
 	//フレンドクラス
 	friend class FbxLoader;
 
+public://定数
+	static const int MAX_BONE_INDICES = 4;
+
 public://サブクラス
 //頂点データ構造体
-	struct VertexPosNormalUv
+	struct VertexPosNormalUvSkin
 	{
 		DirectX::XMFLOAT3 pos;		//xyz座標
 		DirectX::XMFLOAT3 normal;	//法線ベクトル
-		DirectX::XMFLOAT3 uv;		//uv座標
+		DirectX::XMFLOAT2 uv;		//uv座標
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWeight[MAX_BONE_INDICES];
 	};
+
+	//ボーン構造体
+	struct Bone
+	{
+		std::string name;
+		DirectX::XMMATRIX invInitialPos;
+		FbxCluster* fbxCluster;
+		Bone(const std::string& name) {
+			this->name = name;
+		}
+	};
+
+	//デストラクタ
+	~FbxModel();
 
 private://エイリアス
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -56,6 +77,10 @@ private://エイリアス
 	template <class T>using vector = std::vector<T>;
 
 public:
+	//getter
+	std::vector<Bone>& GetBones() { return bones; }
+	FbxScene* GetFbxScene() { return fbxScene; }
+
 	//モデルの変形行列取得
 	const XMMATRIX& GetMODElTransform() { return meshNode->globalTransform; }
 
@@ -65,7 +90,7 @@ private:
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
 
-public:
+
 
 private:
 	//モデル名
@@ -75,7 +100,7 @@ private:
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
 	//頂点データ配列
-	std::vector<VertexPosNormalUv> vertices;
+	std::vector<VertexPosNormalUvSkin> vertices;
 	//頂点インデックス配列
 	std::vector<unsigned short>indices;
 	//アンビエント係数
@@ -98,5 +123,9 @@ private:
 	D3D12_INDEX_BUFFER_VIEW ibView = {};
 	//SRV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap> descHeapSRV;
-};
 
+	//ボーン配列
+	std::vector<Bone>bones;
+	//FBXシーン
+	FbxScene* fbxScene = nullptr;
+};
