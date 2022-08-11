@@ -2,6 +2,13 @@
 
 using namespace DirectX;
 
+//Camera* Camera::GetInstance()
+//{
+//
+//	static Camera instance;
+//	return &instance;
+//}
+
 Camera::Camera(int window_width, int window_height)
 {
 	aspectRatio = (float)window_width / window_height;
@@ -14,6 +21,8 @@ Camera::Camera(int window_width, int window_height)
 
 	// ビュープロジェクションの合成
 	matViewProjection = matView * matProjection;
+
+	matRot = XMMatrixIdentity();
 }
 
 void Camera::Update()
@@ -90,7 +99,7 @@ void Camera::UpdateViewMatrix()
 	// 一つのベクトルにまとめる
 	XMVECTOR translation = XMVectorSet(tX.m128_f32[0], tY.m128_f32[1], tZ.m128_f32[2], 1.0f);
 	// ビュー行列に平行移動成分を設定
-	matView.r[3] = translation;	
+	matView.r[3] = translation;
 
 #pragma region 全方向ビルボード行列の計算
 	// ビルボード行列
@@ -141,7 +150,7 @@ void Camera::MoveEyeVector(const XMFLOAT3& move)
 	SetEye(eye_moved);
 }
 
-void Camera::MoveEyeVector(const XMVECTOR & move)
+void Camera::MoveEyeVector(const XMVECTOR& move)
 {
 	// 視点座標を移動し、反映
 	XMFLOAT3 eye_moved = GetEye();
@@ -171,7 +180,7 @@ void Camera::MoveVector(const XMFLOAT3& move)
 	SetTarget(target_moved);
 }
 
-void Camera::MoveVector(const XMVECTOR & move)
+void Camera::MoveVector(const XMVECTOR& move)
 {
 	// 視点と注視点座標を移動し、反映
 	XMFLOAT3 eye_moved = GetEye();

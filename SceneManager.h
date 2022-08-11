@@ -13,7 +13,7 @@ class SceneManager
 {
 public:
 	void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
-	void Update();
+	void Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
 	void Draw();
 private:
 	GameScene* gameScene = nullptr;

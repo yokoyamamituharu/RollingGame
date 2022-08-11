@@ -18,10 +18,10 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 	this->player = gameScene->GetPlayer();
 
-	grundmodel = new Model();
-	grundmodel->CreateFromOBJ("battlegrund");
+	groundmodel = new Model();
+	groundmodel->CreateFromOBJ("battlegrund");
 	ground = OBJobject::Create();
-	ground->SetModel(grundmodel);
+	ground->SetModel(groundmodel);
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });

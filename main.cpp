@@ -38,23 +38,23 @@ using namespace DirectX;
 #include "SceneManager.h"
 
 //立方体の当たり判定
-bool CubeCollision(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
-	float disX1 = object1.x + radius1.x;
-	float disX2 = object2.x - radius2.x;
-	float disX3 = object1.x - radius1.x;
-	float disX4 = object2.x + radius2.x;
-	float disY1 = object1.y + radius1.y;
-	float disY2 = object2.y - radius2.y;
-	float disY3 = object1.y - radius1.y;
-	float disY4 = object2.y + radius2.y;
-	float disZ1 = object1.z + radius1.z;
-	float disZ2 = object2.z - radius2.z;
-	float disZ3 = object1.z - radius1.z;
-	float disZ4 = object2.z + radius2.z;
-
-	//xとyはそれぞれ中心座標として計算する
-	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
-}
+//bool CubeCollision(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
+//	float disX1 = object1.x + radius1.x;
+//	float disX2 = object2.x - radius2.x;
+//	float disX3 = object1.x - radius1.x;
+//	float disX4 = object2.x + radius2.x;
+//	float disY1 = object1.y + radius1.y;
+//	float disY2 = object2.y - radius2.y;
+//	float disY3 = object1.y - radius1.y;
+//	float disY4 = object2.y + radius2.y;
+//	float disZ1 = object1.z + radius1.z;
+//	float disZ2 = object2.z - radius2.z;
+//	float disZ3 = object1.z - radius1.z;
+//	float disZ4 = object2.z + radius2.z;
+//
+//	//xとyはそれぞれ中心座標として計算する
+//	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
+//}
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -101,7 +101,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon, input, mouse, camera);
 
-	bool isSetMousePoint = false;	//マウスのポインタの位置を固定するかどうか
+	bool isSetMousePoint = true;	//マウスのポインタの位置を固定するかどうか
 
 	while (true)  // ゲームループ
 	{
@@ -115,7 +115,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//入力の更新処理
 		input->Update();
 		mouse->Update();
-		if (input->TriggerKey(DIK_M)) {	//Mキーを押されたらマウスポインターの移動を停止
+		if (input->TriggerKey(DIK_ESCAPE)) {	//Mキーを押されたらマウスポインターの移動を停止
 			if (isSetMousePoint) { isSetMousePoint = false; }
 			else { isSetMousePoint = true; }
 		}
@@ -135,7 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 		//シーンの更新
-		sceneManager->Update();
+		sceneManager->Update(dxCommon, input, mouse, camera);
 
 		//-----描画処理-----//
 		//ポストエフェクトの準備

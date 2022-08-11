@@ -10,6 +10,7 @@
 #include "FBXObject.h"
 #include "FbxLoader.h"
 #include "Player.h"
+#include "Enemy.h"
 
 #include <vector>
 
@@ -47,6 +48,7 @@ private: // メンバ変数
     // ゲームシーン用  
     //スプライト
     Sprite* spriteBG = nullptr;
+    Sprite* clearsprite = nullptr;
     //3Dオブジェクト
     FbxModel* fbxmodel = nullptr;
     FBXObject* fbxobject = nullptr;
@@ -54,7 +56,18 @@ private: // メンバ変数
     Model* playermodel = nullptr;
     Model* playerSpheremodel = nullptr;
     Player* player = nullptr;
-    Model* grundmodel = nullptr;
+    Model* groundmodel = nullptr;
     OBJobject* ground = nullptr;
+
+    Model* enemymodel = nullptr;
+    OBJobject* enemy = nullptr;
+
+    Enemy* enemys[6] = { nullptr };
+
+
+    bool flag1 = false;
+
+    bool alive[6] = { true };
+    bool clear = false;
 };
 

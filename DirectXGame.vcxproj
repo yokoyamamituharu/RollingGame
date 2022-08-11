@@ -252,6 +252,7 @@
     <ClInclude Include="BatlleScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectXCommon.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="FbxModel.h" />
     <ClInclude Include="FBXObject.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="BatlleScene.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectXCommon.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="FbxModel.cpp" />
     <ClCompile Include="FBXObject.cpp" />

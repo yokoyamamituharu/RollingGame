@@ -51,7 +51,7 @@ class BatlleScene
         Model* playermodel = nullptr;
         Model* playerSpheremodel = nullptr;
         Player* player = nullptr;
-        Model* grundmodel = nullptr;
+        Model* groundmodel = nullptr;
         OBJobject* ground = nullptr;
     };
 

@@ -16,6 +16,8 @@ protected: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // メンバ関数
+	//static Camera* GetInstance();
+
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
@@ -137,6 +139,15 @@ public: // メンバ関数
 	void MoveVector(const XMFLOAT3& move);
 	void MoveVector(const XMVECTOR& move);
 
+public:
+	XMMATRIX matRot;
+	// 視点座標
+	XMFLOAT3 eye = { 0, 0, -20 };
+	// 注視点座標
+	XMFLOAT3 target = { 0, 0, 0 };
+	// 上方向ベクトル
+	XMFLOAT3 up = { 0, 1, 0 };
+
 protected: // メンバ変数
 	// ビュー行列
 	XMMATRIX matView = DirectX::XMMatrixIdentity();
@@ -152,13 +163,9 @@ protected: // メンバ変数
 	bool viewDirty = false;
 	// 射影行列ダーティフラグ
 	bool projectionDirty = false;
-	// 視点座標
-	XMFLOAT3 eye = {0, 0, -20};
-	// 注視点座標
-	XMFLOAT3 target = {0, 0, 0};
-	// 上方向ベクトル
-	XMFLOAT3 up = {0, 1, 0};
+
 	// アスペクト比
 	float aspectRatio = 1.0f;
+
 };
 

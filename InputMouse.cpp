@@ -52,7 +52,6 @@ void InputMouse::Update()
 	result = devmouse->Acquire();	// キーボード動作開始
 
 	// 前回のマウス入力を保存
-	//memcpy(keyPre, key, sizeof(key));
 	oldmouse = mouse;
 
 	// マウスの入力

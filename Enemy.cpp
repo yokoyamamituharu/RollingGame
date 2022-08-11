@@ -1,7 +1,7 @@
-#include "Player.h"
+#include "Enemy.h"
 using namespace DirectX;
 
-void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
+void Enemy::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 {
 	assert(input);
 	assert(mouse);
@@ -10,7 +10,7 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	this->camera = camera;
 	//プレイヤー用モデルを読み込み
 	playermodel = new Model();
-	playermodel->CreateFromOBJ("player");
+	playermodel->CreateFromOBJ("enemy");
 	playerSpheremodel = new Model();
 	playerSpheremodel->CreateFromOBJ("playerSphere");
 
@@ -19,32 +19,28 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	object->SetModel(playermodel);
 }
 
-void Player::Update()
+void Enemy::Update()
 {
-	Move();
+	//Move();
 	//オブジェクトのアップデート
 	object->Update();
 }
 
-void Player::Move()
+void Enemy::Move()
 {
 	DirectX::XMVECTOR forvardvec = {};
-
-	if (sphereFlag == false) {
-		if (Input::GetInstance()->PushKey(DIK_W)) {
-			forvardvec.m128_f32[2] += 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_S)) {
-			forvardvec.m128_f32[2] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_A)) {
-			forvardvec.m128_f32[0] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_D)) {
-			forvardvec.m128_f32[0] += 1;
-		}
+	if (Input::GetInstance()->PushKey(DIK_W)) {
+		forvardvec.m128_f32[2] += 1;
 	}
-
+	if (Input::GetInstance()->PushKey(DIK_S)) {
+		forvardvec.m128_f32[2] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_A)) {
+		forvardvec.m128_f32[0] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_D)) {
+		forvardvec.m128_f32[0] += 1;
+	}
 
 
 #pragma region 回転移動
@@ -71,10 +67,9 @@ void Player::Move()
 
 		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
 
-		sphereFlag = true;
 	}
 	else if (rollingSpeed > 0) {
-		forvardvec.m128_f32[2] += rollingSpeed*0.5;
+		forvardvec.m128_f32[2] += rollingSpeed * 0.5;
 		rollingSpeed -= 1;
 		attackFlag = true;
 	}
@@ -84,7 +79,6 @@ void Player::Move()
 		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
 		object->SetModel(playermodel);
 		attackFlag = false;
-		sphereFlag = false;
 	}
 	SpiralVector(spiralSpeed);
 #pragma endregion

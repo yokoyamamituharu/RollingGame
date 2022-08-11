@@ -3,8 +3,7 @@
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>
-
-class Player
+class Enemy
 {
 private:
 	//DirectX‚ğÈ—ª
@@ -51,11 +50,9 @@ private:
 	Model* playermodel = nullptr;
 	Model* playerSpheremodel = nullptr;
 
-	bool isSphere = false;		//ƒNƒŠƒbƒN‚µ‚Ä‚é‚Æ‚«
-	bool sphereFlag = false;	//‹Ê‚Ìó‘Ô‚Ì‚Æ‚«
+	bool isSphere = false;
 	DirectX::XMFLOAT3 spiralSpeed = {};
 	float rollingSpeed = 0.0f;
 
 	Camera* camera;
 };
-
