@@ -152,6 +152,19 @@ void GameScene::Update()
 		}
 	}
 
+	enemys[0]->Direction(player);
+	if(input->PushKey(DIK_1)){
+		enemys[0]->GoTarget(player);
+	}
+	if (input->PushKey(DIK_2)) {
+
+		enemys[0]->Mawarikomi(player);
+	}
+	else
+	{
+		enemys[0]->num = 0;
+	}
+
 	//3Dオブジェクト更新
 	fbxobject->Update();
 	enemy->Update();
@@ -176,20 +189,22 @@ void GameScene::Draw()
 	int num = 0;
 	for (int i = 0; i < 6; i++) {
 		if (alive[i] == true) {
-			enemys[i]->object->Draw();
+			//enemys[i]->object->Draw();
 		}
 		else {
 			num++;
 		}
 	}
+
+	enemys[0]->object->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
 
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	spriteBG->Draw();
+	//spriteBG->Draw();
 	if (num >= 6){
-		clearsprite->Draw();
+		//clearsprite->Draw();
 	}
 	Sprite::PostDraw();
 

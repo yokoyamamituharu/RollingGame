@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>
+#include "Player.h"
 class Enemy
 {
 private:
@@ -39,6 +40,17 @@ public:
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
+	//ターゲットに向かってまっすぐ行く処理
+	void GoTarget(Player* player);
+
+	//プレイヤーの方を向かせる処理
+	void Direction(Player *player);
+
+	//プレイヤーをまわりこむように移動する処理
+	void Mawarikomi(Player* player);
+
+	float num = 0;
+
 public:
 	OBJobject* object = nullptr;
 
@@ -55,4 +67,18 @@ private:
 	float rollingSpeed = 0.0f;
 
 	Camera* camera;
+
+	XMFLOAT2 targetpos;
+	bool atattckFlag = false;
+
+
+	//Player *player;
+	float angle = 0.0f;
+
+	float speed = 5.0f;
+
+	XMFLOAT3 enemypos;
+	XMFLOAT3 enemypos1;
+
+	XMFLOAT3 oldPlayerPos;
 };
