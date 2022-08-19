@@ -81,4 +81,6 @@ private:
 	XMFLOAT3 enemypos1;
 
 	XMFLOAT3 oldPlayerPos;
+
+	int time = 0;
 };

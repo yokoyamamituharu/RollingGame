@@ -69,5 +69,7 @@ private: // ƒƒ“ƒo•Ï”
 
     bool alive[6] = { true };
     bool clear = false;
+
+    int time = 0;
 };
 

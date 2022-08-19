@@ -153,17 +153,39 @@ void GameScene::Update()
 	}
 
 	enemys[0]->Direction(player);
-	if(input->PushKey(DIK_1)){
-		enemys[0]->GoTarget(player);
-	}
-	if (input->PushKey(DIK_2)) {
+	//if(input->PushKey(DIK_1)){
+	//	enemys[0]->GoTarget(player);
+	//}
+	//if (input->PushKey(DIK_2)) {
 
+	//	enemys[0]->Mawarikomi(player);
+	//}
+	//else
+	//{
+	//	enemys[0]->num = 0;
+	//}
+
+		//行動の更新
+	time++;
+	if (time < 100)
+	{
+		XMFLOAT3 pos = enemys[0]->object->GetPosition();
+		pos.z += 0.3;
+		enemys[0]->object->SetPosition(pos);
+	}
+	else if (time < 200)
+	{
 		enemys[0]->Mawarikomi(player);
 	}
 	else
 	{
-		enemys[0]->num = 0;
+		enemys[0]->GoTarget(player);
+		if (time > 280)
+		{
+			time = 0;
+		}
 	}
+
 
 	//3Dオブジェクト更新
 	fbxobject->Update();

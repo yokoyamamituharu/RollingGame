@@ -22,7 +22,10 @@ void Enemy::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 void Enemy::Update()
 {
 	//Move();
-	//オブジェクトのアップデート
+
+
+
+	//オブジェクトの更新
 	object->Update();
 }
 
