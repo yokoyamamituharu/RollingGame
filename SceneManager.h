@@ -2,15 +2,18 @@
 #include "GameScene.h"
 #include "BatlleScene.h"
 
-enum SCENE
-{
-	NONESCENE,
-	GAMESCENE,
-	BATTLESCENE
-};
+
 
 class SceneManager
 {
+public:
+	enum SCENE
+	{
+		NONESCENE,
+		GAMESCENE,
+		BATTLESCENE
+	};
+
 public:
 	void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
 	void Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);

@@ -25,7 +25,7 @@ void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mou
 	}
 
 	if (sceneNo == GAMESCENE) {
-		gameScene->Update();
+		gameScene->Update(sceneNo);
 	}
 	else {
 		batlleScene->Update();

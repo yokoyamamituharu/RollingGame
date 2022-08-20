@@ -105,7 +105,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	enemys[5]->object->SetPosition({ 0.0f,-3.0f,50.0f });
 }
 
-void GameScene::Update()
+void GameScene::Update(int& sceneNo)
 {
 	//カメラ操作
 	if (input->PushKey(DIK_RIGHT)) {
@@ -145,12 +145,20 @@ void GameScene::Update()
 		flag1 = true;
 	}*/
 
+	//敵とプレイヤーのローリング攻撃の当たり判定
 	for (int i = 0; i < 6; i++) {
 		if (CubeCollision(enemys[i]->object->GetPosition(), {2.5,5,1}, player->object->GetPosition(), {5,5,5})
 			&&player->attackFlag==true) {
 			alive[i] = false;
 		}
 	}
+
+	//シーンの切り替え
+	if (alive[0] == false)
+	{
+		sceneNo = 2;
+	}
+
 
 	enemys[0]->Direction(player);
 	//if(input->PushKey(DIK_1)){

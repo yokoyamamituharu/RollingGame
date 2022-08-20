@@ -32,7 +32,7 @@ public:
     //‰Šú‰»
 	void Initialize(DirectXCommon* dxCommon,Input* input, InputMouse* mouse,Camera* camera);
     //XV
-	void Update();
+	void Update(int& sceneNo);
     //•`‰æ
 	void Draw();
 
