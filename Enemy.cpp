@@ -21,95 +21,66 @@ void Enemy::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 
 void Enemy::Update()
 {
+	Direction(player);
 	//Move();
+	if (flag1)
+	{
 
+		if (waitTime <= 0) {
+			waitTime = rand() % 360 + 240;
+			//waitTime = 60;
+			num1 = waitTime;
+		}
+		if (waitTime > 0 && attackFlag == false)
+		{
+			//移動処理
+			if (num1 >= waitTime) {
+				num1 = waitTime - (rand() % 60 + 60);
+				num2 = rand() % 2 + 1;
+			}
 
+			float a = 0.2f;
+			if (num2 == 1) {
+				move = XMFLOAT3(a, 0.0f, 0.0f);
+			}
+			else if (num2 == 2) {
+				move = XMFLOAT3(-a, 0.0f, 0.0f);
+			}
+			else if (num2 == 3) {
+				move = XMFLOAT3(0.0f, 0.0f, -a);
+			}
+			else if (num2 == 4) {
+				move = XMFLOAT3(0.0f, 0.0f, a);
+			}
+			MoveVector(move);
+
+			waitTime--;
+			if (waitTime <= 0) {
+				attackFlag = true;
+				targetPos = player->object->GetPosition();
+				timer1 = 120;
+			}
+		}
+
+		if (attackFlag)
+		{
+			timer1--;
+			GoTarget(targetPos);
+			if (object->GetPosition().x == targetPos.x && object->GetPosition().z == targetPos.z || timer1 <= 0) {
+				attackFlag = false;
+			}
+		}
+	}
 
 	//オブジェクトの更新
 	object->Update();
 }
 
-void Enemy::Move()
+
+void Enemy::GoTarget(XMFLOAT3 target)
 {
-	DirectX::XMVECTOR forvardvec = {};
-	if (Input::GetInstance()->PushKey(DIK_W)) {
-		forvardvec.m128_f32[2] += 1;
-	}
-	if (Input::GetInstance()->PushKey(DIK_S)) {
-		forvardvec.m128_f32[2] -= 1;
-	}
-	if (Input::GetInstance()->PushKey(DIK_A)) {
-		forvardvec.m128_f32[0] -= 1;
-	}
-	if (Input::GetInstance()->PushKey(DIK_D)) {
-		forvardvec.m128_f32[0] += 1;
-	}
+	float speed = 10.0f;
 
-
-#pragma region 回転移動
-	//回転移動
-	if (mouse->PushMouse(MouseDIK::M_LEFT)) {
-		isSphere = true;
-	}
-	else {
-		isSphere = false;
-	}
-
-
-	if (isSphere) {
-		//モデルを変える
-		object->SetModel(playerSpheremodel);
-		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-		rollingSpeed += mouse->MoveMouseVector('y') / 30;
-		if (rollingSpeed < 0) {
-			rollingSpeed = 0;
-		}
-		//マウスの移動量をプレイヤーの回転速度にもする
-		spiralSpeed.z = rollingSpeed;
-		//マウスを離したとき、移動量があったらプレイヤーを直進させる
-
-		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
-
-	}
-	else if (rollingSpeed > 0) {
-		forvardvec.m128_f32[2] += rollingSpeed * 0.5;
-		rollingSpeed -= 1;
-		attackFlag = true;
-	}
-	else {
-		rollingSpeed = 0.0f;
-		spiralSpeed.z = 0;
-		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
-		object->SetModel(playermodel);
-		attackFlag = false;
-	}
-	SpiralVector(spiralSpeed);
-#pragma endregion
-
-
-	//移動の反映
-	XMVECTOR playermatrot = { forvardvec };
-	//回転行列をかける
-	playermatrot = XMVector3Normalize(playermatrot);
-	playermatrot = XMVector3Transform(playermatrot, camera->matRot);
-	//正規化する
-	playermatrot = XMVector3Normalize(playermatrot);
-
-	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	float speed = 1.0f;
-	XMFLOAT3 move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
-	object->SetPosition({
-		object->GetPosition().x + move.x,
-		object->GetPosition().y + move.y,
-		object->GetPosition().z + move.z });
-
-	//プレイヤーを真正面に向かせる
-	//float buff = atan2f(playermatrot.m128_f32[0], playermatrot.m128_f32[2]);
-	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
-}
-
-void Enemy::GoTarget(Player* player)
-{
 	////攻撃用ローカル変数
 	//XMFLOAT3 direction = object->GetPosition();
 	////direction= XMVector3Normalize(direction);
@@ -125,10 +96,10 @@ void Enemy::GoTarget(Player* player)
 	float playerPosZ = player->object->GetPosition().z;
 	float distanceX = 0;
 	float distanceZ = 0;
-	oldPlayerPos = player->object->GetPosition();
+	//oldPlayerPos = player->object->GetPosition();
 
-	distanceX = posX - oldPlayerPos.x;
-	distanceZ = posZ - oldPlayerPos.z;
+	distanceX = posX - target.x;
+	distanceZ = posZ - target.z;
 
 	posX -= distanceX / speed;
 	posZ -= distanceZ / speed;

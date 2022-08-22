@@ -18,7 +18,6 @@ private:
 public:
 	void Initialize(Input* input, InputMouse* mouse, Camera* camera);
 	void Update();
-	void Move();
 	void MoveVector(DirectX::XMFLOAT3 vec)
 	{
 		object->SetPosition({
@@ -35,16 +34,21 @@ public:
 		 object->GetRotation().z + vec.z });
 	}
 
+	void SetPlayer(Player* player)
+	{
+		this->player = player;
+	}
+
 public:
 	void SetInput(Input* input) { this->input = input; }
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
 	//ターゲットに向かってまっすぐ行く処理
-	void GoTarget(Player* player);
+	void GoTarget(XMFLOAT3 target);
 
 	//プレイヤーの方を向かせる処理
-	void Direction(Player *player);
+	void Direction(Player* player);
 
 	//プレイヤーをまわりこむように移動する処理
 	void Mawarikomi(Player* player);
@@ -55,7 +59,7 @@ public:
 	OBJobject* object = nullptr;
 
 	bool attackFlag = false;
-
+	bool flag1 = false;
 private:
 	Input* input;
 	InputMouse* mouse;
@@ -75,12 +79,21 @@ private:
 	//Player *player;
 	float angle = 0.0f;
 
-	float speed = 5.0f;
 
 	XMFLOAT3 enemypos;
 	XMFLOAT3 enemypos1;
 
-	XMFLOAT3 oldPlayerPos;
+	//XMFLOAT3 oldPlayerPos;
+	XMFLOAT3 targetPos;
 
+	int waitTime = 0;
 	int time = 0;
+
+	Player* player;
+
+	int num1 = 0;
+	int num2 = 0;
+	XMFLOAT3 move;
+
+	int timer1 = 0;
 };
