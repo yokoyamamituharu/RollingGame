@@ -95,9 +95,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 		enemys[i]->object->SetScale({ 4.0f,4.0f,4.0f });		
 		enemys[i]->object->SetRotation({ 0.0f,90.0f,0.0f });
 		alive[i] = true;
+		enemys[i]->SetPlayer(player);
 	}
 
-	enemys[0]->object->SetPosition({ 0.0f,-3.0f,0.0f });
+	enemys[0]->object->SetScale({ 8.0f,8.0f,8.0f });
+	enemys[0]->object->SetPosition({ 0.0f,3.0f,0.0f });
 	enemys[1]->object->SetPosition({ 100.0f,-3.0f,50.0f });
 	enemys[2]->object->SetPosition({ -50.0f,-3.0f,100.0f });
 	enemys[3]->object->SetPosition({ 80.0f,-3.0f,200.0f });
@@ -160,7 +162,7 @@ void GameScene::Update(int& sceneNo)
 	}
 
 
-	enemys[0]->Direction(player);
+	//enemys[0]->Direction(player);
 	//if(input->PushKey(DIK_1)){
 	//	enemys[0]->GoTarget(player);
 	//}
@@ -174,25 +176,25 @@ void GameScene::Update(int& sceneNo)
 	//}
 
 		//行動の更新
-	time++;
-	if (time < 100)
-	{
-		XMFLOAT3 pos = enemys[0]->object->GetPosition();
-		pos.z += 0.3;
-		enemys[0]->object->SetPosition(pos);
-	}
-	else if (time < 200)
-	{
-		enemys[0]->Mawarikomi(player);
-	}
-	else
-	{
-		enemys[0]->GoTarget(player);
-		if (time > 280)
-		{
-			time = 0;
-		}
-	}
+	//time++;
+	//if (time < 100)
+	//{
+	//	XMFLOAT3 pos = enemys[0]->object->GetPosition();
+	//	pos.z += 0.3;
+	//	enemys[0]->object->SetPosition(pos);
+	//}
+	//else if (time < 200)
+	//{
+	//	enemys[0]->Mawarikomi(player);
+	//}
+	//else
+	//{
+	//	enemys[0]->GoTarget(player);
+	//	if (time > 280)
+	//	{
+	//		time = 0;
+	//	}
+	//}
 
 
 	//3Dオブジェクト更新
