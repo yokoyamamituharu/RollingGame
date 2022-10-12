@@ -39,6 +39,12 @@ void Bullet::Update()
 	posZ -= distanceZ / speed;
 	object->SetPosition(XMFLOAT3(posX, posY, posZ));
 
+	//時間がきたら消す
+	timer++;
+	if (timer > 60) {
+		dead = true;
+	}
+
 	object->Update();
 }
 
@@ -47,7 +53,7 @@ void Bullet::Draw()
 	object->Draw();
 }
 
-bool Bullet::Initialize(XMFLOAT3 target,bool flag)
+bool Bullet::Initialize(XMFLOAT3 pos,XMFLOAT3 target,bool flag)
 {
 	//弾用モデルを読み込み	
 	//model = new Model();
@@ -55,8 +61,19 @@ bool Bullet::Initialize(XMFLOAT3 target,bool flag)
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(model);
+	object->SetPosition(pos);
 	this->target = target;
 	this->flag = flag;
 
 	return true;
+}
+
+Bullet::Bullet()
+{
+}
+
+
+Bullet::~Bullet()
+{
+	delete(object);
 }

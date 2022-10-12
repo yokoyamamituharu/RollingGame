@@ -18,6 +18,7 @@ public:
 public:
 	void Update(const Player* player);
 	void Draw();
+	OBJobject* GetOBJObject() { return object; }
 
 private:
 	bool Initialize();

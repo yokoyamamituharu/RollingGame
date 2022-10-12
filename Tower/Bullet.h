@@ -8,9 +8,12 @@ public:
 	static void StaticInitialize();
 	static Model* model;
 public:
+	Bullet();
+	~Bullet();
+	bool Initialize(XMFLOAT3 pos = { 0,0,0 },XMFLOAT3 target = { 0,0,0 }, bool flag = false);
 	void Update();
 	void Draw();
-	bool Initialize(XMFLOAT3 target = { 0,0,0 },bool flag = false);
+	bool IsDead() { return dead; }
 
 private:
 
@@ -22,5 +25,7 @@ private:
 	XMFLOAT3 target;
 	//”­ŽË‚³‚ê‚Ä‚¢‚é‚©ƒtƒ‰ƒO
 	bool flag = false;
+	bool dead = false;
+	int timer = 0;
 };
 

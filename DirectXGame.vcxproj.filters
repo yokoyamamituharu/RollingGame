@@ -16,6 +16,36 @@
     <Filter Include="シェーダーファイル">
       <UniqueIdentifier>{7e5584a5-2895-4181-9eaf-f65622106b57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Base">
+      <UniqueIdentifier>{02821b7f-f964-46cf-8863-948c3a024b35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy">
+      <UniqueIdentifier>{cd0270b0-c416-408f-89a9-cbb37b16bf88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{6537e32e-23d7-4a43-8fe8-5cd9674322bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Tower">
+      <UniqueIdentifier>{9913d8d5-6fa2-4efa-afa2-100ef0b19994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{7ad2e91e-dc5d-42fe-8342-20fb8f62fa97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sprite">
+      <UniqueIdentifier>{4bbb0942-bfcb-46be-8ade-7838da8938e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{5124c511-a7ff-4221-acb6-0f48c1cfb953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Input">
+      <UniqueIdentifier>{543c19eb-ec8e-4725-861c-a16fd9508294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ObjectOBJ">
+      <UniqueIdentifier>{94f3d3ed-7ded-4be3-96ae-5a6659974699}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ObjectFBX">
+      <UniqueIdentifier>{a756e0e6-bebe-4ae3-b79d-ddbaf235ecb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -79,151 +109,148 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Input.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Base\DirectXCommon.h">
+      <Filter>ソース ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Base\WinApp.h">
+      <Filter>ソース ファイル\Base</Filter>
     </ClInclude>
-    <ClInclude Include="WinApp.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Input\InputMouse.h">
+      <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXCommon.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Input\Input.h">
+      <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
-    <ClInclude Include="FbxLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>ソース ファイル\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="FbxModel.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy\Enemy.h">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="FBXObject.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy\EnemyManager.h">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="OBJObject.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy\EnemyZako.h">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy\StrongZakoEnemy.h">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Player\Player.h">
+      <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Scene\SceneManager.h">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Scene\BatlleScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="InputMouse.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Sprite\PostEffect.h">
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Sprite\Sprite.h">
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Tower\Bullet.h">
+      <Filter>ソース ファイル\Tower</Filter>
     </ClInclude>
-    <ClInclude Include="BatlleScene.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Tower\DefenseTower.h">
+      <Filter>ソース ファイル\Tower</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyZako.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectFBX\FbxModel.h">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
-    <ClInclude Include="DefenseTower.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectFBX\FBXObject.h">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectFBX\FbxLoader.h">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectOBJ\Model.h">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectOBJ\ModelManager.h">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="StrongZakoEnemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="ObjectOBJ\OBJObject.h">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectXCommon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Base\WinApp.cpp">
+      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="OBJObject.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Base\DirectXCommon.cpp">
+      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
-    <ClCompile Include="WinApp.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Input\InputMouse.cpp">
+      <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
-    <ClCompile Include="FBXObject.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="FbxLoader.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy\EnemyManager.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="FbxModel.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy\EnemyZako.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy\StrongZakoEnemy.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy\Enemy.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Player\Player.cpp">
+      <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
-    <ClCompile Include="InputMouse.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Scene\BatlleScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="BatlleScene.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Sprite\Sprite.cpp">
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyZako.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Sprite\PostEffect.cpp">
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="DefenseTower.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Tower\DefenseTower.cpp">
+      <Filter>ソース ファイル\Tower</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Tower\Bullet.cpp">
+      <Filter>ソース ファイル\Tower</Filter>
     </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ObjectFBX\FbxModel.cpp">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ObjectFBX\FBXObject.cpp">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ObjectFBX\FbxLoader.cpp">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
-    <ClCompile Include="StrongZakoEnemy.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="ObjectOBJ\ModelManager.cpp">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectOBJ\OBJObject.cpp">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectOBJ\Model.cpp">
+      <Filter>ソース ファイル\ObjectOBJ</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

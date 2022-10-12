@@ -50,7 +50,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	Sprite::LoadTexture(2, L"Resources/clear.png");
 
 	//スプライトの生成
-	spriteBG = Sprite::Create(1, { 0.0f,0.0f });	
+	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
 
 	Bullet::StaticInitialize();
@@ -81,32 +81,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
 	//敵の生成処理
-	enemy = OBJobject::Create();
-	enemy->SetModel(enemymodel);
-	enemy->SetScale({ 10.0f,10.0f,10.0f });
-	enemy->SetPosition({ 0.0f,10.0f,10.0f });
-	enemy->SetRotation({ 0.0f,0.0f,0.0f });
-	for (int i = 0; i < 6; i++) {
-		enemys[i] = new EnemyZako();
-		enemys[i]->Initialize(input, mouse, camera);
-		enemys[i]->object->SetScale({ 4.0f,4.0f,4.0f });		
-		enemys[i]->object->SetRotation({ 0.0f,90.0f,0.0f });
-		alive[i] = true;
-		enemys[i]->SetPlayer(player);
-	}
-	enemys[0]->object->SetScale({ 8.0f,8.0f,8.0f });
-	enemys[0]->object->SetPosition({ 0.0f,3.0f,0.0f });
-	enemys[1]->object->SetPosition({ 100.0f,-3.0f,50.0f });
-	enemys[2]->object->SetPosition({ -50.0f,-3.0f,100.0f });
-	enemys[3]->object->SetPosition({ 80.0f,-3.0f,200.0f });
-	enemys[4]->object->SetPosition({ -200.0f,-3.0f,100.0f });
-	enemys[5]->object->SetPosition({ 0.0f,-3.0f,50.0f });
+	enemy1 = new Enemy;
+	enemy1->Initialize("enemy");
+
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
+	defenseTower->GetOBJObject()->SetPosition({ 20,0,20 });
 	bullet = Bullet::Create();
-	enemy1 = new Enemy;
-	enemy1->Initialize("player");
+
 }
 
 void GameScene::Update(int& sceneNo)
@@ -125,70 +108,12 @@ void GameScene::Update(int& sceneNo)
 	}
 
 
-	
-	flag1 = false;
-	/*if (CubeCollision(enemys->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-		flag1 = true;
-	}*/
-
-	//敵とプレイヤーのローリング攻撃の当たり判定
-	for (int i = 0; i < 6; i++) {
-		if (CubeCollision(enemys[i]->object->GetPosition(), {2.5,5,1}, player->object->GetPosition(), {5,5,5})
-			&&player->attackFlag==true) {
-			alive[i] = false;
-		}
-	}
-
-	//シーンの切り替え
-	if (alive[0] == false)
-	{
-		sceneNo = 2;
-	}
-
-
-	//enemys[0]->Direction(player);
-	//if(input->PushKey(DIK_1)){
-	//	enemys[0]->GoTarget(player);
-	//}
-	//if (input->PushKey(DIK_2)) {
-
-	//	enemys[0]->Mawarikomi(player);
-	//}
-	//else
-	//{
-	//	enemys[0]->num = 0;
-	//}
-
-		//行動の更新
-	//time++;
-	//if (time < 100)
-	//{
-	//	XMFLOAT3 pos = enemys[0]->object->GetPosition();
-	//	pos.z += 0.3;
-	//	enemys[0]->object->SetPosition(pos);
-	//}
-	//else if (time < 200)
-	//{
-	//	enemys[0]->Mawarikomi(player);
-	//}
-	//else
-	//{
-	//	enemys[0]->GoTarget(player);
-	//	if (time > 280)
-	//	{
-	//		time = 0;
-	//	}
-	//}
 
 
 	//3Dオブジェクト更新
 	fbxobject->Update();
-	enemy->Update();
 	player->Update();
 	ground->Update();
-	for (int i = 0; i < 6; i++) {
-		enemys[i]->Update();
-	}
 	defenseTower->Update(player);
 	bullet->Update();
 	enemy1->Update();
@@ -200,7 +125,7 @@ void GameScene::Update(int& sceneNo)
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };
 	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
 	movement = XMVector3TransformNormal(movement, camera->matRot);
-	movement *= XMVECTOR{ -1, -1, -1 };	
+	movement *= XMVECTOR{ -1, -1, -1 };
 	//matRot = XMMatrixRotationY((XMConvertToRadians(rote.y)));
 	camera->SetEye({ player->object->GetPosition().x + movement.m128_f32[0] * 80, player->object->GetPosition().y + movement.m128_f32[1] * 80,
 		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
@@ -223,20 +148,8 @@ void GameScene::Draw()
 {
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	player->object->Draw();
-	if (flag1) {
-		enemy->Draw();
-	}
 	ground->Draw();
 	int num = 0;
-	for (int i = 0; i < 6; i++) {
-		if (alive[i] == true) {
-			//enemys[i]->object->Draw();
-		}
-		else {
-			num++;
-		}
-	}
-	//enemys[0]->object->Draw();
 	defenseTower->Draw();
 	bullet->Draw();
 	enemy1->Draw();
@@ -246,7 +159,7 @@ void GameScene::Draw()
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	//spriteBG->Draw();
-	if (num >= 6){
+	if (num >= 6) {
 		//clearsprite->Draw();
 	}
 	Sprite::PostDraw();

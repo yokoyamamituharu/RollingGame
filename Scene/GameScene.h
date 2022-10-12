@@ -62,9 +62,6 @@ private: // ƒƒ“ƒo•Ï”
     OBJobject* ground = nullptr;
     //“G
     Model* enemymodel = nullptr;
-    OBJobject* enemy = nullptr;
-    EnemyZako* enemys[6] = { nullptr };
-    bool alive[6] = { true };
     //ƒ^ƒ[
     DefenseTower* defenseTower = nullptr;
     Bullet* bullet = nullptr;

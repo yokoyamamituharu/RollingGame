@@ -20,6 +20,10 @@ DefenseTower* DefenseTower::Create()
 
 void DefenseTower::Update(const Player* player)
 {
+	//フラグが立った弾を消す
+	bullets.remove_if([](std::unique_ptr<Bullet>& bullet) {return bullet->IsDead(); });
+
+
 	//検知範囲に敵が入ったら攻撃開始
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		attackFlag = true;
@@ -34,7 +38,7 @@ void DefenseTower::Update(const Player* player)
 			//本来なら敵のマネージャーとかから対象の敵のを取得
 			DirectX::XMFLOAT3 target = player->object->GetPosition();
 			std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
-			newBullet->Initialize(player->object->GetPosition(), true);
+			newBullet->Initialize(object->GetPosition(), player->object->GetPosition(), true);
 			bullets.push_back(std::move(newBullet));
 			interval = maxInterval;
 		}
