@@ -10,6 +10,8 @@
 #include "FBXObject.h"
 #include "FbxLoader.h"
 #include "Player.h"
+#include "EnemyZako.h"
+#include "DefenseTower.h"
 #include "Enemy.h"
 
 #include <vector>
@@ -53,23 +55,23 @@ private: // メンバ変数
     FbxModel* fbxmodel = nullptr;
     FBXObject* fbxobject = nullptr;
 
-    Model* playermodel = nullptr;
-    Model* playerSpheremodel = nullptr;
+    //プレイヤー
     Player* player = nullptr;
+    //地面
     Model* groundmodel = nullptr;
     OBJobject* ground = nullptr;
-
+    //敵
     Model* enemymodel = nullptr;
     OBJobject* enemy = nullptr;
-
-    Enemy* enemys[6] = { nullptr };
-
+    EnemyZako* enemys[6] = { nullptr };
+    bool alive[6] = { true };
+    //タワー
+    DefenseTower* defenseTower = nullptr;
+    Bullet* bullet = nullptr;
+    Enemy* enemy1 = nullptr;
 
     bool flag1 = false;
-
-    bool alive[6] = { true };
     bool clear = false;
-
     int time = 0;
 };
 

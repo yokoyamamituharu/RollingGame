@@ -41,7 +41,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	this->camera = camera;
 
 	//カメラの初期位置、注視点
-
 	camera->SetTarget(initTarget);
 	camera->SetEye(initEye);
 
@@ -54,13 +53,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });	
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
 
-
+	Bullet::StaticInitialize();
 	//モデルの読み込み
 	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	playermodel = new Model();
-	playermodel->CreateFromOBJ("player");
-	playerSpheremodel = new Model();
-	playerSpheremodel->CreateFromOBJ("playerSphere");
 	groundmodel = new Model();
 	groundmodel->CreateFromOBJ("ground");
 	enemymodel = new Model();
@@ -71,16 +66,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	fbxobject->SetModel(fbxmodel);
 	fbxobject->PlayAnimetion();
 	fbxobject->SetPos({ 0,0,+80 });
-	player = new Player();
-	player->Initialize(input, mouse, camera);
-	player->object->SetScale({ 1.0f,1.0f,1.0f });
-	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
-	player->object->SetRotation({ 0.0f,90.0f,0.0f });
-	enemy = OBJobject::Create();
-	enemy->SetModel(enemymodel);
-	enemy->SetScale({ 10.0f,10.0f,10.0f });
-	enemy->SetPosition({ 0.0f,10.0f,10.0f });
-	enemy->SetRotation({ 0.0f,0.0f,0.0f });
 
 	ground = OBJobject::Create();
 	ground->SetModel(groundmodel);
@@ -88,16 +73,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
+	//プレイヤーの生成処理
+	player = new Player();
+	player->Initialize(input, mouse, camera);
+	player->object->SetScale({ 1.0f,1.0f,1.0f });
+	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
+	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
+	//敵の生成処理
+	enemy = OBJobject::Create();
+	enemy->SetModel(enemymodel);
+	enemy->SetScale({ 10.0f,10.0f,10.0f });
+	enemy->SetPosition({ 0.0f,10.0f,10.0f });
+	enemy->SetRotation({ 0.0f,0.0f,0.0f });
 	for (int i = 0; i < 6; i++) {
-		enemys[i] = new Enemy();
+		enemys[i] = new EnemyZako();
 		enemys[i]->Initialize(input, mouse, camera);
 		enemys[i]->object->SetScale({ 4.0f,4.0f,4.0f });		
 		enemys[i]->object->SetRotation({ 0.0f,90.0f,0.0f });
 		alive[i] = true;
 		enemys[i]->SetPlayer(player);
 	}
-
 	enemys[0]->object->SetScale({ 8.0f,8.0f,8.0f });
 	enemys[0]->object->SetPosition({ 0.0f,3.0f,0.0f });
 	enemys[1]->object->SetPosition({ 100.0f,-3.0f,50.0f });
@@ -105,10 +101,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	enemys[3]->object->SetPosition({ 80.0f,-3.0f,200.0f });
 	enemys[4]->object->SetPosition({ -200.0f,-3.0f,100.0f });
 	enemys[5]->object->SetPosition({ 0.0f,-3.0f,50.0f });
+
+	//タワーの生成処理
+	defenseTower = DefenseTower::Create();
+	bullet = Bullet::Create();
+	enemy1 = new Enemy;
+	enemy1->Initialize("player");
 }
 
 void GameScene::Update(int& sceneNo)
 {
+	//player->Update();
 	//カメラ操作
 	if (input->PushKey(DIK_RIGHT)) {
 		camera->matRot *= XMMatrixRotationY(0.1f);
@@ -117,30 +120,11 @@ void GameScene::Update(int& sceneNo)
 		camera->matRot *= XMMatrixRotationY(-0.1f);
 	}
 
-	camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
-
-	XMFLOAT3 rote = player->object->GetRotation();
-	XMFLOAT3 pos = player->object->GetPosition();
-	XMVECTOR movement = { 0, 0, 1.0f, 0 };
-	XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
-	movement = XMVector3TransformNormal(movement, camera->matRot);
-	movement *= XMVECTOR{ -1, -1, -1 };
-
-	matRot = XMMatrixRotationY((XMConvertToRadians(rote.y)));
-	camera->SetEye({ player->object->GetPosition().x + movement.m128_f32[0] * 80, player->object->GetPosition().y + movement.m128_f32[1] * 80,
-		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
-	camera->eye.y = 20;
-	camera->target = player->object->GetPosition();
-	//プレイヤーがジャンプした時視点だけ上に向くのを防止するための処理
-	//camera->target.y = player->graundheight;
+	if (Input::GetInstance()->PushKey(DIK_H)) {
+		int num = 0;
+	}
 
 
-	//カメラの更新
-	/*camera->SetEye({ player->object->GetPosition().x + initEye.x,player->object->GetPosition().y + initEye.y,
-		player->object->GetPosition().z + initEye.z });
-	camera->SetTarget({ player->object->GetPosition().x + initTarget.x,player->object->GetPosition().y + initTarget.y,
-		player->object->GetPosition().z + initTarget.z });*/
-	camera->Update();
 	
 	flag1 = false;
 	/*if (CubeCollision(enemys->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
@@ -205,13 +189,38 @@ void GameScene::Update(int& sceneNo)
 	for (int i = 0; i < 6; i++) {
 		enemys[i]->Update();
 	}
+	defenseTower->Update(player);
+	bullet->Update();
+	enemy1->Update();
 
+	camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+
+	//XMFLOAT3 rote = player->object->GetRotation();
+	XMFLOAT3 pos = player->object->GetPosition();
+	XMVECTOR movement = { 0, 0, 1.0f, 0 };
+	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
+	movement = XMVector3TransformNormal(movement, camera->matRot);
+	movement *= XMVECTOR{ -1, -1, -1 };	
+	//matRot = XMMatrixRotationY((XMConvertToRadians(rote.y)));
+	camera->SetEye({ player->object->GetPosition().x + movement.m128_f32[0] * 80, player->object->GetPosition().y + movement.m128_f32[1] * 80,
+		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
+	camera->eye.y = 20;
+	camera->target = player->object->GetPosition();
+	//プレイヤーがジャンプした時視点だけ上に向くのを防止するための処理
+	//camera->target.y = player->graundheight;
+
+
+	//カメラの更新
+	//camera->SetEye({ player->object->GetPosition().x + initEye.x,player->object->GetPosition().y + initEye.y,
+	//	player->object->GetPosition().z + initEye.z });
+	//camera->SetTarget({ player->object->GetPosition().x + initTarget.x,player->object->GetPosition().y + initTarget.y,
+	//	player->object->GetPosition().z + initTarget.z });
+	camera->SetWorldMatrix(player->object->GetWorldMatrix());
+	camera->Update();
 }
 
 void GameScene::Draw()
 {
-
-
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	player->object->Draw();
 	if (flag1) {
@@ -227,10 +236,12 @@ void GameScene::Draw()
 			num++;
 		}
 	}
+	//enemys[0]->object->Draw();
+	defenseTower->Draw();
+	bullet->Draw();
+	enemy1->Draw();
 
-	enemys[0]->object->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
-
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

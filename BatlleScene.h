@@ -10,7 +10,9 @@
 #include "FBXObject.h"
 #include "FbxLoader.h"
 #include "Player.h"
-#include <vector>  
+#include "EnemyZako.h"
+
+#include <vector>
 #include "GameScene.h"
 
 class BatlleScene
@@ -56,8 +58,10 @@ class BatlleScene
 
         Model* enemymodel = nullptr;
 
-        Enemy* enemys[6] = { nullptr };
+        EnemyZako* enemys[6] = { nullptr };
 
         bool alive[6];
+        int time = 0;
+
     };
 
