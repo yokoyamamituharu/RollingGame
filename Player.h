@@ -57,5 +57,6 @@ private:
 	float rollingSpeed = 0.0f;
 
 	Camera* camera;
+	bool isCamera = false;
 };
 

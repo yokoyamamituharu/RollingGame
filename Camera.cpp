@@ -42,7 +42,42 @@ void Camera::Update()
 			projectionDirty = false;
 		}
 		// ビュープロジェクションの合成
-		matViewProjection = matView * matProjection;
+		//matView.r[0].m128_f32[0] = 0;
+		matViewProjection = matView * matProjection ;
+
+
+		//XMMATRIX matRotation, matPosition;
+		//matRotation = XMMatrixIdentity();
+		//matWorld = XMMatrixIdentity();
+		//matRotation = XMMatrixIdentity();
+		//matRotation *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+		//matRotation *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+		//matRotation *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+		//matPosition = XMMatrixTranslation(eye.x, eye.y, eye.z);
+
+		//matWorld *= matRotation;
+		//matWorld *= matPosition;
+
+		//matWorld *= playerWorldMatrix;
+
+		//XMVECTOR vec = { 0,0,1 };
+		//vec = XMVector3TransformNormal(vec, matWorld);
+
+		//vec.m128_f32[0] += eye.x;
+		//vec.m128_f32[1] += eye.y;
+		//vec.m128_f32[2] += eye.z;
+
+		//target.x = vec.m128_f32[0];
+		//target.y = vec.m128_f32[1];
+		//target.z = vec.m128_f32[2];
+
+		//XMVECTOR num = XMVector3TransformNormal(vec, matWorld);
+		//up.x = num.m128_f32[0];
+		//up.y = num.m128_f32[1];
+		//up.z = num.m128_f32[2];
+
+		
+		
 	}
 }
 

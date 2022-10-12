@@ -21,6 +21,12 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 
 void Player::Update()
 {
+	if (Input::GetInstance()->PushKey(DIK_3)) {
+		object->SetRotation({
+			object->GetRotation().x,
+			object->GetRotation().y ,
+			object->GetRotation().z + 1.0f });
+	}
 	Move();
 	//オブジェクトのアップデート
 	object->Update();
@@ -74,7 +80,7 @@ void Player::Move()
 		sphereFlag = true;
 	}
 	else if (rollingSpeed > 0) {
-		forvardvec.m128_f32[2] += rollingSpeed*0.5;
+		forvardvec.m128_f32[2] += rollingSpeed * 0.5;
 		rollingSpeed -= 1;
 		attackFlag = true;
 	}
@@ -89,17 +95,18 @@ void Player::Move()
 	SpiralVector(spiralSpeed);
 #pragma endregion
 
-
-	//移動の反映
-	XMVECTOR playermatrot = { forvardvec };
-	//回転行列をかける
-	playermatrot = XMVector3Normalize(playermatrot);
-	playermatrot = XMVector3Transform(playermatrot, camera->matRot);
-	//正規化する
-	playermatrot = XMVector3Normalize(playermatrot);
+	//これは進む方向にプレイヤーを向かせる処理
+	////移動の反映
+	//XMVECTOR playermatrot = { forvardvec };
+	////回転行列をかける
+	//playermatrot = XMVector3Normalize(playermatrot);
+	//playermatrot = XMVector3Transform(playermatrot, camera->matRot);
+	////正規化する
+	//playermatrot = XMVector3Normalize(playermatrot);
 
 	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	float speed = 1.0f;
+	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
+	float speed = 1.2f;
 	XMFLOAT3 move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
 	object->SetPosition({
 		object->GetPosition().x + move.x,

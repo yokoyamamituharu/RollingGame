@@ -8,6 +8,9 @@
 #include "Model.h"
 #include "Camera.h"
 
+using namespace DirectX;
+using DirectX::operator+;
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
@@ -152,7 +155,6 @@ public: // メンバ関数
 	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
-
 	/// <summary>
 	/// スケールの設定
 	/// </summary>
@@ -165,12 +167,34 @@ public: // メンバ関数
 	/// <param name="rotation">回転</param>
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 
+	//指定した値分オブジェクトの座標を移動させる
+	void VecSetPosition(XMFLOAT3 scalar) 
+	{
+		this->position.x += scalar.x;
+		this->position.y += scalar.y;
+		this->position.z += scalar.z;
+	}
 
+	//指定した値分オブジェクトのサイズを変える
+	void VecSetScale(XMFLOAT3 scalar)
+	{
+		this->scale.x += scalar.x;
+		this->scale.y += scalar.y;
+		this->scale.z += scalar.z;
+	}
 
+	//指定した値分オブジェクトの角度を傾ける
+	void VecSetRotation(XMFLOAT3 scalar)
+	{
+		this->rotation.x += scalar.x;
+		this->rotation.y += scalar.y;
+		this->rotation.z += scalar.z;
+	}
 
+	//オブジェクトの回転行列の取得
+	XMMATRIX GetMatRot();
 
-
-
+	XMMATRIX GetWorldMatrix();
 
 private: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ

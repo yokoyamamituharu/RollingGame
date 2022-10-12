@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <DirectXMath.h>
+//class OBJobject;
 
 /// <summary>
 /// カメラ基本機能
@@ -139,6 +140,10 @@ public: // メンバ関数
 	void MoveVector(const XMFLOAT3& move);
 	void MoveVector(const XMVECTOR& move);
 
+	void SetWorldMatrix(XMMATRIX mat) {
+		playerWorldMatrix = mat;
+	}
+
 public:
 	XMMATRIX matRot;
 	// 視点座標
@@ -167,5 +172,10 @@ protected: // メンバ変数
 	// アスペクト比
 	float aspectRatio = 1.0f;
 
+	XMFLOAT3 rotation = { 0,0,0 };
+
+	XMMATRIX matWorld;
+
+	XMMATRIX playerWorldMatrix;
 };
 

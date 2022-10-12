@@ -335,6 +335,21 @@ void OBJobject::Draw()
 	commandList->DrawIndexedInstanced((UINT)modelData->indices.size(), 1, 0, 0, 0);
 }
 
+XMMATRIX OBJobject::GetMatRot()
+{
+	XMMATRIX matRot;
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	return matRot;
+}
+
+XMMATRIX OBJobject::GetWorldMatrix()
+{
+	return matWorld;
+}
+
 void OBJobject::SetModel(Model *model)
 {
 	modelData = model;
