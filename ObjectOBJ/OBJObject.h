@@ -107,8 +107,6 @@ private: // 静的メンバ変数
 
 #pragma endregion
 private:// 静的メンバ関数
-
-
 	/// <summary>
 	/// グラフィックパイプライン生成
 	/// </summary>

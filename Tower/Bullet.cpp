@@ -18,8 +18,7 @@ Bullet* Bullet::Create()
 
 void Bullet::StaticInitialize()
 {
-	model = new Model();
-	model->CreateFromOBJ("bullet");
+	model = Model::Create("bullet");
 }
 
 void Bullet::Update()
@@ -56,8 +55,7 @@ void Bullet::Draw()
 bool Bullet::Initialize(XMFLOAT3 pos,XMFLOAT3 target,bool flag)
 {
 	//弾用モデルを読み込み	
-	//model = new Model();
-	//model->CreateFromOBJ("bullet");
+	//model = Model::Create("bullet");
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(model);

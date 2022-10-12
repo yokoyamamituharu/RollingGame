@@ -9,10 +9,8 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	this->mouse = mouse;
 	this->camera = camera;
 	//プレイヤー用モデルを読み込み
-	playermodel = new Model();
-	playermodel->CreateFromOBJ("player");
-	playerSpheremodel = new Model();
-	playerSpheremodel->CreateFromOBJ("playerSphere");
+	playermodel = Model::Create("player");
+	playerSpheremodel = Model::Create("playerSphere");
 
 	//オブジェクトの作成
 	object = OBJobject::Create();

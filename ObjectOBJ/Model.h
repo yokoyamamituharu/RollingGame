@@ -75,6 +75,9 @@ public:
 	/// <param name="device">デバイス</param>
 	/// <returns>成否</returns>
 	static bool StaticInitialize(ID3D12Device* device);
+
+	static Model* Create(const std::string& modelname);
+
 public:
 
 	/// <summary>
@@ -82,9 +85,6 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	bool InitializeDescriptorHeap();
-
-	//オブジェクトなんちゃら～
-	void CreateFromOBJ(const std::string& modelname);
 
 
 	/// <summary>
@@ -98,9 +98,6 @@ public:
 	/// </summary>
 	/// <returns>成否</returns>
 	bool LoadTexture(const std::string& directoryPath, const std::string& filename);
-
-
-	static Model* Create();
 
 	//変数
 public:

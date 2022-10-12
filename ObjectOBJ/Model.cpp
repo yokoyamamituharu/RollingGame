@@ -22,33 +22,17 @@ bool Model::StaticInitialize(ID3D12Device* device)
 	return true;
 }
 
-Model* Model::Create()
+Model* Model::Create(const std::string& modelname)
 {
-	//インスタンスを生成
+	//モデルのインスタンスを生成
 	Model* model = new Model();
-	if (model == nullptr)
-	{
-		return nullptr;
-	}
 
 	//初期化
-	//if (!model->)
-	//{
-	//	delete model;
-	//	assert(0);
-	//	return nullptr;
-	//}
-
-
+	model->InitializeDescriptorHeap();
+	//モデルを生成
+	model->CreateModel(modelname);
 
 	return model;
-}
-
-
-void Model::CreateFromOBJ(const std::string& modelname)
-{
-	InitializeDescriptorHeap();
-	CreateModel(modelname);
 }
 
 bool Model::InitializeDescriptorHeap()

@@ -53,13 +53,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
 
+
+	//弾の静的初期化
 	Bullet::StaticInitialize();
+
 	//モデルの読み込み
 	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	groundmodel = new Model();
-	groundmodel->CreateFromOBJ("ground");
-	enemymodel = new Model();
-	enemymodel->CreateFromOBJ("enemy");
+	groundmodel = Model::Create("ground");
+	enemymodel = Model::Create("enemy");
+	castleModel = Model::Create("castle");
+
 	//3Dオブジェクトの生成
 	fbxobject = new FBXObject;
 	fbxobject->Initialize();
@@ -72,6 +75,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
+
+	ground = OBJobject::Create();
+	ground->SetModel(groundmodel);
+	ground->SetScale({ 10.0f,1.0f,10.0f });
+	ground->SetPosition({ 0.0f,-10.0f,0.0f });
+	ground->SetRotation({ 0.0f,0.0f,0.0f });
+
+	castle = OBJobject::Create();
+	castle->SetModel(castleModel);
+	castle->SetScale({ 10.0f,10.0f,10.0f });
 
 	//プレイヤーの生成処理
 	player = new Player();
@@ -117,6 +130,7 @@ void GameScene::Update(int& sceneNo)
 	defenseTower->Update(player);
 	bullet->Update();
 	enemy1->Update();
+	castle->Update();
 
 	camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
 
@@ -147,21 +161,18 @@ void GameScene::Update(int& sceneNo)
 void GameScene::Draw()
 {
 	OBJobject::PreDraw(dxCommon->GetCmdList());
+	//fbxobject->Draw(dxCommon->GetCmdList());
 	player->object->Draw();
-	ground->Draw();
-	int num = 0;
+	ground->Draw();	
 	defenseTower->Draw();
 	bullet->Draw();
 	enemy1->Draw();
-
-	//fbxobject->Draw(dxCommon->GetCmdList());
+	castle->Draw();
+	
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();
-	if (num >= 6) {
-		//clearsprite->Draw();
-	}
+	//spriteBG->Draw();	
 	Sprite::PostDraw();
 
 }

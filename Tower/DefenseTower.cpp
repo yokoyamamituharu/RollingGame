@@ -67,8 +67,7 @@ void DefenseTower::Draw()
 bool DefenseTower::Initialize()
 {
 	//タワー用モデルを読み込み
-	model = new Model();
-	model->CreateFromOBJ("defenseTower");
+	model = Model::Create("defenseTower");
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(model);

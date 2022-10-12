@@ -22,9 +22,6 @@
     <Filter Include="ソース ファイル\Enemy">
       <UniqueIdentifier>{cd0270b0-c416-408f-89a9-cbb37b16bf88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
-      <UniqueIdentifier>{6537e32e-23d7-4a43-8fe8-5cd9674322bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Tower">
       <UniqueIdentifier>{9913d8d5-6fa2-4efa-afa2-100ef0b19994}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,9 @@
     </Filter>
     <Filter Include="ソース ファイル\ObjectFBX">
       <UniqueIdentifier>{a756e0e6-bebe-4ae3-b79d-ddbaf235ecb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{6537e32e-23d7-4a43-8fe8-5cd9674322bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

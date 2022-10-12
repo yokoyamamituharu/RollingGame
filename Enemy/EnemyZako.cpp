@@ -9,8 +9,7 @@ void EnemyZako::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	this->mouse = mouse;
 	this->camera = camera;
 	//敵用モデルを読み込み
-	enemyModel = new Model();
-	enemyModel->CreateFromOBJ("enemy");
+	enemyModel = Model::Create("enemy");
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(enemyModel);

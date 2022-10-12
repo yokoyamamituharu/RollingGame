@@ -5,8 +5,7 @@ Model* ModelManager::bulletModel = nullptr;
 void ModelManager::Initialize()
 {
 	//’e—pƒ‚ƒfƒ‹‚ð“Ç‚Ýž‚Ý
-	bulletModel = new Model();
-	bulletModel->CreateFromOBJ("bullet");
+	bulletModel = Model::Create("bullet");
 }
 
 ModelManager* ModelManager::GetIns()

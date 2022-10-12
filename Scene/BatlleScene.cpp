@@ -37,8 +37,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 	this->player = gameScene->GetPlayer();
 
-	groundmodel = new Model();
-	groundmodel->CreateFromOBJ("battlegrund");
+	groundmodel = Model::Create("battlegrund");
 	ground = OBJobject::Create();
 	ground->SetModel(groundmodel);
 	ground->SetScale({ 10.0f,1.0f,10.0f });
@@ -46,8 +45,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
 
-	enemymodel = new Model();
-	enemymodel->CreateFromOBJ("enemy");
+	enemymodel = Model::Create("enemy");
 	for (int i = 0; i < 6; i++) {
 		enemys[i] = new EnemyZako();
 		enemys[i]->Initialize(input, mouse, camera);

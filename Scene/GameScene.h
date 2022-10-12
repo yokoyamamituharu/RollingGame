@@ -66,6 +66,9 @@ private: // ƒƒ“ƒo•Ï”
     DefenseTower* defenseTower = nullptr;
     Bullet* bullet = nullptr;
     Enemy* enemy1 = nullptr;
+    //‚¨é
+    Model* castleModel = nullptr;
+    OBJobject *castle = nullptr;
 
     bool flag1 = false;
     bool clear = false;
