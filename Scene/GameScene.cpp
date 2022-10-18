@@ -119,8 +119,13 @@ void GameScene::Update(int& sceneNo)
 	if (Input::GetInstance()->PushKey(DIK_H)) {
 		int num = 0;
 	}
+	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+		cameraToMouse *= -1;
+	}
 
-
+	if (Input::GetInstance()->TriggerKey(DIK_0)) {
+		sceneNo = 2;
+	}
 
 
 	//3Dオブジェクト更新
@@ -132,7 +137,9 @@ void GameScene::Update(int& sceneNo)
 	enemy1->Update();
 	castle->Update();
 
-	camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+	if (cameraToMouse == 1) {
+		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+	}
 
 	//XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
@@ -163,12 +170,12 @@ void GameScene::Draw()
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	//fbxobject->Draw(dxCommon->GetCmdList());
 	player->object->Draw();
-	ground->Draw();	
+	ground->Draw();
 	defenseTower->Draw();
 	bullet->Draw();
 	enemy1->Draw();
 	castle->Draw();
-	
+
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

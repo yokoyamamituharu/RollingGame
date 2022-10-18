@@ -73,5 +73,6 @@ private: // ƒƒ“ƒo•Ï”
     bool flag1 = false;
     bool clear = false;
     int time = 0;
+    int cameraToMouse = 1;
 };
 

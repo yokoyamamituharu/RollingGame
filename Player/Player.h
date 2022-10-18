@@ -35,6 +35,8 @@ public:
 		 object->GetRotation().z + vec.z });
 	}
 
+	void Res(int num = 0);
+
 public:
 	void SetInput(Input* input) { this->input = input; }
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
@@ -58,5 +60,14 @@ private:
 
 	Camera* camera;
 	bool isCamera = false;
+
+	int sceneType = 1;
+
+	int rollingTime = 0;
+
+	bool resFlag1 = false;
+	bool resFlag2 = false;
+	bool resFlag3 = false;
+	int resTimer = 0;
 };
 

@@ -14,7 +14,7 @@ private:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-
+	float Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2);
 public:
 	void Initialize(Input* input, InputMouse* mouse, Camera* camera);
 	void Update();
@@ -58,7 +58,6 @@ public:
 public:
 	OBJobject* object = nullptr;
 
-	bool attackFlag = false;
 	bool flag1 = false;
 private:
 	Model* enemyModel = nullptr;
@@ -91,4 +90,28 @@ private:
 	XMFLOAT3 move;
 
 	int timer1 = 0;
+
+
+	float m_PosX;		// •`‰æÀ•WX
+	float m_PosY;		// •`‰æÀ•WY
+	float m_Radius;		// ”¼Œa(•`‰æ—p)
+	float m_CenterX;	// ’†SÀ•WX
+	float m_CenterY;	// ’†SÀ•WY
+	float m_Angle = 0;		// Šp“x
+	float m_Length = 50;		// ”¼Œa‚Ì’·‚³
+
+	int tossintime = 0;
+	bool tossinFlag = false;
+
+	int flag = 1;
+
+	int moveTime = 0;
+	bool attackFlag = false;
+	int attackTime = 0;
+	XMFLOAT3 attackPoint;
+	bool attackFlag2 = false;
+	XMVECTOR direction1;
+
+	bool nearFlag = false;
+	XMFLOAT3 rollPoint;
 };

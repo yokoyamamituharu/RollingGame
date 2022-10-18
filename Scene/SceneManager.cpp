@@ -13,7 +13,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse*
 void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
 {
 	if (Input::GetInstance()->PushKey(DIK_1)) {
-		sceneNo = GAMESCENE;
+		//sceneNo = GAMESCENE;
 	}
 	else if (Input::GetInstance()->PushKey(DIK_2)) {
 		//sceneNo = BATTLESCENE;

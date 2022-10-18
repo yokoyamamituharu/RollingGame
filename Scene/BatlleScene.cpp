@@ -112,17 +112,19 @@ void BatlleScene::Update()
 	//}
 
 	//敵とプレイヤーのローリング攻撃の当たり判定
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 2; i++) {
 		if (CubeCollision1(enemys[i]->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
 			&& player->attackFlag == true) {
 			alive[i] = false;
+			player->Res(1);
 		}
 	}
 
 
 	camera->Update();
 	ground->Update();
-	player->Update();
+	player->Res();
+	player->Update();	
 	for (int i = 0; i < 6; i++)
 	{
 		enemys[i]->Update();
@@ -140,7 +142,7 @@ void BatlleScene::Draw()
 	ground->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 2; i++) {
 		if (alive[i] == true) {
 			enemys[i]->object->Draw();
 		}
