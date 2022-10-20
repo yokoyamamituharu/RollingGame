@@ -24,7 +24,7 @@ namespace
 
         static XMVECTORF32 lScale = { { { 0.2125f, 0.7154f, 0.0721f, 1.f } } };
 
-        static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ flag values don't match mask");
+        static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ actionFlag values don't match mask");
         switch (flags & 0xf)
         {
         case 0:
@@ -264,7 +264,7 @@ HRESULT DirectX::ComputeNormalMap(
     if (!srcImage.pixels || !IsValid(format))
         return E_INVALIDARG;
 
-    static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ flag values don't match mask");
+    static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ actionFlag values don't match mask");
     switch (flags & 0xf)
     {
     case 0:
@@ -328,7 +328,7 @@ HRESULT DirectX::ComputeNormalMap(
         || IsPalettized(format) || IsPalettized(metadata.format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ flag values don't match mask");
+    static_assert(CNMAP_CHANNEL_RED == 0x1, "CNMAP_CHANNEL_ actionFlag values don't match mask");
     switch (flags & 0xf)
     {
     case 0:

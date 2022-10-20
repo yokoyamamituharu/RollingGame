@@ -165,6 +165,10 @@ public: // メンバ関数
 	/// <param name="rotation">回転</param>
 	void SetRotation(XMFLOAT3 rotation) { this->rotation = rotation; }
 
+	void SetPosX(float x) { this->position.x = x; }
+	void SetPosY(float y) { this->position.y = y; }
+	void SetPosZ(float z) { this->position.z = z; }
+
 	//指定した値分オブジェクトの座標を移動させる
 	void VecSetPosition(XMFLOAT3 scalar) 
 	{

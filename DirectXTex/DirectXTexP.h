@@ -218,7 +218,7 @@ namespace DirectX
 
         inline WICBitmapDitherType __cdecl GetWICDither(_In_ TEX_FILTER_FLAGS flags) noexcept
         {
-            static_assert(TEX_FILTER_DITHER == 0x10000, "TEX_FILTER_DITHER* flag values don't match mask");
+            static_assert(TEX_FILTER_DITHER == 0x10000, "TEX_FILTER_DITHER* actionFlag values don't match mask");
 
             static_assert(static_cast<int>(TEX_FILTER_DITHER) == static_cast<int>(WIC_FLAGS_DITHER), "TEX_FILTER_DITHER* should match WIC_FLAGS_DITHER*");
             static_assert(static_cast<int>(TEX_FILTER_DITHER_DIFFUSION) == static_cast<int>(WIC_FLAGS_DITHER_DIFFUSION), "TEX_FILTER_DITHER* should match WIC_FLAGS_DITHER*");
@@ -253,7 +253,7 @@ namespace DirectX
 
         inline WICBitmapInterpolationMode __cdecl GetWICInterp(_In_ WIC_FLAGS flags) noexcept
         {
-            static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
+            static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MASK");
 
             static_assert(static_cast<int>(TEX_FILTER_POINT) == static_cast<int>(WIC_FLAGS_FILTER_POINT), "TEX_FILTER_* flags should match WIC_FLAGS_FILTER_*");
             static_assert(static_cast<int>(TEX_FILTER_LINEAR) == static_cast<int>(WIC_FLAGS_FILTER_LINEAR), "TEX_FILTER_* flags should match WIC_FLAGS_FILTER_*");

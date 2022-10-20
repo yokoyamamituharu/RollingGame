@@ -92,26 +92,23 @@ private:
 	int timer1 = 0;
 
 
-	float m_PosX;		// •`‰æÀ•WX
-	float m_PosY;		// •`‰æÀ•WY
 	float m_Radius;		// ”¼Œa(•`‰æ—p)
-	float m_CenterX;	// ’†SÀ•WX
-	float m_CenterY;	// ’†SÀ•WY
-	float m_Angle = 0;		// Šp“x
-	float m_Length = 50;		// ”¼Œa‚Ì’·‚³
+	float m_Angle = 0;	// Šp“x
+	float m_Length = 50;// ”¼Œa‚Ì’·‚³
 
 	int tossintime = 0;
 	bool tossinFlag = false;
 
-	int flag = 1;
+	//“G‚Ìs“®‚³‚¹‚é/‚³‚¹‚È‚¢ƒtƒ‰ƒO
+	int actionFlag = 1;
 
 	int moveTime = 0;
 	bool attackFlag = false;
 	int attackTime = 0;
-	XMFLOAT3 attackPoint;
-	bool attackFlag2 = false;
-	XMVECTOR direction1;
+	XMVECTOR attackDirection;
 
 	bool nearFlag = false;
 	XMFLOAT3 rollPoint;
+
+	int abaramoveTime = 0;
 };

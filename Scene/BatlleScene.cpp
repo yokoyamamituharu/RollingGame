@@ -37,6 +37,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 	this->player = gameScene->GetPlayer();
 
+	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
+
 	groundmodel = Model::Create("battlegrund");
 	ground = OBJobject::Create();
 	ground->SetModel(groundmodel);
@@ -73,8 +75,12 @@ void BatlleScene::Update()
 	else if (input->PushKey(DIK_LEFT)) {
 		camera->matRot *= XMMatrixRotationY(-0.1f);
 	}
-
-	camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+		cameraToMouse *= -1;
+	}
+	if (cameraToMouse > 0) {
+		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+	}
 
 	XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
@@ -88,44 +94,25 @@ void BatlleScene::Update()
 		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
 	camera->eye.y = 20;
 	camera->target = player->object->GetPosition();
+	camera->target.y = -6;
 
 
-	////行動の更新
-	//time++;
-	//if (time < 100)
-	//{
-	//	XMFLOAT3 pos = enemys[0]->object->GetPosition();
-	//	pos.z += 0.3;
-	//	enemys[0]->object->SetPosition(pos);
-	//}
-	//else if (time < 200)
-	//{
-	//	enemys[0]->Mawarikomi(player);
-	//}
-	//else
-	//{
-	//	enemys[0]->GoTarget(player->object->GetPosition());
-	//	if (time > 280)
-	//	{
-	//		time = 0;
-	//	}
-	//}
 
 	//敵とプレイヤーのローリング攻撃の当たり判定
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (CubeCollision1(enemys[i]->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-			&& player->attackFlag == true) {
+			&& player->attackFlag == true&&alive[i] ==true) {
 			alive[i] = false;
-			player->Res(1);
+			//player->Res(true);
 		}
 	}
 
 
 	camera->Update();
 	ground->Update();
-	player->Res();
+	//player->Res();
 	player->Update();	
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		enemys[i]->Update();
 	}
@@ -133,19 +120,21 @@ void BatlleScene::Update()
 
 void BatlleScene::Draw()
 {
-	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();
-	Sprite::PostDraw();
+	
 
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	player->object->Draw();
 	ground->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (alive[i] == true) {
 			enemys[i]->object->Draw();
 		}
 	}
 	OBJobject::PostDraw();
+
+	Sprite::PreDraw(dxCommon->GetCmdList());
+	spriteBG->Draw();
+	Sprite::PostDraw();
 }

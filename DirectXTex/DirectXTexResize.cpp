@@ -198,7 +198,7 @@ namespace
         }
 #endif
 
-        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
+        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MASK");
 
         switch (filter & TEX_FILTER_MODE_MASK)
         {
@@ -797,7 +797,7 @@ namespace
         if (!srcImage.pixels || !destImage.pixels)
             return E_POINTER;
 
-        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MASK");
+        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MASK");
 
         unsigned long filter_select = filter & TEX_FILTER_MODE_MASK;
         if (!filter_select)

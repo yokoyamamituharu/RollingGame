@@ -30,7 +30,6 @@ void Player::Update()
 		sceneType *= -1;
 	}
 
-
 	Move();
 	//オブジェクトのアップデート
 	object->Update();
@@ -174,35 +173,51 @@ void Player::Move()
 	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
 }
 
-void Player::Res(int num)
+void Player::Res(bool flag)
 {
-	if (num == 1 && resFlag2 == false) {
-		resFlag2 = true;
+
+
+	//下降処理
+	if (resFlag2 == true) {
+		//num -= 0.5;
+		//object->SetPosY({ object->GetPosition().y - 0.5f });
+		//if (object->GetPosition().y < -6) {
+		//	resFlag2 = false;
+		//	object->SetPosY(-6.0f);
+		//	num = 0;
+		//}
 	}
 
-	if (resFlag2 == true) {
-		XMVECTOR movement = { 0, 0, 1.0f, 0 };
-		XMMATRIX matRot = XMMatrixRotationY((XMConvertToRadians(object->GetRotation().y - 90.0f)));
-		movement = XMVector3TransformNormal(movement, matRot);
-
-		movement *= XMVECTOR{ -1, -1, -1 };
-		matRot = XMMatrixRotationY((XMConvertToRadians(object->GetRotation().y)));
-		//XMVECTOR oldBossPos;
-		XMVECTOR playerFront = /*oldBossPos +*/ movement * XMVECTOR{ 50, 50, 50 };
-
-		rollingSpeed = 0;
-		XMFLOAT3 pos1 = object->GetPosition();
-		if (resFlag1 == false) {
-			object->SetPosition({ pos1.x,10, pos1.z });
-			resFlag1 = true;
-		}
-		pos1 = object->GetPosition();
-		pos1.y -= 0.1f;
-		object->SetPosition({ pos1.x,pos1.y, pos1.z });
-		if (pos1.y < -6) {
+	//上昇処理
+	if (resFlag1 == true) {
+		numcase += 0.01f;
+		float un = Ease(numcase);
+		object->SetPosY({ posY + max * un });
+		if (numcase >= 1) {
 			resFlag1 = false;
-			resFlag2 = false;
+			resFlag2 = true;
 		}
-		resTimer++;
+	}
+
+	//バウンドを起動
+	if (flag == 1 && resFlag1 == false) {
+		posY = object->GetPosition().y;
+		resFlag1 = true;
+		numcase = 0;
+		rollingSpeed = 0;
+
 	}
 }
+
+float Player::Ease(float x)
+{
+	double num = pow(1 - x, 1.6);
+	double num2 = 1 - num;
+	if (x >= 1.0f) {
+		//xが1を超えた値だとpowの返り値がおかしくなるので
+		num2= 1;
+	}
+	return num2;
+}
+
+

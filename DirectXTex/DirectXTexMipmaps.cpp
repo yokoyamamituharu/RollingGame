@@ -651,7 +651,7 @@ namespace
         }
 #endif
 
-        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+        static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MODE_MASK");
 
         switch (filter & TEX_FILTER_MODE_MASK)
         {
@@ -2822,7 +2822,7 @@ HRESULT DirectX::GenerateMipMaps(
 
     HRESULT hr = E_UNEXPECTED;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MODE_MASK");
 
 #ifdef WIN32
     bool usewic = UseWICFiltering(baseImage.format, filter);
@@ -2855,7 +2855,7 @@ HRESULT DirectX::GenerateMipMaps(
         case TEX_FILTER_LINEAR:
         case TEX_FILTER_CUBIC:
         {
-            static_assert(TEX_FILTER_FANT == TEX_FILTER_BOX, "TEX_FILTER_ flag alias mismatch");
+            static_assert(TEX_FILTER_FANT == TEX_FILTER_BOX, "TEX_FILTER_ actionFlag alias mismatch");
 
             if (wicpf)
             {
@@ -3037,7 +3037,7 @@ HRESULT DirectX::GenerateMipMaps(
     if (baseImages.empty())
         return hr;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MODE_MASK");
 
 #ifdef WIN32
     bool usewic = !metadata.IsPMAlpha() && UseWICFiltering(metadata.format, filter);
@@ -3070,7 +3070,7 @@ HRESULT DirectX::GenerateMipMaps(
         case TEX_FILTER_LINEAR:
         case TEX_FILTER_CUBIC:
         {
-            static_assert(TEX_FILTER_FANT == TEX_FILTER_BOX, "TEX_FILTER_ flag alias mismatch");
+            static_assert(TEX_FILTER_FANT == TEX_FILTER_BOX, "TEX_FILTER_ actionFlag alias mismatch");
 
             if (wicpf)
             {
@@ -3260,7 +3260,7 @@ HRESULT DirectX::GenerateMipMaps3D(
     if (IsCompressed(format) || IsTypeless(format) || IsPlanar(format) || IsPalettized(format))
         return HRESULT_E_NOT_SUPPORTED;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MODE_MASK");
 
     HRESULT hr = E_UNEXPECTED;
 
@@ -3378,7 +3378,7 @@ HRESULT DirectX::GenerateMipMaps3D(
 
     HRESULT hr = E_UNEXPECTED;
 
-    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
+    static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ actionFlag values don't match TEX_FILTER_MODE_MASK");
 
     unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
     if (!filter_select)

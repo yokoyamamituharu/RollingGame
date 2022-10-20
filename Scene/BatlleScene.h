@@ -62,6 +62,6 @@ class BatlleScene
 
         bool alive[6];
         int time = 0;
-
+        int cameraToMouse = 1;
     };
 

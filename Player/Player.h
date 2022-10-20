@@ -35,12 +35,14 @@ public:
 		 object->GetRotation().z + vec.z });
 	}
 
-	void Res(int num = 0);
+	void Res(bool flag = false);
 
 public:
 	void SetInput(Input* input) { this->input = input; }
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
+
+	float Ease(float x);
 
 public:
 	OBJobject* object = nullptr;
@@ -69,5 +71,9 @@ private:
 	bool resFlag2 = false;
 	bool resFlag3 = false;
 	int resTimer = 0;
+
+	float max = 20;
+	float posY = 0;
+	float numcase = 0;
 };
 

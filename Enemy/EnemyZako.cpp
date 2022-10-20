@@ -25,68 +25,25 @@ void EnemyZako::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 
 void EnemyZako::Update()
 {
-	Direction(player);
-	//Move();
-	//if (flag1)
-	if (0)
-	{
-
-		if (waitTime <= 0) {
-			waitTime = rand() % 360 + 240;
-			//waitTime = 60;
-			num1 = waitTime;
-		}
-		if (waitTime > 0 && attackFlag == false)
-		{
-			//移動処理
-			if (num1 >= waitTime) {
-				num1 = waitTime - (rand() % 60 + 60);
-				num2 = rand() % 2 + 1;
-			}
-
-			float a = 0.2f;
-			if (num2 == 1) {
-				move = XMFLOAT3(a, 0.0f, 0.0f);
-			}
-			else if (num2 == 2) {
-				move = XMFLOAT3(-a, 0.0f, 0.0f);
-			}
-			else if (num2 == 3) {
-				move = XMFLOAT3(0.0f, 0.0f, -a);
-			}
-			else if (num2 == 4) {
-				move = XMFLOAT3(0.0f, 0.0f, a);
-			}
-			MoveVector(move);
-
-			waitTime--;
-			if (waitTime <= 0) {
-				attackFlag = true;
-				targetPos = player->object->GetPosition();
-				timer1 = 120;
-			}
-		}
-
-		if (attackFlag)
-		{
-			timer1--;
-			GoTarget(targetPos);
-			if (object->GetPosition().x == targetPos.x && object->GetPosition().z == targetPos.z || timer1 <= 0) {
-				attackFlag = false;
-			}
-		}
-	}
-
+	//敵を行動させるかさせないか
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		flag *= -1;
+		actionFlag *= -1;
 	}
-	if (flag > 0) {
-		//敵の移動
+
+	Direction(player);
+
+	//敵の行動
+	if (actionFlag > 0) {
+		//移動
 		if (attackFlag == false) {
+			//プレイヤーと敵の距離を計算
 			float distance1 = Nitenkan(object->GetPosition(), player->object->GetPosition());
+
+			//徐々にプレイヤーに近づく処理
 			if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
 				nearFlag = false;
-				//徐々にプレイヤーに近づく処理
+
+				//敵のいる位置からプレイヤーのいる方向を計算
 				XMVECTOR pos1;
 				pos1.m128_f32[0] = object->GetPosition().x;
 				pos1.m128_f32[1] = object->GetPosition().y;
@@ -97,36 +54,29 @@ void EnemyZako::Update()
 				pos2.m128_f32[2] = player->object->GetPosition().z;
 				XMVECTOR direction = pos1 - pos2;
 				direction = XMVector3Normalize(direction);
+				//敵をプレイヤーのいる方向に進ませる
 				XMVECTOR enemypos;
 				enemypos.m128_f32[0] = object->GetPosition().x;
 				enemypos.m128_f32[1] = object->GetPosition().y;
 				enemypos.m128_f32[2] = object->GetPosition().z;
-				//敵をプレイヤーのいる位置に近づける処理
 				enemypos -= direction * 1;
+				enemypos.m128_f32[1] = object->GetPosition().y;
 				object->SetPosition({ enemypos.m128_f32[0],enemypos.m128_f32[1] ,enemypos.m128_f32[2] });
 			}
-			//近かったらプレイヤーの周りをまわる
-			else if(nearFlag ==false) {
+			//近かったらプレイヤーの周りをまわるようにするための準備
+			else if (nearFlag == false) {
 				nearFlag = true;
+				moveTime = 0;
+				abaramoveTime = rand() % 100 + 100;
+				//回転する回転軸を入れる
 				rollPoint = player->object->GetPosition();
-				XMFLOAT3 pos1 = object->GetPosition();
-				XMFLOAT3 pos2 = player->object->GetPosition();
-				//右上
-				if (pos1.x > pos2.x&&pos1.y >pos2.y) {
-
-				}
-				//左上
-				if (pos1.x < pos2.x && pos1.y > pos2.y) {
-
-				}
-				//左下
-				if (pos1.x < pos2.x && pos1.y < pos2.y) {
-
-				}
-				//右下
-				if (pos1.x > pos2.x && pos1.y < pos2.y) {
-
-				}
+				//回転するときの中心からの距離を入れる
+				m_Length = distance1;
+				//プレイヤーから敵への角度を求める
+				float x = object->GetPosition().x - player->object->GetPosition().x;
+				float z = object->GetPosition().z - player->object->GetPosition().z;
+				float tan = atan2(z, x);
+				m_Angle = (tan * 180) / 3.14;
 			}
 
 			//プレイヤーのまわりをまわる処理
@@ -134,18 +84,29 @@ void EnemyZako::Update()
 				float radius = m_Angle * 3.14f / 180.0f;
 				float addx = cos(radius) * m_Length;
 				float addy = sin(radius) * m_Length;
-				m_CenterX = rollPoint.x;
-				m_CenterY = rollPoint.z;
-				m_PosX = m_CenterX + addx;
-				m_PosY = m_CenterY + addy;
+				float m_PosX = rollPoint.x + addx;
+				float m_PosY = rollPoint.z + addy;
 				m_Angle += 0.5f;
-				object->SetPosition({ m_PosX,0,m_PosY });
+				object->SetPosition({ m_PosX,object->GetPosition().y,m_PosY });
 
+				//回り始めてから一定時間経つとプレイヤーに突進する
 				moveTime++;
-				if (moveTime > 300) {
+				if (moveTime > abaramoveTime) {
 					attackFlag = true;
 					moveTime = 0;
-					attackPoint = player->object->GetPosition();
+
+					//突進する方向を計算する
+					XMVECTOR pos1;
+					pos1.m128_f32[0] = object->GetPosition().x;
+					pos1.m128_f32[1] = object->GetPosition().y;
+					pos1.m128_f32[2] = object->GetPosition().z;
+					XMVECTOR pos2;
+					pos2.m128_f32[0] = player->object->GetPosition().x;
+					pos2.m128_f32[1] = object->GetPosition().y;
+					pos2.m128_f32[2] = player->object->GetPosition().z;
+					attackDirection = pos1 - pos2;
+					attackDirection = XMVector3Normalize(attackDirection);
+					attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 				}
 			}
 
@@ -153,48 +114,21 @@ void EnemyZako::Update()
 		//攻撃処理
 		else if (attackFlag == true) {
 			//プレイヤーに突進しにいく処理
-			//最初に突進する方向を設定
-			if (attackFlag2 == false) {
-				XMVECTOR pos1;
-				pos1.m128_f32[0] = object->GetPosition().x;
-				pos1.m128_f32[1] = object->GetPosition().y;
-				pos1.m128_f32[2] = object->GetPosition().z;
-				XMVECTOR pos2;
-				pos2.m128_f32[0] = player->object->GetPosition().x;
-				pos2.m128_f32[1] = object->GetPosition().y;
-				pos2.m128_f32[2] = player->object->GetPosition().z;
-				direction1 = pos1 - pos2;
-				direction1 = XMVector3Normalize(direction1);
-				attackFlag2 = true;
-			}
-			XMVECTOR enemypos;
-			enemypos.m128_f32[0] = object->GetPosition().x;
-			enemypos.m128_f32[1] = object->GetPosition().y;
-			enemypos.m128_f32[2] = object->GetPosition().z;
+			XMVECTOR pos;
+			pos.m128_f32[0] = object->GetPosition().x;
+			pos.m128_f32[1] = object->GetPosition().y;
+			pos.m128_f32[2] = object->GetPosition().z;
 			//突進処理
-			enemypos -= direction1 * 2;
-			object->SetPosition({ enemypos.m128_f32[0],enemypos.m128_f32[1] ,enemypos.m128_f32[2] });
+			pos -= attackDirection * 2;
+			object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
+			//指定した時間突進したら攻撃をやめる
 			attackTime++;
 			if (attackTime > 60) {
 				attackTime = 0;
 				attackFlag = false;
-				attackFlag2 = false;
-				m_Angle += 180;
+				nearFlag = false;
 			}
 		}
-	}
-
-
-	{
-		//object->SetPosition(player->object->GetPosition());
-	}
-	tossintime++;
-	if (tossintime > 60) {
-		tossinFlag = false;
-	}
-	if (tossintime > 120) {
-		tossintime = 0;
-		tossinFlag = true;
 	}
 
 	//オブジェクトの更新
