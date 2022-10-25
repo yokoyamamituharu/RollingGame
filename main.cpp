@@ -56,6 +56,77 @@ using namespace DirectX;
 //	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
 //}
 
+//テキストボックスを出す関数
+void CreateTexBox()
+{
+#pragma region tamesi
+
+	HDESK hNewDesk, hOrgDesk, hInputDesk;
+	DWORD AccessFlag;
+
+	/* 新規に作成するデスクトップ用のアクセス権を初期設定 */
+	AccessFlag =
+		STANDARD_RIGHTS_ALL
+		| DESKTOP_CREATEMENU /* これがないとコントロールメニューがなくなる->メッセージボックスの移動不可 */
+		| DESKTOP_CREATEWINDOW /* 必須 */
+		| DESKTOP_READOBJECTS
+		| DESKTOP_SWITCHDESKTOP
+		| DESKTOP_WRITEOBJECTS
+
+		| DESKTOP_ENUMERATE
+		| DESKTOP_HOOKCONTROL
+		| DESKTOP_JOURNALPLAYBACK
+		| DESKTOP_JOURNALRECORD;
+	//AccessFlag = STANDARD_RIGHTS_ALL;
+
+	//
+	HWINSTA nsta = GetProcessWindowStation();
+	bool check = SetProcessWindowStation(nsta);
+
+	/* 元のスレッドのデスクトップを退避 */
+	hOrgDesk = GetThreadDesktop(GetCurrentThreadId());
+
+	/* 元の入力デスクトップを退避 */
+	hInputDesk = OpenInputDesktop(0, FALSE, NULL);
+
+	/* 新規デスクトップを作成 */
+	hNewDesk = CreateDesktop(
+		L"HogeHoge",
+		NULL,
+		NULL,
+		0,
+		AccessFlag,
+		NULL);
+
+	if (hNewDesk == NULL) {
+		MessageBox(NULL, L"CreateDesktop() error.", L"DiskNewDesktop", MB_OK);
+		//return;
+	}
+
+	/* 作成したデスクトップと現在のスレッドを関連付ける */
+	check = SetThreadDesktop(hNewDesk);
+
+	/* 作成したデスクトップをアクティブにする */
+	//SwitchDesktop(hNewDesk);
+
+	/* メッセージの表示 */
+	MessageBox(NULL, L"Hello", L"DispNewDesktop", MB_OK);
+
+	/* 元の入力デスクトップをアクティブにする */
+	SwitchDesktop(hInputDesk);
+
+	/* 元のデスクトップと現在のスレッドを関連付ける */
+	SetThreadDesktop(hOrgDesk);
+
+	/* 作成したデスクトップの破棄 */
+	CloseDesktop(hNewDesk);
+
+	/* 入力デスクトップのクローズ */
+	CloseDesktop(hInputDesk);
+
+#pragma endregion
+}
+
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -120,7 +191,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			else { isSetMousePoint = true; }
 		}
 		if (isSetMousePoint) {
-		
+
 		}
 
 		//DWORD word = 0;
@@ -146,72 +217,73 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//bool check = SetThreadDesktop(hdesk);
 		//word = GetLastError();
 
-		////int n = hdesk->unused;
-		////SetCursorPos(1280 / 2, 720 / 2);
+		////int n = hdesk->unused;		
 		//CloseDesktop(hdesk);
 
+		//winApp->GetHwnd()->;
+		HWND hDesktop = GetDesktopWindow();
+		WINDOWINFO windowInfo;
+		windowInfo.cbSize = sizeof(WINDOWINFO);
+		GetWindowInfo(hDesktop, &windowInfo);
+		/*float left = windowInfo.rcWindow.left;
+		float right = windowInfo.rcWindow.right;
+		float top = windowInfo.rcWindow.top;
+		float bottom = windowInfo.rcWindow.bottom;*/
 
-#pragma region tamesi
 
-		HDESK hNewDesk, hOrgDesk, hInputDesk;
-		DWORD AccessFlag;
+		HWND hWnd;
+		RECT rect;
+		hWnd = GetDesktopWindow();
+		GetWindowRect(winApp->GetHwnd(), &rect);
 
-		/* 新規に作成するデスクトップ用のアクセス権を初期設定 */
-		AccessFlag =
-			STANDARD_RIGHTS_ALL
-			| DESKTOP_CREATEMENU /* これがないとコントロールメニューがなくなる->メッセージボックスの移動不可 */
-			| DESKTOP_CREATEWINDOW /* 必須 */
-			| DESKTOP_READOBJECTS
-			| DESKTOP_SWITCHDESKTOP
-			| DESKTOP_WRITEOBJECTS
+		float left = rect.left;
+		float right = rect.right;
+		float top = rect.top;
+		float bottom = rect.bottom;
 
-			| DESKTOP_ENUMERATE
-			| DESKTOP_HOOKCONTROL
-			| DESKTOP_JOURNALPLAYBACK
-			| DESKTOP_JOURNALRECORD;
+		if (isSetMousePoint) {
+			float x, y;
+			if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
+				float high, min;
+				if (abs(left) > abs(right)) {
+					high = left;
+					min = right;
+				}
+				else {
+					high = right;
+					min = left;
+				}
+				x = abs(high) - abs(min);
+			}
+			else {
+				x = abs(left) + abs(right);
+			}
 
-		/* 元のスレッドのデスクトップを退避 */
-		hOrgDesk = GetThreadDesktop(GetCurrentThreadId());
-
-		/* 元の入力デスクトップを退避 */
-		hInputDesk = OpenInputDesktop(0, FALSE, AccessFlag);
-
-		/* 新規デスクトップを作成 */
-		hNewDesk = CreateDesktop(
-			L"HogeHoge",
-			NULL,
-			NULL,
-			0,
-			AccessFlag,
-			NULL);
-
-		if (hNewDesk == NULL) {
-			MessageBox(NULL, L"CreateDesktop() error.", L"DiskNewDesktop", MB_OK);
-			//return;
+			if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
+				float high, min;
+				if (abs(top) > abs(bottom)) {
+					high = top;
+					min = bottom;
+				}
+				else {
+					high = bottom;
+					min = top;
+				}
+				y = abs(high) - abs(min);
+			}
+			else {
+				y = abs(top) + abs(bottom);
+			}
+			//SetCursorPos(left + (right - left) / 2, bottom + (top - bottom) / 2);
+			SetCursorPos(left + (x / 2), bottom - (y / 2));
 		}
 
-		/* 作成したデスクトップと現在のスレッドを関連付ける */
-		SetThreadDesktop(hNewDesk);
 
-		/* 作成したデスクトップをアクティブにする */
-		SwitchDesktop(hNewDesk);
+		if (Input::GetInstance()->TriggerKey(DIK_5)) {
+			CreateTexBox();
+		}
 
-		/* メッセージの表示 */
-		MessageBox(NULL, L"Hello", L"DispNewDesktop", MB_OK);
 
-		/* 元の入力デスクトップをアクティブにする */
-		SwitchDesktop(hInputDesk);
-
-		/* 元のデスクトップと現在のスレッドを関連付ける */
-		SetThreadDesktop(hOrgDesk);
-
-		/* 作成したデスクトップの破棄 */
-		CloseDesktop(hNewDesk);
-
-		/* 入力デスクトップのクローズ */
-		CloseDesktop(hInputDesk);
-
-#pragma endregion
 		//MessageBox(NULL, L"ぷり", L"うんち.exe", MB_OK);
 
 		// マウス移動範囲の取得
@@ -223,10 +295,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		rc.top = 400;      // 左上隅のY座標
 		rc.right = 801;      // 右下隅のX座標
 		rc.bottom = 401;      // 右下隅のY座標
-		ClipCursor(&rc);
+		//ClipCursor(&rc);
 
 		// マウス移動範囲の解除
-		ClipCursor(NULL);
+		//ClipCursor(NULL);
+
+		//SetCursorPos(800 , -1000 );
 
 		//クリック確認用
 		if (mouse->PushMouse(MouseDIK::M_RIGHT))
