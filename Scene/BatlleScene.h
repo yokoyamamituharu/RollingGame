@@ -46,6 +46,7 @@ class BatlleScene
         // ゲームシーン用  
         //スプライト
         Sprite* spriteBG = nullptr;
+        Sprite* claerSprite = nullptr;
         //3Dオブジェクト
         FbxModel* fbxmodel = nullptr;
         FBXObject* fbxobject = nullptr;

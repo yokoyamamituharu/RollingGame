@@ -38,6 +38,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 	this->player = gameScene->GetPlayer();
 
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
+	claerSprite = Sprite::Create(2, { 100.0f,100.0f });
+
 
 	groundmodel = Model::Create("battlegrund");
 	ground = OBJobject::Create();
@@ -127,14 +129,21 @@ void BatlleScene::Draw()
 	ground->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
 
+	int aliveNum = 0;
 	for (int i = 0; i < 3; i++) {
 		if (alive[i] == true) {
 			enemys[i]->object->Draw();
+			aliveNum++;
 		}
 	}
+
+
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();
+	if (aliveNum == 0) {
+		claerSprite->Draw();
+	}
 	Sprite::PostDraw();
 }
