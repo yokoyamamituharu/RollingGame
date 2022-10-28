@@ -13,7 +13,9 @@
 #include "EnemyZako.h"
 #include "DefenseTower.h"
 #include "Enemy.h"
-
+#include "BatlleScene.h"
+class BattleScene;
+class SceneManeger;
 #include <vector>
 
 class GameScene
@@ -34,7 +36,7 @@ public:
     //初期化
 	void Initialize(DirectXCommon* dxCommon,Input* input, InputMouse* mouse,Camera* camera);
     //更新
-	void Update(int& sceneNo);
+	void Update(int& sceneNo, BatlleScene* batlleScene);
     //描画
 	void Draw();
 
@@ -65,7 +67,7 @@ private: // メンバ変数
     //タワー
     DefenseTower* defenseTower = nullptr;
     Bullet* bullet = nullptr;
-    Enemy* enemy1 = nullptr;
+    EnemyZako* enemy1 = nullptr;
     //お城
     Model* castleModel = nullptr;
     OBJobject *castle = nullptr;

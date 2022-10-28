@@ -1,4 +1,7 @@
 #include "GameScene.h"
+#include "BatlleScene.h"
+#include "SceneManager.h"
+
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
 using namespace DirectX;
@@ -94,9 +97,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
 	//敵の生成処理
-	enemy1 = new Enemy;
-	enemy1->Initialize("enemy");
-
+	enemy1 = new EnemyZako;
+	enemy1->Initialize(EnemyZako::FIELD_OUT, camera, { -50, EnemyZako::groundOutPos,0 });
+	enemy1->SetPlayer(player);
+	enemy1->object->SetRotation({ 0,90,0 });
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -105,7 +109,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 }
 
-void GameScene::Update(int& sceneNo)
+void GameScene::Update(int& sceneNo ,BatlleScene* batlleScene)
 {
 	//player->Update();
 	//カメラ操作
@@ -126,6 +130,17 @@ void GameScene::Update(int& sceneNo)
 	if (Input::GetInstance()->TriggerKey(DIK_0)) {
 		sceneNo = 2;
 	}
+
+
+	//std::list<std::unique_ptr<EnemyZako>>enemies1 = std::move(enemy1->GetEnemies());
+
+	//敵とプレイヤーのローリング攻撃の当たり判定
+	if (CubeCollision(enemy1->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+		//バトルシーンに行く処理
+		batlleScene->SetEnemies(enemy1->GetEnemies());
+		sceneNo = SceneManager::SCENE_BATTLE;
+	}
+
 
 
 	//3Dオブジェクト更新
@@ -152,8 +167,9 @@ void GameScene::Update(int& sceneNo)
 		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
 	camera->eye.y = 20;
 	camera->target = player->object->GetPosition();
-	//プレイヤーがジャンプした時視点だけ上に向くのを防止するための処理
+	//プレイヤーがジャンプした時視点だけ上に向くのを防止するための処理敵
 	//camera->target.y = player->graundheight;
+
 
 
 	//カメラの更新

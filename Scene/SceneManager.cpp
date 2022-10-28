@@ -7,7 +7,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse*
 	batlleScene = new BatlleScene;
 	batlleScene->Initialize(dxCommon, input, mouse, camera, gameScene);
 
-	sceneNo = BATTLESCENE;
+	sceneNo = SCENE_GAME;
 }
 
 void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
@@ -25,8 +25,9 @@ void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mou
 		batlleScene->Initialize(dxCommon, input, mouse, camera,gameScene);
 	}
 
-	if (sceneNo == GAMESCENE) {
-		gameScene->Update(sceneNo);
+	//シーンの更新
+	if (sceneNo == SCENE_GAME) {
+		gameScene->Update(sceneNo,batlleScene);
 	}
 	else {
 		batlleScene->Update();
@@ -35,7 +36,7 @@ void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mou
 
 void SceneManager::Draw()
 {
-	if (sceneNo ==GAMESCENE) {
+	if (sceneNo ==SCENE_GAME) {
 		gameScene->Draw();
 	}
 	else {

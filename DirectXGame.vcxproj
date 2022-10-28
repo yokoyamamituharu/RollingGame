@@ -256,6 +256,7 @@
     <ClInclude Include="Enemy\EnemyManager.h" />
     <ClInclude Include="Enemy\EnemyZako.h" />
     <ClInclude Include="Enemy\StrongZakoEnemy.h" />
+    <ClInclude Include="FPSLock.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputMouse.h" />
     <ClInclude Include="ObjectFBX\FbxLoader.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="Enemy\EnemyManager.cpp" />
     <ClCompile Include="Enemy\EnemyZako.cpp" />
     <ClCompile Include="Enemy\StrongZakoEnemy.cpp" />
+    <ClCompile Include="FPSLock.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\InputMouse.cpp" />
     <ClCompile Include="main.cpp" />

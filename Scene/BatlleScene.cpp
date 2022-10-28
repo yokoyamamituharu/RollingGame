@@ -1,3 +1,4 @@
+#include "GameScene.h"
 #include "BatlleScene.h"
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -50,22 +51,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 
 	enemymodel = Model::Create("enemy");
-	for (int i = 0; i < 6; i++) {
-		enemys[i] = new EnemyZako();
-		enemys[i]->Initialize(input, mouse, camera);
-		enemys[i]->object->SetScale({ 4.0f,4.0f,4.0f });
-		enemys[i]->object->SetRotation({ 0.0f,90.0f,0.0f });
-		alive[i] = true;
-		enemys[i]->SetPlayer(player);
-		enemys[i]->flag1 = true;
-	}
+	
 
-	enemys[0]->object->SetPosition({ 0.0f,-3.0f,0.0f });
-	enemys[1]->object->SetPosition({ 100.0f,-3.0f,50.0f });
-	enemys[2]->object->SetPosition({ -50.0f,-3.0f,100.0f });
-	enemys[3]->object->SetPosition({ 80.0f,-3.0f,200.0f });
-	enemys[4]->object->SetPosition({ -200.0f,-3.0f,100.0f });
-	enemys[5]->object->SetPosition({ 0.0f,-3.0f,50.0f });
 }
 
 void BatlleScene::Update()
@@ -101,40 +88,42 @@ void BatlleScene::Update()
 
 
 	//敵とプレイヤーのローリング攻撃の当たり判定
-	for (int i = 0; i < 3; i++) {
-		if (CubeCollision1(enemys[i]->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-			&& player->attackFlag == true&&alive[i] ==true) {
-			alive[i] = false;
-			//player->Res(true);
-		}
-	}
+	//for (std::unique_ptr<EnemyZako>&enemy : enemiesS) {
+	//	if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
+	//		&& player->attackFlag == true) {
+	//		//player->Res(true);
+	//	}
+	//}
 
 
 	camera->Update();
 	ground->Update();
 	//player->Res();
-	player->Update();	
-	for (int i = 0; i < 3; i++)
-	{
-		enemys[i]->Update();
+	player->Update();		
+
+	for (std::unique_ptr<EnemyZako>& enemy : enemiesS) {
+		enemy->SetPlayer(player);
+		enemy->Update();
+	}
+
+
+	//バトルシーンから脱出するシーン
+	if (Input::GetInstance()->TriggerKey(DIK_B)) {
+		
 	}
 }
 
 void BatlleScene::Draw()
 {
-	
-
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	player->object->Draw();
 	ground->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());
 
 	int aliveNum = 0;
-	for (int i = 0; i < 3; i++) {
-		if (alive[i] == true) {
-			enemys[i]->object->Draw();
-			aliveNum++;
-		}
+
+	for (std::unique_ptr<EnemyZako>&enemy : enemiesS) {
+		enemy->Draw();
 	}
 
 

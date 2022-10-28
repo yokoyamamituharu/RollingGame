@@ -13,7 +13,7 @@
 #include "EnemyZako.h"
 
 #include <vector>
-#include "GameScene.h"
+class GameScene;
 
 class BatlleScene
 {  
@@ -37,6 +37,10 @@ class BatlleScene
         //•`‰æ
         void Draw();
 
+        void SetEnemies(std::list<std::unique_ptr<EnemyZako>>&enemies) {
+            enemiesS = std::move(enemies);
+        }
+
     private: // ƒƒ“ƒo•Ï”
         DirectXCommon* dxCommon = nullptr;
         Input* input = nullptr;
@@ -59,7 +63,12 @@ class BatlleScene
 
         Model* enemymodel = nullptr;
 
-        EnemyZako* enemys[6] = { nullptr };
+        //EnemyZako* enemys[6] = { nullptr };
+
+        std::list<std::unique_ptr<EnemyZako>>enemiesS;
+
+        //
+        EnemyZako* parentEnemy = nullptr;
 
         bool alive[6];
         int time = 0;

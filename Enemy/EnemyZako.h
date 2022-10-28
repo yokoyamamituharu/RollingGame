@@ -4,6 +4,7 @@
 #include "InputMouse.h"
 #include <DirectXMath.h>
 #include "Player.h"
+#include "Enemy.h"
 class EnemyZako
 {
 private:
@@ -15,9 +16,26 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 	float Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2);
+
+
 public:
-	void Initialize(Input* input, InputMouse* mouse, Camera* camera);
+	enum FIELDLOCATION {
+		FIELD_NONE,
+		FIELD_OUT,
+		FIELD_IN
+	};
+
+
+	//コンストラクタ
+	EnemyZako();
+
+	//デストラクタ
+	~EnemyZako();
+
+	void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 });
 	void Update();
+	void Draw();
+
 	void MoveVector(DirectX::XMFLOAT3 vec)
 	{
 		object->SetPosition({
@@ -40,8 +58,6 @@ public:
 	}
 
 public:
-	void SetInput(Input* input) { this->input = input; }
-	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
 	//ターゲットに向かってまっすぐ行く処理
@@ -53,16 +69,15 @@ public:
 	//プレイヤーをまわりこむように移動する処理
 	void Mawarikomi(Player* player);
 
+	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
+
 	float num = 0;
 
 public:
 	OBJobject* object = nullptr;
 
-	bool flag1 = false;
 private:
 	Model* enemyModel = nullptr;
-	Input* input;
-	InputMouse* mouse;
 
 	Camera* camera;
 
@@ -100,7 +115,7 @@ private:
 	bool tossinFlag = false;
 
 	//敵の行動させる/させないフラグ
-	int actionFlag = 1;
+	int isAction = 1;
 
 	int moveTime = 0;
 	bool attackFlag = false;
@@ -111,4 +126,13 @@ private:
 	XMFLOAT3 rollPoint;
 
 	int abaramoveTime = 0;
+
+	std::list<std::unique_ptr<EnemyZako>>enemies;
+
+	int isFiled = FIELD_NONE;	//1:外シーン、2:中シーン
+
+public:
+	//ざこてきの地面となるの座標
+	static const float groundOutPos;
+	static const float groundInPos;
 };

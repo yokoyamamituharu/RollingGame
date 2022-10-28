@@ -9,9 +9,9 @@ class SceneManager
 public:
 	enum SCENE
 	{
-		NONESCENE,
-		GAMESCENE,
-		BATTLESCENE
+		SCENE_NONE,
+		SCENE_GAME,
+		SCENE_BATTLE
 	};
 
 public:
@@ -22,6 +22,6 @@ private:
 	GameScene* gameScene = nullptr;
 	BatlleScene* batlleScene = nullptr;
 
-	int sceneNo = NONESCENE;
+	int sceneNo = SCENE_NONE;
 };
 

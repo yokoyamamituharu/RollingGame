@@ -265,6 +265,9 @@ bool OBJobject::Initialize()
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1));
 
+	//オブジェクトの初期位置
+	position = { 0,0,0 };
+
 	return true;
 }
 
