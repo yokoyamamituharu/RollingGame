@@ -190,11 +190,17 @@ void Player::Res(bool flag)
 
 	//ã¸ˆ—
 	if (resFlag1 == true) {
-		numcase += 0.01f;
-		float un = Ease(numcase,1.6);
-		object->SetPosY({ posY + max * un });
-		object->SetPosX({ posY + max * un });
-		if (numcase >= 1) {
+
+		float un = Ease(timer, 1.6);
+		float un2 = Ease(timer, 1.6);
+		float xnumm = object->GetPosition().x - un2;
+		timer += 0.0625f;
+				
+		object->SetPosY({ posY + riseValue * un });
+		object->SetPosX({ xnumm + backValue * un2 });
+
+
+		if (timer >= 1) {
 			resFlag1 = false;
 			resFlag2 = true;
 		}
@@ -204,18 +210,17 @@ void Player::Res(bool flag)
 	if (flag == 1 && resFlag1 == false) {
 		posY = object->GetPosition().y;
 		resFlag1 = true;
-		numcase = 0;
+		timer = 0;
 		rollingSpeed = 0;
 		xvec = 4;
 	}
 }
 
-float Player::Ease(float x,float s)
+float Player::Ease(float x, float s)
 {
-	
 	if (x < 1.0f) {
-		double num = pow(1 - x, s);		 
-		 double num2 = 1 - num;
+		double num = pow(1 - x, s);
+		double num2 = 1 - num;
 		return num2;
 	}
 	else
@@ -223,8 +228,6 @@ float Player::Ease(float x,float s)
 		//x‚ª1‚ð’´‚¦‚½’l‚¾‚Æpow‚Ì•Ô‚è’l‚ª‚¨‚©‚µ‚­‚È‚é‚Ì‚Å
 		return 1.0f;
 	}
-		
-	
 }
 
 

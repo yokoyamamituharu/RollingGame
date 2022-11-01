@@ -30,7 +30,7 @@ void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mou
 		gameScene->Update(sceneNo,batlleScene);
 	}
 	else {
-		batlleScene->Update();
+		batlleScene->Update(sceneNo, gameScene);
 	}
 }
 

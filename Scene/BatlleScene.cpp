@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "BatlleScene.h"
+#include "SceneManager.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -55,7 +56,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 }
 
-void BatlleScene::Update()
+void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 {
 	//カメラ操作
 	if (input->PushKey(DIK_RIGHT)) {
@@ -105,7 +106,7 @@ void BatlleScene::Update()
 	player->Update();		
 	player->Res();
 
-	for (std::unique_ptr<EnemyZako>& enemy : enemiesS) {
+	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 		enemy->SetPlayer(player);
 		enemy->Update();
 	}
@@ -113,7 +114,8 @@ void BatlleScene::Update()
 
 	//バトルシーンから脱出するシーン
 	if (Input::GetInstance()->TriggerKey(DIK_B)) {
-		
+		gameScene->SetEnemy(enemy1);
+		sceneNo = SceneManager::SCENE_GAME;
 	}
 }
 
@@ -126,7 +128,7 @@ void BatlleScene::Draw()
 
 	int aliveNum = 0;
 
-	for (std::unique_ptr<EnemyZako>&enemy : enemiesS) {
+	for (std::unique_ptr<EnemyZako>&enemy : enemy1->GetEnemies()) {
 		enemy->Draw();
 	}
 

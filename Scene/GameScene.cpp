@@ -97,10 +97,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
 	//敵の生成処理
-	enemy1 = new EnemyZako;
+	std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();	
 	enemy1->Initialize(EnemyZako::FIELD_OUT, camera, { -50, EnemyZako::groundOutPos,0 });
 	enemy1->SetPlayer(player);
 	enemy1->object->SetRotation({ 0,90,0 });
+	enemiesG.push_back(std::move(enemy1));
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -134,11 +135,15 @@ void GameScene::Update(int& sceneNo ,BatlleScene* batlleScene)
 
 	//std::list<std::unique_ptr<EnemyZako>>enemies1 = std::move(enemy1->GetEnemies());
 
-	//敵とプレイヤーのローリング攻撃の当たり判定
-	if (CubeCollision(enemy1->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-		//バトルシーンに行く処理
-		batlleScene->SetEnemies(enemy1->GetEnemies());
-		sceneNo = SceneManager::SCENE_BATTLE;
+	//敵とプレイヤーの当たり判定
+	for (std::unique_ptr<EnemyZako>& enemy : enemiesG) {
+		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+			//バトルシーンに行く処理
+			batlleScene->SetEnemies(enemy);
+			enemiesG.remove(enemy);
+			sceneNo = SceneManager::SCENE_BATTLE;
+			break;
+		}
 	}
 
 
@@ -149,7 +154,9 @@ void GameScene::Update(int& sceneNo ,BatlleScene* batlleScene)
 	ground->Update();
 	defenseTower->Update(player);
 	bullet->Update();
-	enemy1->Update();
+	for (std::unique_ptr<EnemyZako>& enemy : enemiesG) {
+		enemy->Update();
+	}	
 	castle->Update();
 
 	if (cameraToMouse == 1) {
@@ -189,7 +196,10 @@ void GameScene::Draw()
 	ground->Draw();
 	defenseTower->Draw();
 	bullet->Draw();
-	enemy1->Draw();
+
+	for (std::unique_ptr<EnemyZako>& enemy : enemiesG) {
+		enemy->Draw();
+	}
 	castle->Draw();
 
 	OBJobject::PostDraw();

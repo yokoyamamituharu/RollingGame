@@ -72,10 +72,12 @@ private:
 	bool resFlag3 = false;
 	int resTimer = 0;
 
-	float max = 20;
+	float riseValue = 20;
 	float posY = 0;
-	float numcase = 0;
+	float timer = 0;
 
+	float backValue = 15;
 	float xvec = 0;
+
 };
 

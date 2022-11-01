@@ -33,12 +33,12 @@ class BatlleScene
         //‰Šú‰»
         void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera,GameScene* gameScene);
         //XV
-        void Update();
+        void Update(int& sceneNo, GameScene* gameScene);
         //•`‰æ
         void Draw();
 
-        void SetEnemies(std::list<std::unique_ptr<EnemyZako>>&enemies) {
-            enemiesS = std::move(enemies);
+        void SetEnemies(std::unique_ptr<EnemyZako>&enemy) {
+            enemy1 = std::move(enemy);
         }
 
     private: // ƒƒ“ƒo•Ï”
@@ -65,7 +65,7 @@ class BatlleScene
 
         //EnemyZako* enemys[6] = { nullptr };
 
-        std::list<std::unique_ptr<EnemyZako>>enemiesS;
+        std::unique_ptr<EnemyZako>enemy1;
 
         //
         EnemyZako* parentEnemy = nullptr;
