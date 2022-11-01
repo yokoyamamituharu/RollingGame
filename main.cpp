@@ -39,6 +39,8 @@ using namespace DirectX;
 
 #include "FPSLock.h"
 
+#include "ParticleManager.h"
+
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -74,6 +76,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
 	FBXObject::StaticInitialize(dxCommon->GetDev(), camera);
 
+	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+
 	//-----変数宣言-----//
 	//ポストエフェクトの初期化
 	PostEffect* postEffect = nullptr;
@@ -88,8 +92,53 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 	FPSLock fpsLock;
+
+	ParticleManager* particleMan = ParticleManager::Create();
+	
+
 	while (true)  // ゲームループ
 	{
+		HWND a = GetActiveWindow();
+		if (winApp->GetHwnd() != a) {
+			int num = 0;
+		}
+
+		if (input->TriggerKey(DIK_SPACE)) {
+			//パーティクルの追加
+			for (int i = 0; i < 8; i++)
+			{
+				//X,Y,Z全てで[-5.0f,-5.0f]でランダムに分布
+				const float rnd_pos = 10.0f;
+				XMFLOAT3 pos{};
+				//pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				//pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				//pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+				pos.x = 0;
+				pos.y = 0;
+				pos.z = 0;
+				//X,Y,Z全て[-0.0f,+0.05f]でランダムに分布
+				const float rnd_vel = 0.1f;
+				XMFLOAT3 vel{};
+				//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+				//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+				//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+				int rndVel = 3.0f;
+				vel.x = rand() % (rndVel * 2) - rndVel;
+				vel.y = rand() % (rndVel * 2) - rndVel;
+				vel.z = rand() % (rndVel * 2) - rndVel;
+				//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+				XMFLOAT3 acc{};
+				const float rnd_acc = 0.001f;
+				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+				//追加
+				particleMan->Add(60, pos, vel, acc, 10.0f, 5.0f);
+			}
+		}
+
+
+		particleMan->Update();
+
 		//fpsLock.Update();
 
 		// ブロック内はページ右側を参照
@@ -107,82 +156,56 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 			else { isSetMousePoint = true; }
 		}
 
-	
-		HWND hWnd;
-		RECT rect;
-		hWnd = GetDesktopWindow();
-		GetWindowRect(winApp->GetHwnd(), &rect);
 
-		float left = rect.left;
-		float right = rect.right;
-		float top = rect.top;
-		float bottom = rect.bottom;
 
-		if (isSetMousePoint) {
-			float x, y;
-			if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
-				float high, min;
-				if (abs(left) > abs(right)) {
-					high = left;
-					min = right;
+		//ウィンドウがアクティブ状態なら処理
+		if (winApp->GetHwnd() == GetActiveWindow())
+		{
+			//マウスの座標固定処理
+			RECT rect;
+			GetWindowRect(winApp->GetHwnd(), &rect);
+			float left = rect.left;
+			float right = rect.right;
+			float top = rect.top;
+			float bottom = rect.bottom;
+
+			if (isSetMousePoint) {
+				float x, y;
+				if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
+					float high, min;
+					if (abs(left) > abs(right)) {
+						high = left;
+						min = right;
+					}
+					else {
+						high = right;
+						min = left;
+					}
+					x = abs(high) - abs(min);
 				}
 				else {
-					high = right;
-					min = left;
+					x = abs(left) + abs(right);
 				}
-				x = abs(high) - abs(min);
-			}
-			else {
-				x = abs(left) + abs(right);
-			}
 
-			if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
-				float high, min;
-				if (abs(top) > abs(bottom)) {
-					high = top;
-					min = bottom;
+				if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
+					float high, min;
+					if (abs(top) > abs(bottom)) {
+						high = top;
+						min = bottom;
+					}
+					else {
+						high = bottom;
+						min = top;
+					}
+					y = abs(high) - abs(min);
 				}
 				else {
-					high = bottom;
-					min = top;
+					y = abs(top) + abs(bottom);
 				}
-				y = abs(high) - abs(min);
+				SetCursorPos(left + (x / 2), bottom - (y / 2));
 			}
-			else {
-				y = abs(top) + abs(bottom);
-			}
-			//SetCursorPos(left + (right - left) / 2, bottom + (top - bottom) / 2);
-			SetCursorPos(left + (x / 2), bottom - (y / 2));
 		}
 
-
-		//MessageBox(NULL, L"ぷり", L"うんち.exe", MB_OK);
-
-		// マウス移動範囲の取得
-
-
-		// マウス移動範囲の設定
-		RECT rc;
-		rc.left = 800;      // 左上隅のX座標
-		rc.top = 400;      // 左上隅のY座標
-		rc.right = 801;      // 右下隅のX座標
-		rc.bottom = 401;      // 右下隅のY座標
-		//ClipCursor(&rc);
-
-		// マウス移動範囲の解除
-		//ClipCursor(NULL);
-
-		//SetCursorPos(800 , -1000 );
-
-		//クリック確認用
-		if (mouse->PushMouse(MouseDIK::M_RIGHT))
-		{
-			int a = 0;
-		}
-		if (mouse->PushMouse(MouseDIK::M_LEFT))
-		{
-			int a = 0;
-		}
 
 
 		//シーンの更新
@@ -190,12 +213,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 		//-----描画処理-----//
 		//ポストエフェクトの準備
-		//postEffect->PreDrawScene(dxCommon->GetCmdList());
-		//postEffect->PosDrawScene(dxCommon->GetCmdList());
+		postEffect->PreDrawScene(dxCommon->GetCmdList());
+		postEffect->PosDrawScene(dxCommon->GetCmdList());
 
 		dxCommon->PreDraw();
+
+		ParticleManager::PreDraw(dxCommon->GetCmdList());
+		particleMan->Draw();
+		ParticleManager::PostDraw();
+
 		//postEffect->Draw(dxCommon->GetCmdList());		
 		sceneManager->Draw();
+
 		dxCommon->PostDraw();
 	}
 

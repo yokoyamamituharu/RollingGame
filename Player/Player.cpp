@@ -191,8 +191,9 @@ void Player::Res(bool flag)
 	//上昇処理
 	if (resFlag1 == true) {
 		numcase += 0.01f;
-		float un = Ease(numcase);
+		float un = Ease(numcase,1.6);
 		object->SetPosY({ posY + max * un });
+		object->SetPosX({ posY + max * un });
 		if (numcase >= 1) {
 			resFlag1 = false;
 			resFlag2 = true;
@@ -205,19 +206,25 @@ void Player::Res(bool flag)
 		resFlag1 = true;
 		numcase = 0;
 		rollingSpeed = 0;
-
+		xvec = 4;
 	}
 }
 
-float Player::Ease(float x)
+float Player::Ease(float x,float s)
 {
-	double num = pow(1 - x, 1.6);
-	double num2 = 1 - num;
-	if (x >= 1.0f) {
-		//xが1を超えた値だとpowの返り値がおかしくなるので
-		num2= 1;
+	
+	if (x < 1.0f) {
+		double num = pow(1 - x, s);		 
+		 double num2 = 1 - num;
+		return num2;
 	}
-	return num2;
+	else
+	{
+		//xが1を超えた値だとpowの返り値がおかしくなるので
+		return 1.0f;
+	}
+		
+	
 }
 
 

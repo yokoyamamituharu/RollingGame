@@ -95,11 +95,15 @@ void BatlleScene::Update()
 	//	}
 	//}
 
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+		player->Res(true);
+	}
 
 	camera->Update();
 	ground->Update();
 	//player->Res();
 	player->Update();		
+	player->Res();
 
 	for (std::unique_ptr<EnemyZako>& enemy : enemiesS) {
 		enemy->SetPlayer(player);

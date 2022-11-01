@@ -42,7 +42,7 @@ public:
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
-	float Ease(float x);
+	float Ease(float x,float s);
 
 public:
 	OBJobject* object = nullptr;
@@ -75,5 +75,7 @@ private:
 	float max = 20;
 	float posY = 0;
 	float numcase = 0;
+
+	float xvec = 0;
 };
 
