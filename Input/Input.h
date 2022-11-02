@@ -18,6 +18,8 @@ private: // エイリアス
 public://
 	static Input* GetInstance();
 
+	void Finalize();
+
 public: // メンバ関数
 	/// <summary>
 	/// 初期化

@@ -175,17 +175,17 @@ void Player::Move()
 
 void Player::Res(bool flag)
 {
-
-
 	//‰º~ˆ—
 	if (resFlag2 == true) {
-		//num -= 0.5;
-		//object->SetPosY({ object->GetPosition().y - 0.5f });
-		//if (object->GetPosition().y < -6) {
-		//	resFlag2 = false;
-		//	object->SetPosY(-6.0f);
-		//	num = 0;
-		//}
+		if (gravity <= 2.0f) {
+			gravity += 0.15f;
+		}		
+		object->SetPosY({ object->GetPosition().y - gravity });
+		if (object->GetPosition().y <= grundHeight) {
+			resFlag2 = false;
+			gravity = 0.0f;
+			object->SetPosY(-6.0f);
+		}
 	}
 
 	//ã¸ˆ—

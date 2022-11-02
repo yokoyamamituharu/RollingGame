@@ -41,6 +41,9 @@ using namespace DirectX;
 
 #include "ParticleManager.h"
 
+#include "SafeDelete.h"
+#include "Otamesi.h"
+
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -235,10 +238,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DirectX解放
 	delete dxCommon;
 	//入力の解放
-	//delete input;
+	delete mouse;
+	//
+	//カメラの開放
+	delete camera;
 	//シーンの開放
 	delete sceneManager;
+	//ポストエフェクトの開放
+	delete postEffect;
+	//パーティクルマネージャーの開放
+	delete particleMan;
 	//FBXの解放処理
 	FbxLoader::GetInstance()->Finalize();
+
+	//input->Finalize();
+
 	return 0;
 }

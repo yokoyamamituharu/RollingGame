@@ -9,12 +9,21 @@ Input* Input::GetInstance()
 	return &instance;
 }
 
+
+
+void Input::Finalize()
+{
+	devkeyboard->Unacquire();
+	devkeyboard->Release();
+	dinput->Release();
+}
+
 bool Input::Initialize(HINSTANCE hInstance, HWND hwnd)
 {
 	HRESULT result = S_FALSE;
 
 	// DirectInputオブジェクトの生成	
-	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&dinput, nullptr);
+	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, nullptr);
 	if (FAILED(result)) {
 		assert(0);
 		return result;

@@ -49,6 +49,8 @@ public:
 
 	bool attackFlag = false;
 
+	float grundHeight = -6.0f;
+
 private:
 	Input* input;
 	InputMouse* mouse;
@@ -78,6 +80,8 @@ private:
 
 	float backValue = 15;
 	float xvec = 0;
+
+	float gravity = 0.0f;
 
 };
 
