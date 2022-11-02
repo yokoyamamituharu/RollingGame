@@ -11,6 +11,20 @@
 using namespace DirectX;
 using DirectX::operator+;
 
+//XMFLOAT3のオーバーロード
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
+
+const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
+
+const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
+
+const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const float& scalar);
+
+const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float& scalar);
+
+
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>

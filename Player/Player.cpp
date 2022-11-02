@@ -191,11 +191,12 @@ void Player::Res(bool flag)
 	//ã¸ˆ—
 	if (resFlag1 == true) {
 
-		float un = Ease(timer, 1.6);
 		float un2 = Ease(timer, 1.6);
-		float xnumm = object->GetPosition().x - un2;
+		float xnumm = object->GetPosition().x - backValue * un2;
 		timer += 0.0625f;
-				
+		float un = Ease(timer, 1.6);
+		un2 = Ease(timer, 1.6);
+
 		object->SetPosY({ posY + riseValue * un });
 		object->SetPosX({ xnumm + backValue * un2 });
 

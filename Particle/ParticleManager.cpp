@@ -1,6 +1,7 @@
 ﻿#include "ParticleManager.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
+#include "OBJObject.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -35,16 +36,6 @@ ParticleManager::VertexPos ParticleManager::vertices[vertexCount];
 
 XMMATRIX ParticleManager::matBillboard = XMMatrixIdentity();
 XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
-
-//XMFLOAT3同士の加算処理
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3 &lhs, const DirectX::XMFLOAT3 &rhs)
-{
-	XMFLOAT3 result;
-	result.x = lhs.x + rhs.x;
-	result.y = lhs.y + rhs.y;
-	result.z = lhs.z + rhs.z;
-	return result;
-}
 
 bool ParticleManager::StaticInitialize(ID3D12Device *device, int window_width, int window_height)
 {

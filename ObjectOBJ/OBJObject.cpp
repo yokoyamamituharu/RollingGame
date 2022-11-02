@@ -25,6 +25,60 @@ ComPtr<ID3D12PipelineState> OBJobject::pipelinestate;
 
 Camera* OBJobject::camera = nullptr;
 
+//XMFLOAT3同士の加算処理
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x + rhs.x;
+	result.y = lhs.y + rhs.y;
+	result.z = lhs.z + rhs.z;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x - rhs.x;
+	result.y = lhs.y - rhs.y;
+	result.z = lhs.z - rhs.z;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x * rhs.x;
+	result.y = lhs.y * rhs.y;
+	result.z = lhs.z * rhs.z;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x / rhs.x;
+	result.y = lhs.y / rhs.y;
+	result.z = lhs.z / rhs.z;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const float& scalar)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x * scalar;
+	result.y = lhs.y * scalar;
+	result.z = lhs.z * scalar;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float& scalar)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x / scalar;
+	result.y = lhs.y / scalar;
+	result.z = lhs.z / scalar;
+	return result;
+}
 
 bool OBJobject::StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera)
 {
