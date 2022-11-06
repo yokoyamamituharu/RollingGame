@@ -15,11 +15,11 @@ public:
 	void Draw();
 	bool IsDead() { return dead; }
 
-private:
-
+public:
+OBJobject* object = nullptr;
 private:
 	//Model* model = nullptr;
-	OBJobject* object = nullptr;
+	
 
 	//’…’e–Ú•W
 	XMFLOAT3 target;

@@ -2,7 +2,7 @@
 #include "OBJObject.h"
 #include "Bullet.h"
 #include "Player.h"
-
+#include "EnemyZako.h"
 class DefenseTower
 {
 	enum TowerType {
@@ -16,7 +16,7 @@ public:
 	static DefenseTower* Create();
 
 public:
-	void Update(const Player* player);
+	void Update(std::list<std::shared_ptr<EnemyZako>>& enemies);
 	void Draw();
 	OBJobject* GetOBJObject() { return object; }
 
@@ -34,5 +34,7 @@ private:
 
 	const int maxInterval = 10;
 	int interval = maxInterval;
+
+	std::weak_ptr<EnemyZako> targetEnemy;
 };
 

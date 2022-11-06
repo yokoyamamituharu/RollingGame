@@ -97,7 +97,7 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 	//}
 
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		player->Res(true);
+		//player->Res(true);
 	}
 
 	camera->Update();

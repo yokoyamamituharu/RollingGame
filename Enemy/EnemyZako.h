@@ -32,7 +32,9 @@ public:
 	//デストラクタ
 	~EnemyZako();
 
-	void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 });
+	void Damege(int attackPower) { hp -= attackPower; }
+
+	void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false, XMFLOAT3 targetPos = { 0,0,0 });
 	void Update();
 	void Draw();
 
@@ -57,6 +59,13 @@ public:
 		this->player = player;
 	}
 
+	//敵を行動させるかさせないか
+	static void Action() {		
+		if (Input::GetInstance()->TriggerKey(DIK_E)) {
+			isAction *= -1;
+		}
+	}
+
 public:
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -75,13 +84,15 @@ public:
 
 public:
 	OBJobject* object = nullptr;
+	float GetHp() { return hp; }
+
+	static void EnemyCreateModel();
 
 private:
-	Model* enemyModel = nullptr;
+	static Model* enemyModel;
 
 	Camera* camera;
 
-	XMFLOAT2 targetpos;
 	bool atattckFlag = false;
 
 
@@ -93,7 +104,10 @@ private:
 	XMFLOAT3 enemypos1;
 
 	//XMFLOAT3 oldPlayerPos;
-	XMFLOAT3 targetPos;
+	XMVECTOR targetPos;
+	//ターゲットに進む方向
+	XMVECTOR targetVec;
+	//XMFLOAT3 targetPos;
 
 	int waitTime = 0;
 	int time = 0;
@@ -115,7 +129,7 @@ private:
 	bool tossinFlag = false;
 
 	//敵の行動させる/させないフラグ
-	int isAction = 1;
+	static int isAction;
 
 	int moveTime = 0;
 	bool attackFlag = false;
@@ -130,6 +144,15 @@ private:
 	std::list<std::unique_ptr<EnemyZako>>enemies;
 
 	int isFiled = FIELD_NONE;	//1:外シーン、2:中シーン
+	bool isTarget = false;	//目的地が生成した時に設定されたか
+
+
+
+	float maxHp = 100;
+	float hp = maxHp;
+
+	float scale = 1;
+	XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
 
 public:
 	//ざこてきの地面となるの座標

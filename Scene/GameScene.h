@@ -40,7 +40,7 @@ public:
 	//•`‰æ
 	void Draw();
 
-	void SetEnemy(std::unique_ptr<EnemyZako>& enemy) {
+	void SetEnemy(std::shared_ptr<EnemyZako>& enemy) {
 		enemiesG.push_back(std::move(enemy));
 	}
 
@@ -76,12 +76,21 @@ private: // ƒƒ“ƒo•Ï”
 	Model* castleModel = nullptr;
 	OBJobject* castle = nullptr;
 
+	//‘ƒŒŠ
+	Model* suanaModel = nullptr;
+	OBJobject* suana = nullptr;
+	OBJobject* suana2 = nullptr;
+	//•Ç
+	Model* kabeModel = nullptr;
+	OBJobject* kabe = nullptr;
+	OBJobject* kabe2 = nullptr;
+
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;
 	int cameraToMouse = 1;
 
-	std::list<std::unique_ptr<EnemyZako>>enemiesG;
+	std::list<std::shared_ptr<EnemyZako>>enemiesG;
 
 };
 

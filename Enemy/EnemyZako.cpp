@@ -6,6 +6,8 @@ using namespace DirectX;
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -3.0f;
 const float EnemyZako::groundOutPos = -3.0f;
+int EnemyZako::isAction = 1;
+Model* EnemyZako::enemyModel = nullptr;
 
 float EnemyZako::Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2)
 {
@@ -23,12 +25,14 @@ EnemyZako::~EnemyZako()
 {
 }
 
-void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos)
+void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos)
 {
 	this->isFiled = filedFlag;
 	this->camera = camera;
-	//敵用モデルを読み込み
-	enemyModel = Model::Create("enemy");
+	this->isTarget = isTarget;
+	this->targetPos.m128_f32[0] = targetPos.x;
+	this->targetPos.m128_f32[1] = targetPos.y;
+	this->targetPos.m128_f32[2] = targetPos.z;	
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(enemyModel);
@@ -58,16 +62,41 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos)
 		//サイズのセット
 		object->SetScale({ 4.0f,4.0f, 4.0f });
 	}
+
+	if (isTarget == true) {
+		//移動する方向を計算する
+		XMVECTOR pos1;
+		pos1.m128_f32[0] = object->GetPosition().x;
+		pos1.m128_f32[1] = object->GetPosition().y;
+		pos1.m128_f32[2] = object->GetPosition().z;
+		targetVec = pos1 - this->targetPos;
+		targetVec = XMVector3Normalize(targetVec);
+		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+	}
 }
 
 void EnemyZako::Update()
 {
-	//敵を行動させるかさせないか
-	if (Input::GetInstance()->TriggerKey(DIK_E)) {
-		isAction *= -1;
+	scale = hp / maxHp;
+	if (scale <= 0) {
+		scale = 1;
+		object->SetRotation({ 180,90,0 });
 	}
+	object->SetScale(maxScale * scale);
 
-	if (isFiled == FIELD_IN) {
+
+	if (isFiled == FIELD_OUT && isAction > 0) {
+		if (isTarget == true) {
+			XMVECTOR pos;
+			pos.m128_f32[0] = object->GetPosition().x;
+			pos.m128_f32[1] = object->GetPosition().y;
+			pos.m128_f32[2] = object->GetPosition().z;
+			//突進処理
+			pos -= targetVec * 1;
+			object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
+		}
+	}
+	else if (isFiled == FIELD_IN) {
 
 		Direction(player);
 
@@ -232,5 +261,11 @@ void EnemyZako::Mawarikomi(Player* player)
 	float z = object->GetPosition().z + num;
 
 	object->SetPosition({ x, y, z });
+}
+
+void EnemyZako::EnemyCreateModel()
+{
+	//敵用モデルを読み込み
+	enemyModel = Model::Create("enemy");
 }
 

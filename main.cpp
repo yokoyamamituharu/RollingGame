@@ -41,8 +41,8 @@ using namespace DirectX;
 
 #include "ParticleManager.h"
 
-#include "SafeDelete.h"
-#include "Otamesi.h"
+//#include "SafeDelete.h"
+//#include "Otamesi.h"
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

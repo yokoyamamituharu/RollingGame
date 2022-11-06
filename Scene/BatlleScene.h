@@ -37,7 +37,7 @@ class BatlleScene
         //•`‰æ
         void Draw();
 
-        void SetEnemies(std::unique_ptr<EnemyZako>&enemy) {
+        void SetEnemies(std::shared_ptr<EnemyZako>&enemy) {
             enemy1 = std::move(enemy);
         }
 
@@ -65,7 +65,7 @@ class BatlleScene
 
         //EnemyZako* enemys[6] = { nullptr };
 
-        std::unique_ptr<EnemyZako>enemy1;
+        std::shared_ptr<EnemyZako>enemy1;
 
         //
         EnemyZako* parentEnemy = nullptr;
