@@ -15,10 +15,12 @@ private:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-	float Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2);
+	
 
 
 public:
+	float Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2);
+
 	enum FIELDLOCATION {
 		FIELD_NONE,
 		FIELD_OUT,
@@ -34,8 +36,8 @@ public:
 
 	void Damege(int attackPower) { hp -= attackPower; }
 
-	void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false, XMFLOAT3 targetPos = { 0,0,0 });
-	void Update();
+	virtual void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false, XMFLOAT3 targetPos = { 0,0,0 });
+	virtual void Update();
 	void Draw();
 
 	void MoveVector(DirectX::XMFLOAT3 vec)
@@ -88,7 +90,7 @@ public:
 
 	static void EnemyCreateModel();
 
-private:
+protected:
 	static Model* enemyModel;
 
 	Camera* camera;
@@ -152,7 +154,7 @@ private:
 	float hp = maxHp;
 
 	float scale = 1;
-	XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
+	 XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
 
 public:
 	//Ç¥Ç±ÇƒÇ´ÇÃínñ Ç∆Ç»ÇÈÇÃç¿ïW

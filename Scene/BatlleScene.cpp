@@ -72,6 +72,8 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
 	}
 
+	EnemyZako::Action();
+
 	XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };
@@ -89,12 +91,13 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 
 
 	//敵とプレイヤーのローリング攻撃の当たり判定
-	//for (std::unique_ptr<EnemyZako>&enemy : enemiesS) {
-	//	if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-	//		&& player->attackFlag == true) {
-	//		//player->Res(true);
-	//	}
-	//}
+	for (std::unique_ptr<EnemyZako>&enemy : enemy1->GetEnemies()) {
+		if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
+			&& player->attackFlag == true) {
+
+			//player->Res(true);
+		}
+	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		//player->Res(true);
@@ -130,6 +133,7 @@ void BatlleScene::Draw()
 
 	for (std::unique_ptr<EnemyZako>&enemy : enemy1->GetEnemies()) {
 		enemy->Draw();
+		aliveNum++;
 	}
 
 

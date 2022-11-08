@@ -2,6 +2,7 @@
 #include "BatlleScene.h"
 #include "SceneManager.h"
 #include "StrongZakoEnemy.h"
+#include "/K020G1196/RollingGame_ryuunen/tuyoEnemy.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -62,6 +63,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	Bullet::StaticInitialize();
 
 	EnemyZako::EnemyCreateModel();
+
+	StrongZakoEnemy::CreateStrongEnemyModel();
 
 	//ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
 	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
