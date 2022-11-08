@@ -73,6 +73,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	castleModel = Model::Create("castle");
 	suanaModel = Model::Create("suana");
 	kabeModel = Model::Create("kabe");
+	tenqModel = Model::Create("tenQ");
 
 	//3Dオブジェクトの生成
 	fbxobject = new FBXObject;
@@ -120,6 +121,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
 	kabe2->SetRotation({ 0,180,0 });
+
+	tenQ = OBJobject::Create();
+	tenQ->SetModel(tenqModel);
+	tenQ->SetScale({ 5,5,5 });
 
 	//プレイヤーの生成処理
 	player = new Player();
@@ -170,7 +175,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//巣穴１から敵を生成
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, suana->GetPosition(), true, suana->GetPosition() + XMFLOAT3{0, 0, -50});
+		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, suana->GetPosition(), true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
 		enemiesG.push_back(std::move(newEnemy));
 	}
 
@@ -222,6 +227,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	kabe->Update();
 	kabe2->Update();
+	tenQ->Update();
 
 	if (cameraToMouse == 1) {
 		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
@@ -269,6 +275,7 @@ void GameScene::Draw()
 	suana2->Draw();
 	kabe->Draw();
 	kabe2->Draw();
+	tenQ->Draw();
 
 	OBJobject::PostDraw();
 

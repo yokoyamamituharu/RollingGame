@@ -23,6 +23,9 @@ private:
 	//パイプライン生成
 	void CreateGraphicsPipeLineState();
 
+	void LoadPsShader(const wchar_t* name, ComPtr<ID3DBlob>& psBlob);
+
+	void LoadVsShader(const wchar_t* name, ComPtr<ID3DBlob>& vsBlob);
 
 private://静的メンバ変数
 	//画面クリアカラー

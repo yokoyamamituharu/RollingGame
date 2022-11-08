@@ -8,7 +8,7 @@
 using namespace DirectX;
 
 //静的メンバ変数の実体
-const float PostEffect::clearColor[4] = { 0.25f,0.5f,0.11f,0.0f };
+const float PostEffect::clearColor[4] = { 0.0f,0.0f,0.00f,0.0f };
 
 
 PostEffect::PostEffect()
@@ -285,129 +285,22 @@ void PostEffect::CreateGraphicsPipeLineState()
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 #pragma region ADS合成
-	// 頂点シェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/PostEffectTestVS_NONE.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&vsBlob[0], &errorBlob);
-
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		assert(0);
-	}
-
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/PostEffectTestPS_NONE.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob[0], &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		assert(0);
-	}
+	LoadVsShader(L"Resources/shaders/PostEffectTestVS_NONE.hlsl", vsBlob[0]);
+	LoadPsShader(L"Resources/shaders/PostEffectTestPS_NONE.hlsl", psBlob[0]);
+	
 #pragma endregion
 
 
 #pragma region ガウシアンブラー
-	// 頂点シェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/PostEffectTestVS_GAUSSIAN.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&vsBlob[1], &errorBlob);
+	LoadVsShader(L"Resources/shaders/PostEffectTestVS_GAUSSIAN.hlsl", vsBlob[1]);
+	LoadPsShader(L"Resources/shaders/PostEffectTestPS_GAUSSIAN.hlsl", psBlob[1]);
 
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		assert(0);
-	}
-
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/PostEffectTestPS_GAUSSIAN.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob[1], &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		assert(0);
-	}
 #pragma endregion
 
 #pragma region モザイク
 	vsBlob[2] = vsBlob[1];
+	LoadPsShader(L"Resources/shaders/PostEffectTestPS_MOZAIKU.hlsl", psBlob[2]);
 
-	// ピクセルシェーダの読み込みとコンパイル
-	result = D3DCompileFromFile(
-		L"Resources/shaders/PostEffectTestPS_MOZAIKU.hlsl",	// シェーダファイル名
-		nullptr,
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-		0,
-		&psBlob[2], &errorBlob);
-	if (FAILED(result)) {
-		// errorBlobからエラー内容をstring型にコピー
-		std::string errstr;
-		errstr.resize(errorBlob->GetBufferSize());
-
-		std::copy_n((char*)errorBlob->GetBufferPointer(),
-			errorBlob->GetBufferSize(),
-			errstr.begin());
-		errstr += "\n";
-		// エラー内容を出力ウィンドウに表示
-		OutputDebugStringA(errstr.c_str());
-		assert(0);
-	}
 #pragma endregion
 
 	// 頂点レイアウト
@@ -504,5 +397,66 @@ void PostEffect::CreateGraphicsPipeLineState()
 		// グラフィックスパイプラインの生成
 		result = device->CreateGraphicsPipelineState(&gpipeline[i], IID_PPV_ARGS(&pipelineState[i]));
 		assert(SUCCEEDED(result));
+	}
+}
+
+void PostEffect::LoadPsShader(const wchar_t* name, ComPtr<ID3DBlob>& psBlob)
+{
+	HRESULT result = S_FALSE;
+	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+
+
+	// ピクセルシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		name,	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&psBlob, &errorBlob);
+
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		assert(0);
+	}
+}
+
+void PostEffect::LoadVsShader(const wchar_t* name, ComPtr<ID3DBlob>& vsBlob)
+{
+	HRESULT result = S_FALSE;
+	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
+
+	// 頂点シェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		name,	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vsBlob, &errorBlob);
+
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
+
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		assert(0);
 	}
 }

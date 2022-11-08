@@ -85,6 +85,10 @@ private: // ƒƒ“ƒo•Ï”
 	OBJobject* kabe = nullptr;
 	OBJobject* kabe2 = nullptr;
 
+	//“V‹…
+	Model* tenqModel = nullptr;
+	OBJobject* tenQ = nullptr;
+
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;

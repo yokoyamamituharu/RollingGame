@@ -217,16 +217,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//-----描画処理-----//
 		//ポストエフェクトの準備
 		postEffect->PreDrawScene(dxCommon->GetCmdList());
+		ParticleManager::PreDraw(dxCommon->GetCmdList());
+		particleMan->Draw();
+		ParticleManager::PostDraw();
+		sceneManager->Draw();
 		postEffect->PosDrawScene(dxCommon->GetCmdList());
 
 		dxCommon->PreDraw();
 
-		ParticleManager::PreDraw(dxCommon->GetCmdList());
-		particleMan->Draw();
-		ParticleManager::PostDraw();
+		
 
-		//postEffect->Draw(dxCommon->GetCmdList());		
-		sceneManager->Draw();
+		postEffect->Draw(dxCommon->GetCmdList());		
+		
 
 		dxCommon->PostDraw();
 	}
