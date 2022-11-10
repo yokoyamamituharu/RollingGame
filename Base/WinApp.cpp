@@ -1,9 +1,9 @@
 #include"WinApp.h"
 
-LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) 
+LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	// メッセージで分岐
-	switch (msg) 
+	switch (msg)
 	{
 	case WM_DESTROY: // ウィンドウが破棄された
 		PostQuitMessage(0); // OSに対して、アプリの終了を伝える
@@ -27,12 +27,18 @@ void WinApp::Initialize()
 	RECT wrc = { 0, 0, window_width, window_height };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false); // 自動でサイズ補正
 
+
+	int dispx = GetSystemMetrics(SM_CXSCREEN);
+	int dispy = GetSystemMetrics(SM_CYSCREEN);
+
 	// ウィンドウオブジェクトの生成
 	hwnd = CreateWindow(w.lpszClassName, // クラス名
 		L"RollingGame",         // タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,        // 標準的なウィンドウスタイル
-		CW_USEDEFAULT,              // 表示X座標（OSに任せる）
-		CW_USEDEFAULT,              // 表示Y座標（OSに任せる）
+		//CW_USEDEFAULT,              // 表示X座標（OSに任せる）
+		//CW_USEDEFAULT,              // 表示Y座標（OSに任せる）
+		dispx / 10,
+		dispy / 12,
 		wrc.right - wrc.left,       // ウィンドウ横幅
 		wrc.bottom - wrc.top,   // ウィンドウ縦幅
 		nullptr,                // 親ウィンドウハンドル
@@ -42,14 +48,14 @@ void WinApp::Initialize()
 
 	// ウィンドウ表示
 	ShowWindow(hwnd, SW_SHOW);
-	
+
 }
 
 bool WinApp::ProcessMessage()
 {
 	MSG msg{};
 
-	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) 
+	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg); // キー入力メッセージの処理
 		DispatchMessage(&msg); // プロシージャにメッセージを送る

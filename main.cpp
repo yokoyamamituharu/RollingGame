@@ -44,6 +44,52 @@ using namespace DirectX;
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
 
+//マウスカーソルをウィンドウの真ん中に固定する関数
+void SetCenterCoursolPos(WinApp* winApp)
+{
+	//マウスの座標固定処理
+	RECT rect;
+	GetWindowRect(winApp->GetHwnd(), &rect);
+	float left = rect.left;
+	float right = rect.right;
+	float top = rect.top;
+	float bottom = rect.bottom;
+
+	float x, y;
+	if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
+		float high, min;
+		if (abs(left) > abs(right)) {
+			high = left;
+			min = right;
+		}
+		else {
+			high = right;
+			min = left;
+		}
+		x = abs(high) - abs(min);
+	}
+	else {
+		x = abs(left) + abs(right);
+	}
+
+	if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
+		float high, min;
+		if (abs(top) > abs(bottom)) {
+			high = top;
+			min = bottom;
+		}
+		else {
+			high = bottom;
+			min = top;
+		}
+		y = abs(high) - abs(min);
+	}
+	else {
+		y = abs(top) + abs(bottom);
+	}
+	SetCursorPos(left + (x / 2), bottom - (y / 2));
+}
+
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -97,15 +143,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FPSLock fpsLock;
 
 	ParticleManager* particleMan = ParticleManager::Create();
-	
+
 
 	while (true)  // ゲームループ
 	{
-		HWND a = GetActiveWindow();
-		if (winApp->GetHwnd() != a) {
-			int num = 0;
-		}
-
 		if (input->TriggerKey(DIK_SPACE)) {
 			//パーティクルの追加
 			for (int i = 0; i < 8; i++)
@@ -138,8 +179,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				particleMan->Add(60, pos, vel, acc, 10.0f, 5.0f);
 			}
 		}
-
-
 		particleMan->Update();
 
 		//fpsLock.Update();
@@ -154,59 +193,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//入力の更新処理
 		input->Update();
 		mouse->Update();
+
 		if (input->TriggerKey(DIK_ESCAPE)) {	//Mキーを押されたらマウスポインターの移動を停止
 			if (isSetMousePoint) { isSetMousePoint = false; }
 			else { isSetMousePoint = true; }
 		}
-
-
-
 		//ウィンドウがアクティブ状態なら処理
-		if (winApp->GetHwnd() == GetActiveWindow())
+		if (winApp->GetHwnd() == GetActiveWindow() && isSetMousePoint == true)
 		{
-			//マウスの座標固定処理
-			RECT rect;
-			GetWindowRect(winApp->GetHwnd(), &rect);
-			float left = rect.left;
-			float right = rect.right;
-			float top = rect.top;
-			float bottom = rect.bottom;
-
-			if (isSetMousePoint) {
-				float x, y;
-				if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
-					float high, min;
-					if (abs(left) > abs(right)) {
-						high = left;
-						min = right;
-					}
-					else {
-						high = right;
-						min = left;
-					}
-					x = abs(high) - abs(min);
-				}
-				else {
-					x = abs(left) + abs(right);
-				}
-
-				if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
-					float high, min;
-					if (abs(top) > abs(bottom)) {
-						high = top;
-						min = bottom;
-					}
-					else {
-						high = bottom;
-						min = top;
-					}
-					y = abs(high) - abs(min);
-				}
-				else {
-					y = abs(top) + abs(bottom);
-				}
-				SetCursorPos(left + (x / 2), bottom - (y / 2));
-			}
+			SetCenterCoursolPos(winApp);
 		}
 
 
@@ -223,13 +218,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		sceneManager->Draw();
 		postEffect->PosDrawScene(dxCommon->GetCmdList());
 
+		//sceneManager->gameScene->PostReserve();
+
+
 		dxCommon->PreDraw();
 
-		
-
-		postEffect->Draw(dxCommon->GetCmdList());		
-		
-
+		//sceneManager->Draw();
+		//sceneManager->gameScene->PostDraw();
+		postEffect->Draw(dxCommon->GetCmdList());
 		dxCommon->PostDraw();
 	}
 
