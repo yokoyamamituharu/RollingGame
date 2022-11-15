@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Useful.h"
 using namespace DirectX;
 
 void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
@@ -15,23 +16,32 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(playermodel);
+	breakEnemy = 0;
 }
 
 void Player::Update()
 {
-
-	if (Input::GetInstance()->PushKey(DIK_3)) {
-		object->SetRotation({
-			object->GetRotation().x,
-			object->GetRotation().y ,
-			object->GetRotation().z + 1.0f });
-	}
+	//if (Input::GetInstance()->PushKey(DIK_3)) {
+	//	object->SetRotation({
+	//		object->GetRotation().x,
+	//		object->GetRotation().y ,
+	//		object->GetRotation().z + 1.0f });
+	//}
 
 	if (Input::GetInstance()->TriggerKey(DIK_9)) {
 		sceneType *= -1;
 	}
 
+	if (muteki == true) {
+		mutekiTime++;
+		if (mutekiTime > 60) {
+			muteki = false;
+			mutekiTime = 0;
+		}
+	}
+
 	Move();
+	Res();
 	//オブジェクトのアップデート
 	object->Update();
 }
@@ -55,8 +65,6 @@ void Player::Move()
 		}
 	}
 
-
-
 #pragma region 回転移動
 	//回転移動
 	if (mouse->PushMouse(MouseDIK::M_LEFT)) {
@@ -66,89 +74,92 @@ void Player::Move()
 		isSphere = false;
 	}
 
-
-	if (sceneType == 1)
-	{
-		if (isSphere) {
-			//モデルを変える
-			object->SetModel(playerSpheremodel);
-			//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-			rollingSpeed += mouse->MoveMouseVector('y') / 30;
-			if (rollingSpeed < 0) {
-				rollingSpeed = 0;
-			}
-			//マウスの移動量をプレイヤーの回転速度にもする
-			spiralSpeed.z = rollingSpeed;
-			//マウスを離したとき、移動量があったらプレイヤーを直進させる
-
-			//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
-
-			sphereFlag = true;
+	if (isSphere) {
+		//モデルを変える
+		object->SetModel(playerSpheremodel);
+		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
+		rollingSpeed += mouse->MoveMouseVector('y') / 30;
+		if (rollingSpeed < 0) {
+			rollingSpeed = 0;
 		}
-		else if (rollingSpeed > 0) {
-			if (rollingSpeed > 400) {
-				forvardvec.m128_f32[2] += 10;
-			}
-			else if (rollingSpeed > 300) {
-				forvardvec.m128_f32[2] += 7;
-			}
-			else if (rollingSpeed > 100) {
-				forvardvec.m128_f32[2] += 5;
-			}
-			else {
-				forvardvec.m128_f32[2] += 3;
-			}
-			rollingSpeed -= 1;
-			attackFlag = true;
+		//マウスの移動量をプレイヤーの回転速度にもする
+		spiralSpeed.z = rollingSpeed;
+		//マウスを離したとき、移動量があったらプレイヤーを直進させる
+
+		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
+
+		sphereFlag = true;
+	}
+	else if (rollingSpeed > 0) {
+		if (rollingSpeed > 400) {
+			forvardvec.m128_f32[2] += 10;
+		}
+		else if (rollingSpeed > 300) {
+			forvardvec.m128_f32[2] += 7;
+		}
+		else if (rollingSpeed > 100) {
+			forvardvec.m128_f32[2] += 5;
 		}
 		else {
-			rollingSpeed = 0.0f;
-			spiralSpeed.z = 0;
-			object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
-			object->SetModel(playermodel);
-			attackFlag = false;
-			sphereFlag = false;
+			forvardvec.m128_f32[2] += 3;
 		}
-		SpiralVector(spiralSpeed);
+		rollingSpeed -= 1;
+		attackFlag = true;
 	}
-	else
-	{
-		if (isSphere) {
-			//モデルを変える
-			object->SetModel(playerSpheremodel);
-			//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-			rollingSpeed += mouse->MoveMouseVector('y') / 30;
-			if (rollingSpeed < 0) {
-				rollingSpeed = 0;
-			}
-			//マウスの移動量をプレイヤーの回転速度にもする
-			spiralSpeed.z = rollingSpeed;
-			//マウスを離したとき、移動量があったらプレイヤーを直進させる
-
-			//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
-
-			sphereFlag = true;
-		}
-		else if (rollingSpeed > 0) {
-			rollingSpeed = 10;
-			forvardvec.m128_f32[2] += rollingSpeed * 0.5;
-			attackFlag = true;
-			rollingTime++;
-			if (rollingTime > 30) {
-				rollingSpeed = 0;
-				rollingTime = 0;
-			}
-		}
-		else {
-			rollingSpeed = 0.0f;
-			spiralSpeed.z = 0;
-			object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
-			object->SetModel(playermodel);
-			attackFlag = false;
-			sphereFlag = false;
-		}
-		SpiralVector(spiralSpeed);
+	else {
+		rollingSpeed = 0.0f;
+		spiralSpeed.z = 0;
+		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
+		object->SetModel(playermodel);
+		attackFlag = false;
+		sphereFlag = false;
 	}
+	SpiralVector(spiralSpeed);
+#pragma region カクス
+	//if (sceneType == 1)
+	//{
+	//}
+	//else
+	//{
+	//	if (isSphere) {
+	//		//モデルを変える
+	//		object->SetModel(playerSpheremodel);
+	//		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
+	//		rollingSpeed += mouse->MoveMouseVector('y') / 30;
+	//		if (rollingSpeed < 0) {
+	//			rollingSpeed = 0;
+	//		}
+	//		//マウスの移動量をプレイヤーの回転速度にもする
+	//		spiralSpeed.z = rollingSpeed;
+	//		//マウスを離したとき、移動量があったらプレイヤーを直進させる
+
+	//		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
+
+	//		sphereFlag = true;
+	//	}
+	//	else if (rollingSpeed > 0) {
+	//		rollingSpeed = 10;
+	//		forvardvec.m128_f32[2] += rollingSpeed * 0.5;
+	//		attackFlag = true;
+	//		rollingTime++;
+	//		if (rollingTime > 30) {
+	//			rollingSpeed = 0;
+	//			rollingTime = 0;
+	//		}
+	//	}
+	//	else {
+	//		rollingSpeed = 0.0f;
+	//		spiralSpeed.z = 0;
+	//		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
+	//		object->SetModel(playermodel);
+	//		attackFlag = false;
+	//		sphereFlag = false;
+	//	}
+	//	SpiralVector(spiralSpeed);
+	//}
+#pragma endregion
+
+
 #pragma endregion
 
 	//これは進む方向にプレイヤーを向かせる処理
@@ -163,7 +174,7 @@ void Player::Move()
 	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
 	float speed = 1.2f;
-	XMFLOAT3 move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
+	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
 	object->SetPosition({
 		object->GetPosition().x + move.x,
 		object->GetPosition().y + move.y,
@@ -174,34 +185,29 @@ void Player::Move()
 	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
 }
 
-void Player::Res(bool flag)
+void Player::Res(bool flag, XMFLOAT3 vec)
 {
+	object->VecSetPosition(backVec);
+
 	//下降処理
 	if (resFlag2 == true) {
 		if (gravity <= 2.0f) {
 			gravity += 0.15f;
-		}		
+		}
 		object->SetPosY({ object->GetPosition().y - gravity });
 		if (object->GetPosition().y <= grundHeight) {
 			resFlag2 = false;
 			gravity = 0.0f;
 			object->SetPosY(-6.0f);
+			backVec = { 0,0,0 };
 		}
 	}
 
 	//上昇処理
 	if (resFlag1 == true) {
-
-		float un2 = Ease(timer, 1.6);
-		float xnumm = object->GetPosition().x - backValue * un2;
 		timer += 0.0625f;
 		float un = Ease(timer, 1.6);
-		un2 = Ease(timer, 1.6);
-
 		object->SetPosY({ posY + riseValue * un });
-		object->SetPosX({ xnumm + backValue * un2 });
-
-
 		if (timer >= 1) {
 			resFlag1 = false;
 			resFlag2 = true;
@@ -214,16 +220,18 @@ void Player::Res(bool flag)
 		resFlag1 = true;
 		timer = 0;
 		rollingSpeed = 0;
-		xvec = 4;
+		backVec = Use::LoadXMVECTOR(-XMVector3Normalize(XMLoadFloat3(&move)));
 	}
+}
 
-	if (muteki == true) {
-		mutekiTime++;
-		if (mutekiTime > 60) {
-			muteki = false;
-			mutekiTime = 0;
-		}
-	}
+void Player::Stop()
+{
+	rollingSpeed = 0;
+	object->SetPosition(outPos);
+	resFlag1 = false;
+	resFlag2 = false;
+	gravity = 0.0f;	
+	backVec = { 0,0,0 };
 }
 
 float Player::Ease(float x, float s)

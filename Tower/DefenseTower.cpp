@@ -47,6 +47,9 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 			}
 		}
 	}	
+	else{
+		attackFlag = false;
+	}
 
 	//‚±‚Á‚¿‚Å‚â‚Á‚½•û‚ª‚¢‚¢‚Ì‚©‚Ç‚¤‚©‚Í‚í‚©‚ñ‚Ë‚¥‚â
 	//std::shared_ptr<int> ptr = targetEnemy.lock();

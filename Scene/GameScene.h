@@ -59,7 +59,7 @@ private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
 	InputMouse* mouse = nullptr;
-	Camera* camera;
+	Camera* camera = nullptr;
 
 	// ゲームシーン用  
 	//スプライト
@@ -100,7 +100,7 @@ private: // メンバ変数
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;
-	int cameraToMouse = -1;
+	int cameraToMouse = 1;
 
 	std::list<std::shared_ptr<EnemyZako>>enemiesG;
 
@@ -108,5 +108,10 @@ private: // メンバ変数
 
 	Canvas* canvas = nullptr;
 
+	static const int maxEnemy = 6;
+	int index = 0;
+	int timer[maxEnemy];
+
+	int dasuteki[maxEnemy];
 };
 

@@ -14,13 +14,13 @@ void Canvas::Initialize()
 	float width = 200;
 
 	for (int i = 0; i < 10; i++) {
-		enemyNum3[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(i * intervalWidth),height });
-		enemyNum2[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(i * intervalWidth),height });
-		enemyNum1[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(i * intervalWidth),height });
+		enemyNum3[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 0),height });
+		enemyNum2[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 1),height });
+		enemyNum1[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 2),height });
 
-		breakEnemyNum3[i] = Sprite::Create(10 + i, { width + float(i * intervalWidth),height });
-		breakEnemyNum2[i] = Sprite::Create(10 + i, { width + float(i * intervalWidth),height });
-		breakEnemyNum1[i] = Sprite::Create(10 + i, { width + float(i * intervalWidth),height });
+		breakEnemyNum3[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 0),height });
+		breakEnemyNum2[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 1),height });
+		breakEnemyNum1[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 2),height });
 	}
 
 	slash = Sprite::Create(9, { width + fintervalWidth * 3,height });
@@ -43,9 +43,9 @@ void Canvas::Draw()
 		}
 	}
 
-	int num1 = enemyNum % 10;
-	int num2 = enemyNum / 10;
-	int num3 = enemyNum / 100;
+	int num1 = maxEnemyNum % 10;
+	int num2 = maxEnemyNum / 10;
+	int num3 = maxEnemyNum / 100;
 
 	enemyNum1[num1]->Draw();
 	enemyNum2[num2]->Draw();

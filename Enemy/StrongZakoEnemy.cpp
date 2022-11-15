@@ -2,14 +2,14 @@
 
 Model* StrongZakoEnemy::strongEnemyModel = nullptr;
 
-void StrongZakoEnemy::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos)
+void StrongZakoEnemy::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
 	this->isFiled = filedFlag;
 	this->camera = camera;
 	this->isTarget = isTarget;
-	this->targetPos.m128_f32[0] = targetPos.x;
-	this->targetPos.m128_f32[1] = targetPos.y;
-	this->targetPos.m128_f32[2] = targetPos.z;
+	this->targetPos.m128_f32[0] = targetPos1.x;
+	this->targetPos.m128_f32[1] = targetPos1.y;
+	this->targetPos.m128_f32[2] = targetPos1.z;
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(strongEnemyModel);
@@ -20,8 +20,8 @@ void StrongZakoEnemy::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bo
 		object->SetScale({ 4.0f,4.0f, 4.0f });
 
 		//この敵が中シーンに移動した時に持っている小敵の情報を追加
-		int enemyNum = rand() % 2 + 5;
-		for (int i = 0; i < enemyNum; i++)
+		int maxEnemyNum = rand() % 2 + 5;
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			//敵をリストに追加していく
 			std::unique_ptr<StrongZakoEnemy> newEnemyZako = std::make_unique<StrongZakoEnemy>();

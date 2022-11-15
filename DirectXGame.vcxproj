@@ -297,6 +297,7 @@
     <ClInclude Include="Tower\DefenseTower.h" />
     <ClInclude Include="tuyoEnemy.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Useful.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectXCommon.cpp" />
@@ -330,6 +331,7 @@
     <ClCompile Include="Tower\DefenseTower.cpp" />
     <ClCompile Include="tuyoEnemy.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Useful.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

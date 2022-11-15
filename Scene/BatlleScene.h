@@ -61,6 +61,8 @@ class BatlleScene
         Player* player = nullptr;
         Model* groundmodel = nullptr;
         OBJobject* ground = nullptr;
+        Model* tenQQModel = nullptr;
+        OBJobject* tenQ = nullptr;
 
         Model* enemymodel = nullptr;
 

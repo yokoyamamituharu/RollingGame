@@ -1,11 +1,11 @@
 #include "EnemyZako.h"
 using namespace DirectX;
-
+#include "../Useful.h"
 
 
 /// 静的メンバ変数の実体
-const float EnemyZako::groundInPos = -3.0f;
-const float EnemyZako::groundOutPos = -3.0f;
+const float EnemyZako::groundInPos = -4.0f;
+const float EnemyZako::groundOutPos = -4.0f;
 int EnemyZako::isAction = 1;
 Model* EnemyZako::enemyModel = nullptr;
 
@@ -25,14 +25,18 @@ EnemyZako::~EnemyZako()
 {
 }
 
-void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos)
+void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
 	this->isFiled = filedFlag;
 	this->camera = camera;
 	this->isTarget = isTarget;
-	this->targetPos.m128_f32[0] = targetPos.x;
-	this->targetPos.m128_f32[1] = targetPos.y;
-	this->targetPos.m128_f32[2] = targetPos.z;
+	this->targetPos.m128_f32[0] = targetPos1.x;
+	this->targetPos.m128_f32[1] = targetPos1.y;
+	this->targetPos.m128_f32[2] = targetPos1.z;
+	this->targetPos1 = targetPos1;
+	this->targetPos2 = targetPos2;
+
+	targetIndex = 1;
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(enemyModel);
@@ -41,10 +45,11 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 	if (filedFlag == 1) {
 		object->SetPosition(pos);
 		object->SetScale({ 4.0f,4.0f, 4.0f });
+		oldPos = object->GetPosition();
 
 		//この敵が中シーンに移動した時に持っている小敵の情報を追加
-		int enemyNum = rand() % 2 + 5;
-		for (int i = 0; i < enemyNum; i++)
+		int maxEnemyNum = rand() % 2 + 5;
+		for (int i = 0; i < maxEnemyNum; i++)
 		{
 			//敵をリストに追加していく
 			std::unique_ptr<EnemyZako> newEnemyZako = std::make_unique<EnemyZako>();
@@ -63,12 +68,10 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 		object->SetScale({ 4.0f,4.0f, 4.0f });
 	}
 
+	//目的地が設定されていたら
 	if (isTarget == true) {
 		//移動する方向を計算する
-		XMVECTOR pos1;
-		pos1.m128_f32[0] = object->GetPosition().x;
-		pos1.m128_f32[1] = object->GetPosition().y;
-		pos1.m128_f32[2] = object->GetPosition().z;
+		XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
 		targetVec = pos1 - this->targetPos;
 		targetVec = XMVector3Normalize(targetVec);
 		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
@@ -89,8 +92,38 @@ void EnemyZako::Update()
 	if (isFiled == FIELD_OUT && isAction > 0) {
 		if (isTarget == true) {
 			//目的地に向かって直進			
-			XMFLOAT3 pos = object->GetPosition() - targetVec * 1;
-			object->SetPosition(pos);
+			//XMFLOAT3 pos = object->GetPosition() - targetVec * 1;
+			//object->SetPosition(pos);
+			if (targetIndex == 1) {
+				if (targetPos1.z > 0) {
+					object->VecSetPosition(XMFLOAT3{ 0,0,1 });
+					if (object->GetPosition().z >= oldPos.z + targetPos1.z) {
+						targetIndex = 2;
+						oldPos = object->GetPosition();
+					}
+				}
+				if (targetPos1.z < 0) {
+					object->VecSetPosition(XMFLOAT3{ 0,0,-1 });
+					if (object->GetPosition().z <= oldPos.z + targetPos1.z) {
+						targetIndex = 2;
+						oldPos = object->GetPosition();
+					}
+				}
+			}
+			else if (targetIndex == 2) {
+				if (targetPos2.x > 0) {
+					object->VecSetPosition(XMFLOAT3{ 1,0,0 });
+					if (object->GetPosition().x >= targetPos2.x) {
+						targetIndex = 2;
+					}
+				}
+				if (targetPos2.x < 0) {
+					object->VecSetPosition(XMFLOAT3{ -1,0,0 });
+					if (object->GetPosition().x <= targetPos2.x) {
+						targetIndex = 2;
+					}
+				}
+			}
 		}
 	}
 	//中シーンでの処理
@@ -98,7 +131,7 @@ void EnemyZako::Update()
 
 		//移動処理
 		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
-		if (attackFlag == false&& stopFlag==false) {
+		if (attackFlag == false && stopFlag == false) {
 			//プレイヤーの方向を見る
 			Direction(player);
 			//プレイヤーと敵の距離を計算
@@ -199,36 +232,6 @@ void EnemyZako::Draw()
 
 
 
-void EnemyZako::GoTarget(XMFLOAT3 target)
-{
-	float speed = 10.0f;
-
-	////攻撃用ローカル変数
-	//XMFLOAT3 direction = object->GetPosition();
-	////direction= XMVector3Normalize(direction);
-
-	//enemypos = {direction.x* speed, direction.y* speed, direction.z* speed};
-	//enemypos1 = { enemypos1.x * direction.x, enemypos1.y * direction.y, enemypos1.z * direction.z };
-	//object->SetPosition(enemypos1);
-
-	float posX = object->GetPosition().x;
-	float posY = object->GetPosition().y;
-	float posZ = object->GetPosition().z;
-	float playerPosX = player->object->GetPosition().x;
-	float playerPosZ = player->object->GetPosition().z;
-	float distanceX = 0;
-	float distanceZ = 0;
-	//oldPlayerPos = player->object->GetPosition();
-
-	distanceX = posX - target.x;
-	distanceZ = posZ - target.z;
-
-	posX -= distanceX / speed;
-	posZ -= distanceZ / speed;
-
-	object->SetPosition(XMFLOAT3(posX, posY, posZ));
-}
-
 void EnemyZako::Direction(Player* player)
 {
 	const float direction = 90.0f;
@@ -237,20 +240,11 @@ void EnemyZako::Direction(Player* player)
 
 	XMFLOAT3 distance = { pos.x - playerPos.x,pos.y - playerPos.y,pos.z - playerPos.z };
 
-	angle = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
+	angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 
-	object->SetRotation(XMFLOAT3(0.0f, angle, 0.0f));
+	object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 }
 
-void EnemyZako::Mawarikomi(Player* player)
-{
-	num -= 0.005;
-	float x = object->GetPosition().x + 0.3f;
-	float y = object->GetPosition().y;
-	float z = object->GetPosition().z + num;
-
-	object->SetPosition({ x, y, z });
-}
 
 void EnemyZako::EnemyCreateModel()
 {
@@ -269,28 +263,17 @@ void EnemyZako::Stop()
 		stopFlag = false;
 	}
 }
-
 void EnemyZako::DirectionWotch()
 {
 	//敵のいる位置からプレイヤーのいる方向を計算
-	XMVECTOR pos1;
-	pos1.m128_f32[0] = object->GetPosition().x;
-	pos1.m128_f32[1] = object->GetPosition().y;
-	pos1.m128_f32[2] = object->GetPosition().z;
-	XMVECTOR pos2;
-	pos2.m128_f32[0] = player->object->GetPosition().x;
-	pos2.m128_f32[1] = player->object->GetPosition().y;
-	pos2.m128_f32[2] = player->object->GetPosition().z;
-	XMVECTOR direction = pos1 - pos2;
+	XMVECTOR enemyVec = XMLoadFloat3(&object->GetPosition());
+	XMVECTOR playerVec = XMLoadFloat3(&player->object->GetPosition());
+	XMVECTOR direction = enemyVec - playerVec;
 	direction = XMVector3Normalize(direction);
 	//敵をプレイヤーのいる方向に進ませる
-	XMVECTOR enemypos;
-	enemypos.m128_f32[0] = object->GetPosition().x;
-	enemypos.m128_f32[1] = object->GetPosition().y;
-	enemypos.m128_f32[2] = object->GetPosition().z;
-	enemypos -= direction * 0.5;
-	enemypos.m128_f32[1] = object->GetPosition().y;
-	object->SetPosition({ enemypos.m128_f32[0],enemypos.m128_f32[1] ,enemypos.m128_f32[2] });
+	enemyVec -= direction * 0.5;
+	enemyVec.m128_f32[1] = object->GetPosition().y;	//高さは考慮しない
+	object->SetPosition(Use::LoadXMVECTOR(enemyVec));
 }
 
 void EnemyZako::Maeburi()
@@ -304,7 +287,7 @@ void EnemyZako::Maeburi()
 	if (jumpTime <= mtime) {
 		object->VecSetPosition(vec);
 	}
-	else if(jumpTime <= mtime*2)
+	else if (jumpTime <= mtime * 2)
 	{
 		object->VecSetPosition(mvec);
 	}
@@ -312,7 +295,5 @@ void EnemyZako::Maeburi()
 		jumpTime = 0;
 		maeburiFlag = false;
 	}
-
-
 }
 

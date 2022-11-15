@@ -2,6 +2,7 @@
 #include "BatlleScene.h"
 #include "SceneManager.h"
 #include <DirectXMath.h>
+#include "../Useful.h"
 using namespace DirectX;
 
 bool CubeCollision1(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
@@ -46,18 +47,26 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 	groundmodel = Model::Create("battlegrund");
 	ground = OBJobject::Create();
 	ground->SetModel(groundmodel);
-	ground->SetScale({ 10.0f,1.0f,10.0f });
+	ground->SetScale({ 1000.0f,1.0f,1000.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
 
+	tenQQModel = Model::Create("IntenQ");
+	tenQ = OBJobject::Create();
+	tenQ->SetModel(tenQQModel);
+	tenQ->SetScale({ 10.0f,1.0f,10.0f });
+	tenQ->SetPosition({ 0.0f,-10.0f,0.0f });
+	tenQ->SetRotation({ 0.0f,0.0f,0.0f });
+	tenQ->Update();
+
 	enemymodel = Model::Create("enemy");
-	
+
 	canvas = new Canvas();
 	canvas->Initialize();
 }
 
-void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
+void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 {
 	//カメラ操作
 	if (input->PushKey(DIK_RIGHT)) {
@@ -73,7 +82,6 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
 	}
 
-	enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
 
 
 	EnemyZako::Action();
@@ -96,15 +104,22 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemy1 != 0) {
+		//死亡判定があったらエネミーを消す
+		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
 		//敵とプレイヤーのローリング攻撃の当たり判定
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 			if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
 				) {
 				if (player->attackFlag == true) {
 					enemy->SetDead();
-					//player->Res(true);
+					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
+					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
+					XMVECTOR vec = pos1 - pos2;
+					vec = XMVector3Normalize(vec);
+					vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+					player->Res(true, Use::LoadXMVECTOR(vec));
 				}
-				else if(enemy->GetAttack()) {
+				else if (enemy->GetAttack()) {
 					player->Damage(1);
 				}
 			}
@@ -114,6 +129,9 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 			enemy->Update();
 		}
 	}
+
+	const int maxEnemy = 12;
+	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
@@ -123,30 +141,39 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 	camera->Update();
 	ground->Update();
 	//player->Res();
-	player->Update();		
-	player->Res();
+	player->Update();
+	//player->Res();
+	tenQ->Update();
 
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 
 	//バトルシーンから脱出するシーン
 	if (enemy1->GetEnemies().size() == 0) {
+		player->object->SetPosition(player->outPos);
+		player->Stop();
+		player->breakEnemy++;	//敵の撃破数を増やす
+		enemy1.reset();
 		sceneNo = SceneManager::SCENE_GAME;
 	}
-	if (player->GetHp() <=0) {
+	if (player->GetHp() <= 0) {
+		player->Stop();
 		player->Cure(5);
 		sceneNo = SceneManager::SCENE_END;
 	}
 	if (Input::GetInstance()->TriggerKey(DIK_B)) {
 		gameScene->SetEnemy(enemy1);
+		player->object->SetPosition(player->outPos);
 		sceneNo = SceneManager::SCENE_GAME;
 	}
-	
+
 }
 
 void BatlleScene::Draw()
 {
 	OBJobject::PreDraw(dxCommon->GetCmdList());
+	tenQ->Draw();
+
 	player->object->Draw();
 	ground->Draw();
 	//fbxobject->Draw(dxCommon->GetCmdList());

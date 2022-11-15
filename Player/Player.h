@@ -35,7 +35,9 @@ public:
 		 object->GetRotation().z + vec.z });
 	}
 
-	void Res(bool flag = false);
+	void Res(bool flag = false, XMFLOAT3 vec = { 0,0,0 });
+
+	void Stop();
 
 public:
 	void SetInput(Input* input) { this->input = input; }
@@ -56,6 +58,9 @@ public:
 
 	float grundHeight = -6.0f;
 
+	int breakEnemy;
+
+	XMFLOAT3 outPos = { 0,0,0 };	//中シーンに行くときに今の座標を保存しておく
 private:
 	Input* input;
 	InputMouse* mouse;
@@ -86,11 +91,15 @@ private:
 	float timer = 0;
 
 	float backValue = 15;
-	float xvec = 0;
 
 	float gravity = 0.0f;
 
 	int maxHp = 5;
 	int hp = maxHp;
+
+	XMFLOAT3 backVec = { 0,0,0 };
+
+	XMFLOAT3 move = { 0,0,0 };
+
 };
 

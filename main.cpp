@@ -137,7 +137,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon, input, mouse, camera);
 
-	bool isSetMousePoint = false;	//マウスのポインタの位置を固定するかどうか
+	bool isSetMousePoint = true;	//マウスのポインタの位置を固定するかどうか
 
 
 	FPSLock fpsLock;

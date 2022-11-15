@@ -12,6 +12,11 @@ public:
 		nowHp = playerHp;
 	}
 
+	void SetEnemy( int maxEnemy, int enemy) {
+		maxEnemyNum = maxEnemy;
+		breakEnemyNum = enemy;
+	}
+
 private:
 	// const int maxHp = 10;
 	static const int limitHp = 20;
@@ -30,7 +35,7 @@ private:
 
 	Sprite* slash = nullptr;
 
-	int enemyNum = 12;
+	int maxEnemyNum = 12;
 	int breakEnemyNum = 12;
 
 	//int array_tin[maxHp];

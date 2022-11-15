@@ -172,6 +172,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	canvas = new Canvas();
 	canvas->Initialize();
 
+	index = 0;
+	timer[0] = 0;
+	timer[1] = 120;
+	timer[2] = 60;
+	timer[3] = 60;
+	timer[4] = 210;
+	timer[5] = 200;
+
+	dasuteki[0] = 2;
+	dasuteki[1] = 1;
+	dasuteki[2] = 1;
+	dasuteki[3] = 1;
+	dasuteki[4] = 2;
+	dasuteki[5] = 1;
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -184,6 +198,25 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//else if (input->PushKey(DIK_LEFT)) {
 	//	camera->matRot *= XMMatrixRotationY(-0.1f);
 	//}
+
+	//“G¶¬ˆ—
+	timer[index]--;
+
+	if (timer[index] <= 0) {
+		if (dasuteki[index] == 1) {
+			//ƒ^ƒ[‚ª‚ ‚é•û
+			std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
+			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true,  XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+			enemiesG.push_back(std::move(newEnemy));
+		}
+		if (dasuteki[index] == 2) {
+			std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
+			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+			enemiesG.push_back(std::move(newEnemy));
+		}
+
+		index++;
+	}
 
 	if (Input::GetInstance()->PushKey(DIK_H)) {
 		int num = 0;
@@ -202,20 +235,20 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//‘ƒŒŠ‚P‚©‚ç“G‚ğ¶¬
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, suana->GetPosition(), true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
+		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
 		enemiesG.push_back(std::move(newEnemy));
 	}
 
 	//‘ƒŒŠ‚Q‚©‚ç“G‚ğ¶¬
 	if (Input::GetInstance()->TriggerKey(DIK_2)) {
 		std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, suana2->GetPosition(), true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
+		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
 		enemiesG.push_back(std::move(newEnemy));
 	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_3)) {
 		std::shared_ptr<StrongZakoEnemy> newEnemy = std::make_shared<StrongZakoEnemy>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, suana2->GetPosition(), true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
+		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
 		enemiesG.push_back(std::move(newEnemy));
 	}
 
@@ -228,11 +261,21 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			//ƒoƒgƒ‹ƒV[ƒ“‚És‚­ˆ—
 			batlleScene->SetEnemies(enemy);
 			enemiesG.remove(enemy);
+			player->outPos = player->object->GetPosition();
+			player->Stop();
+			//ƒvƒŒƒCƒ„[‚ğŒ´“_‚É”­¶‚³‚¹‚é
+			player->object->SetPosition({ 0,-6,0 });
 			sceneNo = SceneManager::SCENE_BATTLE;
 			break;
 		}
-	}
 
+		//“G‚Æé‚Ì“–‚½‚è”»’è
+		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+			//“–‚½‚Á‚½‚ç•‰‚¯
+			sceneNo = SceneManager::SCENE_END;
+		}
+	}
+	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	if (Input::GetInstance()->TriggerKey(DIK_PGUP)) {
