@@ -37,8 +37,8 @@ void WinApp::Initialize()
 		WS_OVERLAPPEDWINDOW,        // 標準的なウィンドウスタイル
 		//CW_USEDEFAULT,              // 表示X座標（OSに任せる）
 		//CW_USEDEFAULT,              // 表示Y座標（OSに任せる）
-		dispx / 10,
-		dispy / 12,
+		dispx / 10 + 20,
+		dispy / 12 - 10,
 		wrc.right - wrc.left,       // ウィンドウ横幅
 		wrc.bottom - wrc.top,   // ウィンドウ縦幅
 		nullptr,                // 親ウィンドウハンドル
