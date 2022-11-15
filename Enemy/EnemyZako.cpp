@@ -32,7 +32,7 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 	this->isTarget = isTarget;
 	this->targetPos.m128_f32[0] = targetPos.x;
 	this->targetPos.m128_f32[1] = targetPos.y;
-	this->targetPos.m128_f32[2] = targetPos.z;	
+	this->targetPos.m128_f32[2] = targetPos.z;
 	//オブジェクトの作成
 	object = OBJobject::Create();
 	object->SetModel(enemyModel);
@@ -85,119 +85,108 @@ void EnemyZako::Update()
 	object->SetScale(maxScale * scale);
 
 
+	//外シーンでの処理
 	if (isFiled == FIELD_OUT && isAction > 0) {
 		if (isTarget == true) {
-			XMVECTOR pos;
-			pos.m128_f32[0] = object->GetPosition().x;
-			pos.m128_f32[1] = object->GetPosition().y;
-			pos.m128_f32[2] = object->GetPosition().z;
-			//突進処理
-			pos -= targetVec * 1;
-			object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
+			//目的地に向かって直進			
+			XMFLOAT3 pos = object->GetPosition() - targetVec * 1;
+			object->SetPosition(pos);
 		}
 	}
-	else if (isFiled == FIELD_IN) {
+	//中シーンでの処理
+	else if (isFiled == FIELD_IN && isAction > 0) {
 
-		Direction(player);
+		//移動処理
+		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
+		if (attackFlag == false&& stopFlag==false) {
+			//プレイヤーの方向を見る
+			Direction(player);
+			//プレイヤーと敵の距離を計算
+			float distance1 = Nitenkan(object->GetPosition(), player->object->GetPosition());
 
-		//敵の行動
-		if (isAction > 0) {
-			//移動
-			if (attackFlag == false) {
-				//プレイヤーと敵の距離を計算
-				float distance1 = Nitenkan(object->GetPosition(), player->object->GetPosition());
+			//徐々にプレイヤーに近づく処理
+			if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
+				nearFlag = false;
+				//プレイヤーに近づく
+				DirectionWotch();
+			}
+			//近かったらプレイヤーの周りをまわるようにするための準備
+			else if (nearFlag == false) {
+				nearFlag = true;
+				moveTime = 0;
 
-				//徐々にプレイヤーに近づく処理
-				if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
-					nearFlag = false;
+				rotaTime = rand() % 100 + 100;
+				//回転する回転軸を入れる
+				rollPoint = player->object->GetPosition();
+				//回転するときの中心からの距離を入れる
+				m_Length = distance1;
+				//プレイヤーから敵への角度を求める
+				float x = object->GetPosition().x - player->object->GetPosition().x;
+				float z = object->GetPosition().z - player->object->GetPosition().z;
+				float tan = atan2(z, x);
+				m_Angle = (tan * 180) / 3.14;
+			}
 
-					//敵のいる位置からプレイヤーのいる方向を計算
+			//プレイヤーのまわりをまわる処理
+			if (nearFlag == true) {
+				float radius = m_Angle * 3.14f / 180.0f;
+				float addx = cos(radius) * m_Length;
+				float addy = sin(radius) * m_Length;
+				float m_PosX = rollPoint.x + addx;
+				float m_PosY = rollPoint.z + addy;
+				m_Angle += 0.5f;
+				object->SetPosition({ m_PosX,object->GetPosition().y,m_PosY });
+
+				//回り始めてから一定時間経つとプレイヤーに突進する
+				moveTime++;
+				if (moveTime > rotaTime) {
+					attackFlag = true;
+					moveTime = 0;
+					maeburiFlag = true;
+
+					//突進する方向を計算する
 					XMVECTOR pos1;
 					pos1.m128_f32[0] = object->GetPosition().x;
 					pos1.m128_f32[1] = object->GetPosition().y;
 					pos1.m128_f32[2] = object->GetPosition().z;
 					XMVECTOR pos2;
 					pos2.m128_f32[0] = player->object->GetPosition().x;
-					pos2.m128_f32[1] = player->object->GetPosition().y;
+					pos2.m128_f32[1] = object->GetPosition().y;
 					pos2.m128_f32[2] = player->object->GetPosition().z;
-					XMVECTOR direction = pos1 - pos2;
-					direction = XMVector3Normalize(direction);
-					//敵をプレイヤーのいる方向に進ませる
-					XMVECTOR enemypos;
-					enemypos.m128_f32[0] = object->GetPosition().x;
-					enemypos.m128_f32[1] = object->GetPosition().y;
-					enemypos.m128_f32[2] = object->GetPosition().z;
-					enemypos -= direction * 1;
-					enemypos.m128_f32[1] = object->GetPosition().y;
-					object->SetPosition({ enemypos.m128_f32[0],enemypos.m128_f32[1] ,enemypos.m128_f32[2] });
+					attackDirection = pos1 - pos2;
+					attackDirection = XMVector3Normalize(attackDirection);
+					attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+
+					atodekesuROta = object->GetRotation();
 				}
-				//近かったらプレイヤーの周りをまわるようにするための準備
-				else if (nearFlag == false) {
-					nearFlag = true;
-					moveTime = 0;
-					abaramoveTime = rand() % 100 + 100;
-					//回転する回転軸を入れる
-					rollPoint = player->object->GetPosition();
-					//回転するときの中心からの距離を入れる
-					m_Length = distance1;
-					//プレイヤーから敵への角度を求める
-					float x = object->GetPosition().x - player->object->GetPosition().x;
-					float z = object->GetPosition().z - player->object->GetPosition().z;
-					float tan = atan2(z, x);
-					m_Angle = (tan * 180) / 3.14;
-				}
-
-				//プレイヤーのまわりをまわる処理
-				if (nearFlag == true) {
-					float radius = m_Angle * 3.14f / 180.0f;
-					float addx = cos(radius) * m_Length;
-					float addy = sin(radius) * m_Length;
-					float m_PosX = rollPoint.x + addx;
-					float m_PosY = rollPoint.z + addy;
-					m_Angle += 0.5f;
-					object->SetPosition({ m_PosX,object->GetPosition().y,m_PosY });
-
-					//回り始めてから一定時間経つとプレイヤーに突進する
-					moveTime++;
-					if (moveTime > abaramoveTime) {
-						attackFlag = true;
-						moveTime = 0;
-
-						//突進する方向を計算する
-						XMVECTOR pos1;
-						pos1.m128_f32[0] = object->GetPosition().x;
-						pos1.m128_f32[1] = object->GetPosition().y;
-						pos1.m128_f32[2] = object->GetPosition().z;
-						XMVECTOR pos2;
-						pos2.m128_f32[0] = player->object->GetPosition().x;
-						pos2.m128_f32[1] = object->GetPosition().y;
-						pos2.m128_f32[2] = player->object->GetPosition().z;
-						attackDirection = pos1 - pos2;
-						attackDirection = XMVector3Normalize(attackDirection);
-						attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
-					}
-				}
-
 			}
-			//攻撃処理
-			else if (attackFlag == true) {
-				//プレイヤーに突進しにいく処理
-				XMVECTOR pos;
-				pos.m128_f32[0] = object->GetPosition().x;
-				pos.m128_f32[1] = object->GetPosition().y;
-				pos.m128_f32[2] = object->GetPosition().z;
-				//突進処理
-				pos -= attackDirection * 2;
-				object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
-				//指定した時間突進したら攻撃をやめる
-				attackTime++;
-				if (attackTime > 60) {
-					attackTime = 0;
-					attackFlag = false;
-					nearFlag = false;
-				}
+
+		}
+		//攻撃処理
+		else if (attackFlag == true && maeburiFlag == false) {
+			atodekesuROta.z = 90;
+			object->SetRotation(atodekesuROta);
+			//プレイヤーに突進しにいく処理
+			XMVECTOR pos;
+			pos.m128_f32[0] = object->GetPosition().x;
+			pos.m128_f32[1] = object->GetPosition().y;
+			pos.m128_f32[2] = object->GetPosition().z;
+			//突進処理
+			pos -= attackDirection * 1.1;
+			object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
+			//指定した時間突進したら攻撃をやめる
+			attackTime++;
+			if (attackTime > 120) {
+				attackTime = 0;
+				attackFlag = false;
+				nearFlag = false;
+				stopFlag = true;
 			}
 		}
+
+		if (maeburiFlag == true)Maeburi();
+		if (stopFlag == true)Stop();
+
 	}
 	//オブジェクトの更新
 	object->Update();
@@ -267,5 +256,63 @@ void EnemyZako::EnemyCreateModel()
 {
 	//敵用モデルを読み込み
 	enemyModel = Model::Create("enemy");
+}
+
+void EnemyZako::Stop()
+{
+	stopTime++;
+	//ストップ処理
+	if (stopTime <= 60) {
+	}
+	else {
+		stopTime = 0;
+		stopFlag = false;
+	}
+}
+
+void EnemyZako::DirectionWotch()
+{
+	//敵のいる位置からプレイヤーのいる方向を計算
+	XMVECTOR pos1;
+	pos1.m128_f32[0] = object->GetPosition().x;
+	pos1.m128_f32[1] = object->GetPosition().y;
+	pos1.m128_f32[2] = object->GetPosition().z;
+	XMVECTOR pos2;
+	pos2.m128_f32[0] = player->object->GetPosition().x;
+	pos2.m128_f32[1] = player->object->GetPosition().y;
+	pos2.m128_f32[2] = player->object->GetPosition().z;
+	XMVECTOR direction = pos1 - pos2;
+	direction = XMVector3Normalize(direction);
+	//敵をプレイヤーのいる方向に進ませる
+	XMVECTOR enemypos;
+	enemypos.m128_f32[0] = object->GetPosition().x;
+	enemypos.m128_f32[1] = object->GetPosition().y;
+	enemypos.m128_f32[2] = object->GetPosition().z;
+	enemypos -= direction * 0.5;
+	enemypos.m128_f32[1] = object->GetPosition().y;
+	object->SetPosition({ enemypos.m128_f32[0],enemypos.m128_f32[1] ,enemypos.m128_f32[2] });
+}
+
+void EnemyZako::Maeburi()
+{
+	jumpTime++;
+	XMFLOAT3 vec = { 0,0.2,0 };
+	XMFLOAT3 mvec = vec;
+	mvec.y = -vec.y;
+	int mtime = 30;
+	//ジャンプしょり
+	if (jumpTime <= mtime) {
+		object->VecSetPosition(vec);
+	}
+	else if(jumpTime <= mtime*2)
+	{
+		object->VecSetPosition(mvec);
+	}
+	else {
+		jumpTime = 0;
+		maeburiFlag = false;
+	}
+
+
 }
 

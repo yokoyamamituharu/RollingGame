@@ -90,6 +90,25 @@ public:
 
 	static void EnemyCreateModel();
 
+	void Stop();
+
+	void SetDead() { dead = true; }
+
+	bool IsDead() { return dead; }
+
+	bool GetAttack() { return attackFlag; }
+
+protected:
+	//プレイヤーの方に歩み寄る関数
+	void DirectionWotch();
+
+	int maxStorpTime = 0;
+	int stopTime = maxStorpTime;
+	bool stopFlag = false;
+	int jumpTime = 0;
+	//突進前の処理
+	void Maeburi();
+
 protected:
 	static Model* enemyModel;
 
@@ -97,10 +116,11 @@ protected:
 
 	bool atattckFlag = false;
 
+	bool dead = false;
 
+	XMFLOAT3 atodekesuROta = {0,0,0};
 	//Player *player;
 	float angle = 0.0f;
-
 
 	XMFLOAT3 enemypos;
 	XMFLOAT3 enemypos1;
@@ -113,6 +133,7 @@ protected:
 
 	int waitTime = 0;
 	int time = 0;
+
 
 	Player* player;
 
@@ -141,7 +162,7 @@ protected:
 	bool nearFlag = false;
 	XMFLOAT3 rollPoint;
 
-	int abaramoveTime = 0;
+	int rotaTime = 0;
 
 	std::list<std::unique_ptr<EnemyZako>>enemies;
 
@@ -154,7 +175,13 @@ protected:
 	float hp = maxHp;
 
 	float scale = 1;
-	 XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
+	XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
+
+
+	bool animeEndFlag = false;
+
+	//攻撃の前ぶりアニメショーン再生フラグ
+	bool maeburiFlag = false;
 
 public:
 	//ざこてきの地面となるの座標
