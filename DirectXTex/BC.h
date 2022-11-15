@@ -158,7 +158,7 @@ struct D3DX_BC2
 // BC3/DXT4/5 compression (8 bits per texel)
 struct D3DX_BC3
 {
-    uint8_t     alpha[2];   // alpha values
+    uint8_t     blackOutAlpha[2];   // alpha values
     uint8_t     bitmap[6];  // 3bpp alpha bitmap
     D3DX_BC1    bc1;        // BC1 rgb data
 };

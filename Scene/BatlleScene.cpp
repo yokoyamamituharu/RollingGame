@@ -53,7 +53,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 
 	enemymodel = Model::Create("enemy");
 	
-
+	canvas = new Canvas();
+	canvas->Initialize();
 }
 
 void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
@@ -71,6 +72,9 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 	if (cameraToMouse > 0) {
 		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
 	}
+
+	enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
+
 
 	EnemyZako::Action();
 
@@ -90,14 +94,27 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 
 
 
-	//敵とプレイヤーのローリング攻撃の当たり判定
-	for (std::unique_ptr<EnemyZako>&enemy : enemy1->GetEnemies()) {
-		if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-			&& player->attackFlag == true) {
-
-			//player->Res(true);
+	//敵の情報を外シーンから取得できていたら処理
+	if (enemy1 != 0) {
+		//敵とプレイヤーのローリング攻撃の当たり判定
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
+				) {
+				if (player->attackFlag == true) {
+					enemy->SetDead();
+					//player->Res(true);
+				}
+				else if(enemy->GetAttack()) {
+					player->Damage(1);
+				}
+			}
+		}
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			enemy->SetPlayer(player);
+			enemy->Update();
 		}
 	}
+	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		//player->Res(true);
@@ -109,17 +126,22 @@ void BatlleScene::Update(int& sceneNo,GameScene* gameScene)
 	player->Update();		
 	player->Res();
 
-	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-		enemy->SetPlayer(player);
-		enemy->Update();
-	}
+	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 
 	//バトルシーンから脱出するシーン
+	if (enemy1->GetEnemies().size() == 0) {
+		sceneNo = SceneManager::SCENE_GAME;
+	}
+	if (player->GetHp() <=0) {
+		player->Cure(5);
+		sceneNo = SceneManager::SCENE_END;
+	}
 	if (Input::GetInstance()->TriggerKey(DIK_B)) {
 		gameScene->SetEnemy(enemy1);
 		sceneNo = SceneManager::SCENE_GAME;
 	}
+	
 }
 
 void BatlleScene::Draw()
@@ -131,10 +153,13 @@ void BatlleScene::Draw()
 
 	int aliveNum = 0;
 
-	for (std::unique_ptr<EnemyZako>&enemy : enemy1->GetEnemies()) {
-		enemy->Draw();
-		aliveNum++;
+	if (enemy1 != 0) {
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			enemy->Draw();
+			aliveNum++;
+		}
 	}
+
 
 
 	OBJobject::PostDraw();
@@ -144,5 +169,6 @@ void BatlleScene::Draw()
 	if (aliveNum == 0) {
 		claerSprite->Draw();
 	}
+	canvas->Draw();
 	Sprite::PostDraw();
 }

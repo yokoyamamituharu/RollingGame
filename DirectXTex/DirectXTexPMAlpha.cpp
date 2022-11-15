@@ -50,9 +50,9 @@ namespace
             for (size_t w = 0; w < srcImage.width; ++w)
             {
                 const XMVECTOR v = *ptr;
-                XMVECTOR alpha = XMVectorSplatW(*ptr);
-                alpha = XMVectorMultiply(v, alpha);
-                *(ptr++) = XMVectorSelect(v, alpha, g_XMSelect1110);
+                XMVECTOR blackOutAlpha = XMVectorSplatW(*ptr);
+                blackOutAlpha = XMVectorMultiply(v, blackOutAlpha);
+                *(ptr++) = XMVectorSelect(v, blackOutAlpha, g_XMSelect1110);
             }
 
             if (!StoreScanline(pDest, destImage.rowPitch, destImage.format, scanline.get(), srcImage.width))
@@ -95,9 +95,9 @@ namespace
             for (size_t w = 0; w < srcImage.width; ++w)
             {
                 const XMVECTOR v = *ptr;
-                XMVECTOR alpha = XMVectorSplatW(*ptr);
-                alpha = XMVectorMultiply(v, alpha);
-                *(ptr++) = XMVectorSelect(v, alpha, g_XMSelect1110);
+                XMVECTOR blackOutAlpha = XMVectorSplatW(*ptr);
+                blackOutAlpha = XMVectorMultiply(v, blackOutAlpha);
+                *(ptr++) = XMVectorSelect(v, blackOutAlpha, g_XMSelect1110);
             }
 
             if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, scanline.get(), srcImage.width, filter))
@@ -135,12 +135,12 @@ namespace
             for (size_t w = 0; w < srcImage.width; ++w)
             {
                 const XMVECTOR v = *ptr;
-                XMVECTOR alpha = XMVectorSplatW(*ptr);
-                if (XMVectorGetX(alpha) > 0)
+                XMVECTOR blackOutAlpha = XMVectorSplatW(*ptr);
+                if (XMVectorGetX(blackOutAlpha) > 0)
                 {
-                    alpha = XMVectorDivide(v, alpha);
+                    blackOutAlpha = XMVectorDivide(v, blackOutAlpha);
                 }
-                *(ptr++) = XMVectorSelect(v, alpha, g_XMSelect1110);
+                *(ptr++) = XMVectorSelect(v, blackOutAlpha, g_XMSelect1110);
             }
 
             if (!StoreScanline(pDest, destImage.rowPitch, destImage.format, scanline.get(), srcImage.width))
@@ -183,12 +183,12 @@ namespace
             for (size_t w = 0; w < srcImage.width; ++w)
             {
                 const XMVECTOR v = *ptr;
-                XMVECTOR alpha = XMVectorSplatW(*ptr);
-                if (XMVectorGetX(alpha) > 0)
+                XMVECTOR blackOutAlpha = XMVectorSplatW(*ptr);
+                if (XMVectorGetX(blackOutAlpha) > 0)
                 {
-                    alpha = XMVectorDivide(v, alpha);
+                    blackOutAlpha = XMVectorDivide(v, blackOutAlpha);
                 }
-                *(ptr++) = XMVectorSelect(v, alpha, g_XMSelect1110);
+                *(ptr++) = XMVectorSelect(v, blackOutAlpha, g_XMSelect1110);
             }
 
             if (!StoreScanlineLinear(pDest, destImage.rowPitch, destImage.format, scanline.get(), srcImage.width, filter))

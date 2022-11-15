@@ -403,9 +403,9 @@ namespace
 
                         auto t = static_cast<uint16_t>(uint32_t(*sPtr) | uint32_t(*(sPtr + 1u) << 8));
 
-                        const uint32_t alpha = (t & 0x8000) ? 255 : 0;
-                        minalpha = std::min(minalpha, alpha);
-                        maxalpha = std::max(maxalpha, alpha);
+                        const uint32_t blackOutAlpha = (t & 0x8000) ? 255 : 0;
+                        minalpha = std::min(minalpha, blackOutAlpha);
+                        maxalpha = std::max(maxalpha, blackOutAlpha);
 
                         sPtr += 2;
 
@@ -438,9 +438,9 @@ namespace
 
                             auto t = static_cast<uint16_t>(uint32_t(*sPtr) | uint32_t(*(sPtr + 1u) << 8));
 
-                            const uint32_t alpha = (t & 0x8000) ? 255 : 0;
-                            minalpha = std::min(minalpha, alpha);
-                            maxalpha = std::max(maxalpha, alpha);
+                            const uint32_t blackOutAlpha = (t & 0x8000) ? 255 : 0;
+                            minalpha = std::min(minalpha, blackOutAlpha);
+                            maxalpha = std::max(maxalpha, blackOutAlpha);
 
                             sPtr += 2;
                             *dPtr = t;
@@ -516,11 +516,11 @@ namespace
                                 return E_FAIL;
 
                             // BGRA -> RGBA
-                            const uint32_t alpha = *(sPtr + 3);
-                            t = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(alpha << 24);
+                            const uint32_t blackOutAlpha = *(sPtr + 3);
+                            t = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(blackOutAlpha << 24);
 
-                            minalpha = std::min(minalpha, alpha);
-                            maxalpha = std::max(maxalpha, alpha);
+                            minalpha = std::min(minalpha, blackOutAlpha);
+                            maxalpha = std::max(maxalpha, blackOutAlpha);
 
                             sPtr += 4;
                         }
@@ -581,11 +581,11 @@ namespace
                                     return E_FAIL;
 
                                 // BGRA -> RGBA
-                                uint32_t alpha = *(sPtr + 3);
-                                *dPtr = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(alpha << 24);
+                                uint32_t blackOutAlpha = *(sPtr + 3);
+                                *dPtr = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(blackOutAlpha << 24);
 
-                                minalpha = std::min(minalpha, alpha);
-                                maxalpha = std::max(maxalpha, alpha);
+                                minalpha = std::min(minalpha, blackOutAlpha);
+                                maxalpha = std::max(maxalpha, blackOutAlpha);
 
                                 sPtr += 4;
                             }
@@ -646,12 +646,12 @@ namespace
                         if (sPtr + 3 >= endPtr)
                             return E_FAIL;
 
-                        const uint32_t alpha = *(sPtr + 3);
+                        const uint32_t blackOutAlpha = *(sPtr + 3);
 
                         auto t = *reinterpret_cast<const uint32_t*>(sPtr);
 
-                        minalpha = std::min(minalpha, alpha);
-                        maxalpha = std::max(maxalpha, alpha);
+                        minalpha = std::min(minalpha, blackOutAlpha);
+                        maxalpha = std::max(maxalpha, blackOutAlpha);
 
                         sPtr += 4;
 
@@ -687,11 +687,11 @@ namespace
                             if (sPtr + 3 >= endPtr)
                                 return E_FAIL;
 
-                            const uint32_t alpha = *(sPtr + 3);
+                            const uint32_t blackOutAlpha = *(sPtr + 3);
                             *dPtr = *reinterpret_cast<const uint32_t*>(sPtr);
 
-                            minalpha = std::min(minalpha, alpha);
-                            maxalpha = std::max(maxalpha, alpha);
+                            minalpha = std::min(minalpha, blackOutAlpha);
+                            maxalpha = std::max(maxalpha, blackOutAlpha);
 
                             sPtr += 4;
 
@@ -885,9 +885,9 @@ namespace
                     sPtr += 2;
                     *dPtr = t;
 
-                    const uint32_t alpha = (t & 0x8000) ? 255 : 0;
-                    minalpha = std::min(minalpha, alpha);
-                    maxalpha = std::max(maxalpha, alpha);
+                    const uint32_t blackOutAlpha = (t & 0x8000) ? 255 : 0;
+                    minalpha = std::min(minalpha, blackOutAlpha);
+                    maxalpha = std::max(maxalpha, blackOutAlpha);
 
                     if (convFlags & CONV_FLAGS_INVERTX)
                         --dPtr;
@@ -948,11 +948,11 @@ namespace
                             return E_FAIL;
 
                         // BGRA -> RGBA
-                        uint32_t alpha = *(sPtr + 3);
-                        *dPtr = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(alpha << 24);
+                        uint32_t blackOutAlpha = *(sPtr + 3);
+                        *dPtr = uint32_t(*sPtr << 16) | uint32_t(*(sPtr + 1) << 8) | uint32_t(*(sPtr + 2)) | uint32_t(blackOutAlpha << 24);
 
-                        minalpha = std::min(minalpha, alpha);
-                        maxalpha = std::max(maxalpha, alpha);
+                        minalpha = std::min(minalpha, blackOutAlpha);
+                        maxalpha = std::max(maxalpha, blackOutAlpha);
 
                         sPtr += 4;
                     }
@@ -1002,11 +1002,11 @@ namespace
                     if (sPtr + 3 >= endPtr)
                         return E_FAIL;
 
-                    const uint32_t alpha = *(sPtr + 3);
+                    const uint32_t blackOutAlpha = *(sPtr + 3);
                     *dPtr = *reinterpret_cast<const uint32_t*>(sPtr);
 
-                    minalpha = std::min(minalpha, alpha);
-                    maxalpha = std::max(maxalpha, alpha);
+                    minalpha = std::min(minalpha, blackOutAlpha);
+                    maxalpha = std::max(maxalpha, blackOutAlpha);
 
                     sPtr += 4;
 
@@ -1766,10 +1766,10 @@ HRESULT DirectX::LoadFromTGAFile(
 
                 for (size_t x = 0; x < img->width; ++x)
                 {
-                    const uint32_t alpha = ((*sPtr & 0xFF000000) >> 24);
+                    const uint32_t blackOutAlpha = ((*sPtr & 0xFF000000) >> 24);
 
-                    minalpha = std::min(minalpha, alpha);
-                    maxalpha = std::max(maxalpha, alpha);
+                    minalpha = std::min(minalpha, blackOutAlpha);
+                    maxalpha = std::max(maxalpha, blackOutAlpha);
 
                     ++sPtr;
                 }
@@ -1828,10 +1828,10 @@ HRESULT DirectX::LoadFromTGAFile(
 
                 for (size_t x = 0; x < img->width; ++x)
                 {
-                    const uint32_t alpha = ((*sPtr & 0xFF000000) >> 24);
+                    const uint32_t blackOutAlpha = ((*sPtr & 0xFF000000) >> 24);
 
-                    minalpha = std::min(minalpha, alpha);
-                    maxalpha = std::max(maxalpha, alpha);
+                    minalpha = std::min(minalpha, blackOutAlpha);
+                    maxalpha = std::max(maxalpha, blackOutAlpha);
 
                     ++sPtr;
                 }
@@ -1886,10 +1886,10 @@ HRESULT DirectX::LoadFromTGAFile(
 
                 for (size_t x = 0; x < img->width; ++x)
                 {
-                    const uint32_t alpha = (*sPtr & 0x8000) ? 255 : 0;
+                    const uint32_t blackOutAlpha = (*sPtr & 0x8000) ? 255 : 0;
 
-                    minalpha = std::min(minalpha, alpha);
-                    maxalpha = std::max(maxalpha, alpha);
+                    minalpha = std::min(minalpha, blackOutAlpha);
+                    maxalpha = std::max(maxalpha, blackOutAlpha);
 
                     ++sPtr;
                 }

@@ -11,6 +11,7 @@
 #include "FbxLoader.h"
 #include "Player.h"
 #include "EnemyZako.h"
+#include "../Canvas.h"
 
 #include <vector>
 class GameScene;
@@ -69,6 +70,7 @@ class BatlleScene
 
         //
         EnemyZako* parentEnemy = nullptr;
+        Canvas* canvas = nullptr;
 
         bool alive[6];
         int time = 0;

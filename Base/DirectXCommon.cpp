@@ -43,7 +43,7 @@ void DirectXCommon::PreDraw()
 	commandList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 
 	//画面クリア
-	float clearColor[] = { 0,0,0.0f,0.0f };//青っぽい色
+	float clearColor[] = { 0.0f,0.0f,0.5f };//青っぽい色
 	commandList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 
 	//深度バッファのクリアコマンド

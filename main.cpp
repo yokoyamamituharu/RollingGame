@@ -137,7 +137,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon, input, mouse, camera);
 
-	bool isSetMousePoint = true;	//マウスのポインタの位置を固定するかどうか
+	bool isSetMousePoint = false;	//マウスのポインタの位置を固定するかどうか
 
 
 	FPSLock fpsLock;
@@ -205,27 +205,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		}
 
 
-
 		//シーンの更新
 		sceneManager->Update(dxCommon, input, mouse, camera);
 
 		//-----描画処理-----//
 		//ポストエフェクトの準備
-		postEffect->PreDrawScene(dxCommon->GetCmdList());
-		ParticleManager::PreDraw(dxCommon->GetCmdList());
-		particleMan->Draw();
-		ParticleManager::PostDraw();
-		sceneManager->Draw();
-		postEffect->PosDrawScene(dxCommon->GetCmdList());
+		//postEffect->PreDrawScene(dxCommon->GetCmdList());
+		//ParticleManager::PreDraw(dxCommon->GetCmdList());
+		//particleMan->Draw();
+		//ParticleManager::PostDraw();
+		//sceneManager->Draw();
+		//postEffect->PosDrawScene(dxCommon->GetCmdList());
 
 		//sceneManager->gameScene->PostReserve();
 
 
 		dxCommon->PreDraw();
 
-		//sceneManager->Draw();
-		//sceneManager->gameScene->PostDraw();
-		postEffect->Draw(dxCommon->GetCmdList());
+		sceneManager->Draw();
+		//postEffect->Draw(dxCommon->GetCmdList());
 		dxCommon->PostDraw();
 	}
 
@@ -235,9 +233,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	winApp = nullptr;
 	//DirectX解放
 	delete dxCommon;
+	dxCommon = nullptr;
 	//入力の解放
 	delete mouse;
-	//
 	//カメラの開放
 	delete camera;
 	//シーンの開放

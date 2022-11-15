@@ -53,6 +53,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	Sprite::LoadTexture(0, L"Resources/texture.png");
 	Sprite::LoadTexture(1, L"Resources/torisetu.png");
 	Sprite::LoadTexture(2, L"Resources/clear.png");
+	Sprite::LoadTexture(3, L"Resources/hp.png");
+	Sprite::LoadTexture(4, L"Resources/damageHp.png");
+	//背景
+	Sprite::LoadTexture(5, L"Resources/title.png");
+	Sprite::LoadTexture(6, L"Resources/end.png");
+	Sprite::LoadTexture(7, L"Resources/black.png");
+
+	Sprite::LoadTexture(9, L"Resources/num/slash.png");
+	Sprite::LoadTexture(10, L"Resources/num/0.png");
+	Sprite::LoadTexture(11, L"Resources/num/1.png");
+	Sprite::LoadTexture(12, L"Resources/num/2.png");
+	Sprite::LoadTexture(13, L"Resources/num/3.png");
+	Sprite::LoadTexture(14, L"Resources/num/4.png");
+	Sprite::LoadTexture(15, L"Resources/num/5.png");
+	Sprite::LoadTexture(16, L"Resources/num/6.png");
+	Sprite::LoadTexture(17, L"Resources/num/7.png");
+	Sprite::LoadTexture(18, L"Resources/num/8.png");
+	Sprite::LoadTexture(19, L"Resources/num/9.png");
+
+
+	//Sprite::LoadTexture(5, L"Resources/hp.png");
 
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
@@ -145,6 +166,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	defenseTower->GetOBJObject()->SetPosition({ 20,0,20 });
 	bullet = Bullet::Create();
 
+	postEffect = new PostEffect();
+	postEffect->Initialize();
+
+	canvas = new Canvas();
+	canvas->Initialize();
+
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -206,7 +233,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 	}
 
+	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
+	if (Input::GetInstance()->TriggerKey(DIK_PGUP)) {
+		player->Cure(1);
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_PGDN)) {
+		player->Damage(1);
+	}
 
 	//3Dオブジェクト更新
 	fbxobject->Update();
@@ -229,10 +263,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	kabe2->Update();
 	tenQ->Update();
 
+
+	//カメラ操作
+	if (input->PushKey(DIK_RIGHT)) {
+		camera->matRot *= XMMatrixRotationY(0.02f);
+	}
+	else if (input->PushKey(DIK_LEFT)) {
+		camera->matRot *= XMMatrixRotationY(-0.02f);
+	}
 	if (cameraToMouse == 1) {
 		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
 	}
-
 	//XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };
@@ -262,7 +303,6 @@ void GameScene::Draw()
 {
 	OBJobject::PreDraw(dxCommon->GetCmdList());
 	//fbxobject->Draw(dxCommon->GetCmdList());
-	player->object->Draw();
 	ground->Draw();
 	defenseTower->Draw();
 	bullet->Draw();
@@ -276,11 +316,33 @@ void GameScene::Draw()
 	kabe->Draw();
 	kabe2->Draw();
 	tenQ->Draw();
-
+	player->object->Draw();
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	//spriteBG->Draw();	
+	canvas->Draw();
+	Sprite::PostDraw();
+}
+
+void GameScene::PostReserve()
+{
+	postEffect->PreDrawScene(dxCommon->GetCmdList());
+
+	//ポストエフェクトさせたいオブジェクト
+	OBJobject::PreDraw(dxCommon->GetCmdList());
+	//player->object->Draw();
+	OBJobject::PostDraw();
+
+	//ポストエフェクトさせたいスプライト
+	Sprite::PreDraw(dxCommon->GetCmdList());
+	//spriteBG->Draw();	
 	Sprite::PostDraw();
 
+	postEffect->PosDrawScene(dxCommon->GetCmdList());
+}
+
+void GameScene::PostDraw()
+{
+	postEffect->Draw(dxCommon->GetCmdList());
 }

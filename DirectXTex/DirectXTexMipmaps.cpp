@@ -171,8 +171,8 @@ namespace
             for (size_t w = 0; w < srcImage.width; ++w)
             {
                 const XMVECTOR v = *ptr;
-                const XMVECTOR alpha = XMVectorMultiply(XMVectorSplatW(v), vscale);
-                *(ptr++) = XMVectorSelect(alpha, v, g_XMSelect1110);
+                const XMVECTOR blackOutAlpha = XMVectorMultiply(XMVectorSplatW(v), vscale);
+                *(ptr++) = XMVectorSelect(blackOutAlpha, v, g_XMSelect1110);
             }
 
             if (!StoreScanline(pDest, destImage.rowPitch, destImage.format, scanline.get(), srcImage.width))

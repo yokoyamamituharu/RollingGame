@@ -17,6 +17,8 @@
 class BattleScene;
 class SceneManeger;
 #include <vector>
+#include "PostEffect.h"
+#include "../Canvas.h"
 
 class GameScene
 {
@@ -43,6 +45,12 @@ public:
 	void SetEnemy(std::shared_ptr<EnemyZako>& enemy) {
 		enemiesG.push_back(std::move(enemy));
 	}
+
+	//ポストエフェクトの準備
+	void PostReserve();
+
+	//ゲームシーンのポストエフェクトを描画
+	void PostDraw();
 
 public:
 	Player* GetPlayer() { return player; }
@@ -92,9 +100,13 @@ private: // メンバ変数
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;
-	int cameraToMouse = 1;
+	int cameraToMouse = -1;
 
 	std::list<std::shared_ptr<EnemyZako>>enemiesG;
+
+	PostEffect* postEffect = nullptr;
+
+	Canvas* canvas = nullptr;
 
 };
 

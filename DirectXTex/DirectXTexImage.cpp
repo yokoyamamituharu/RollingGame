@@ -815,8 +815,8 @@ bool ScratchImage::IsAlphaAllOpaque() const noexcept
                 const XMVECTOR* ptr = scanline.get();
                 for (size_t w = 0; w < img.width; ++w)
                 {
-                    const XMVECTOR alpha = XMVectorSplatW(*ptr);
-                    if (XMVector4Less(alpha, threshold))
+                    const XMVECTOR blackOutAlpha = XMVectorSplatW(*ptr);
+                    if (XMVector4Less(blackOutAlpha, threshold))
                         return false;
                     ++ptr;
                 }

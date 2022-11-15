@@ -24,6 +24,17 @@ const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const float& sca
 
 const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float& scalar);
 
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs);
+
+const DirectX::XMFLOAT3 operator+(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs);
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs);
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs);
+
+
+
+
 
 /// <summary>
 /// 3Dオブジェクト
@@ -63,7 +74,7 @@ public: // サブクラス
 		XMFLOAT3 diffuse;	//ディフューズ係数
 		float pad2;			//パディング
 		XMFLOAT3 specular;	//スペキュラー係数
-		float alpha;		//アルファ
+		float blackOutAlpha;		//アルファ
 	};
 
 
@@ -167,7 +178,9 @@ public: // メンバ関数
 	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
-	/// <summary>
+	/// <
+	/// 
+	/// >
 	/// スケールの設定
 	/// </summary>
 	/// <param name="scale">スケール</param>

@@ -45,7 +45,7 @@ public:
 		XMFLOAT3 diffuse;	//ディフューズ係数
 		float pad2;			//パディング
 		XMFLOAT3 specular;	//スペキュラー係数
-		float alpha;		//アルファ
+		float blackOutAlpha;		//アルファ
 	};
 
 	//マテリアル
@@ -55,7 +55,7 @@ public:
 		XMFLOAT3 ambient;	//アンビエント影響度
 		XMFLOAT3 diffuse;	//ディフューズ影響度
 		XMFLOAT3 specular;	//スペキュラー影響度
-		float alpha;		//アルファ
+		float blackOutAlpha;		//アルファ
 		std::string textureFilename;//テクスチャファイル名
 		//コンストラクタ
 		Material()
@@ -63,7 +63,7 @@ public:
 			ambient = { 0.3f,0.3f,0.3f };
 			diffuse = { 0.0f,0.0f,0.0f };
 			specular = { 0.0f,0.0f,0.0f };
-			alpha = 1.0f;
+			blackOutAlpha = 1.0f;
 		}
 	};
 

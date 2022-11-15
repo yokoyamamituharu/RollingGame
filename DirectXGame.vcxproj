@@ -270,6 +270,8 @@
     <ClInclude Include="Base\DirectXCommon.h" />
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />
+    <ClInclude Include="Canvas.h" />
+    <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy\Enemy.h" />
     <ClInclude Include="Enemy\EnemyManager.h" />
     <ClInclude Include="Enemy\EnemyZako.h" />
@@ -290,15 +292,18 @@
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Sprite\PostEffect.h" />
     <ClInclude Include="Sprite\Sprite.h" />
-    <ClInclude Include="tamesi.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Tower\Bullet.h" />
     <ClInclude Include="Tower\DefenseTower.h" />
     <ClInclude Include="tuyoEnemy.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy\Enemy.cpp" />
     <ClCompile Include="Enemy\EnemyManager.cpp" />
     <ClCompile Include="Enemy\EnemyZako.cpp" />
@@ -320,9 +325,11 @@
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Sprite\PostEffect.cpp" />
     <ClCompile Include="Sprite\Sprite.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Tower\Bullet.cpp" />
     <ClCompile Include="Tower\DefenseTower.cpp" />
     <ClCompile Include="tuyoEnemy.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

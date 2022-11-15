@@ -80,6 +80,44 @@ const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float& sca
 	return result;
 }
 
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x + rhs.m128_f32[0];
+	result.y = lhs.y + rhs.m128_f32[1];
+	result.z = lhs.z + rhs.m128_f32[2];
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator+(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.m128_f32[0] + rhs.x;
+	result.y = lhs.m128_f32[1] + rhs.y;
+	result.z = lhs.m128_f32[2] + rhs.z;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x - rhs.m128_f32[0];
+	result.y = lhs.y - rhs.m128_f32[1];
+	result.z = lhs.z - rhs.m128_f32[2];	
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs)
+{
+	XMFLOAT3 result;
+	result.x = lhs.m128_f32[0] - rhs.x;
+	result.y = lhs.m128_f32[1] - rhs.y;
+	result.z = lhs.m128_f32[2] - rhs.z;
+	return result;
+}
+
+
+
 bool OBJobject::StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera)
 {
 	// nullptrチェック
@@ -363,7 +401,7 @@ void OBJobject::Update()
 	constMap1->ambient = modelData->material.ambient;
 	constMap1->diffuse = modelData->material.diffuse;
 	constMap1->specular = modelData->material.specular;
-	constMap1->alpha = modelData->material.alpha;
+	constMap1->blackOutAlpha = modelData->material.blackOutAlpha;
 	constBuffB1->Unmap(0, nullptr);
 }
 

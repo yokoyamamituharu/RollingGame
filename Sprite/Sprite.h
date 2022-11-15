@@ -96,6 +96,9 @@ public://メンバ関数
 	//初期化	
 	bool Initialize();
 
+	//アルファ値を設定
+	void SetAlpha(float blackOutAlpha) { color.w = blackOutAlpha; }
+
 	//スプライト単体描画
 	void Draw();
 

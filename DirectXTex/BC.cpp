@@ -912,10 +912,10 @@ void DirectX::D3DXDecodeBC3(XMVECTOR *pColor, const uint8_t *pBC) noexcept
     // Adaptive 3-bit alpha part
     float fAlpha[8];
 
-    fAlpha[0] = static_cast<float>(pBC3->alpha[0]) * (1.0f / 255.0f);
-    fAlpha[1] = static_cast<float>(pBC3->alpha[1]) * (1.0f / 255.0f);
+    fAlpha[0] = static_cast<float>(pBC3->blackOutAlpha[0]) * (1.0f / 255.0f);
+    fAlpha[1] = static_cast<float>(pBC3->blackOutAlpha[1]) * (1.0f / 255.0f);
 
-    if (pBC3->alpha[0] > pBC3->alpha[1])
+    if (pBC3->blackOutAlpha[0] > pBC3->blackOutAlpha[1])
     {
         for (size_t i = 1; i < 7; ++i)
             fAlpha[i + 1] = (fAlpha[0] * float(7u - i) + fAlpha[1] * float(i)) * (1.0f / 7.0f);
@@ -1020,8 +1020,8 @@ void DirectX::D3DXEncodeBC3(uint8_t *pBC, const XMVECTOR *pColor, uint32_t flags
     // Alpha part
     if (1.0f == fMinAlpha)
     {
-        pBC3->alpha[0] = 0xff;
-        pBC3->alpha[1] = 0xff;
+        pBC3->blackOutAlpha[0] = 0xff;
+        pBC3->blackOutAlpha[1] = 0xff;
         memset(pBC3->bitmap, 0x00, 6);
         return;
     }
@@ -1041,8 +1041,8 @@ void DirectX::D3DXEncodeBC3(uint8_t *pBC, const XMVECTOR *pColor, uint32_t flags
     // Setup block
     if ((8 == uSteps) && (bAlphaA == bAlphaB))
     {
-        pBC3->alpha[0] = bAlphaA;
-        pBC3->alpha[1] = bAlphaB;
+        pBC3->blackOutAlpha[0] = bAlphaA;
+        pBC3->blackOutAlpha[1] = bAlphaB;
         memset(pBC3->bitmap, 0x00, 6);
         return;
     }
@@ -1055,8 +1055,8 @@ void DirectX::D3DXEncodeBC3(uint8_t *pBC, const XMVECTOR *pColor, uint32_t flags
 
     if (6 == uSteps)
     {
-        pBC3->alpha[0] = bAlphaA;
-        pBC3->alpha[1] = bAlphaB;
+        pBC3->blackOutAlpha[0] = bAlphaA;
+        pBC3->blackOutAlpha[1] = bAlphaB;
 
         fStep[0] = fAlphaA;
         fStep[1] = fAlphaB;
@@ -1071,8 +1071,8 @@ void DirectX::D3DXEncodeBC3(uint8_t *pBC, const XMVECTOR *pColor, uint32_t flags
     }
     else
     {
-        pBC3->alpha[0] = bAlphaB;
-        pBC3->alpha[1] = bAlphaA;
+        pBC3->blackOutAlpha[0] = bAlphaB;
+        pBC3->blackOutAlpha[1] = bAlphaA;
 
         fStep[0] = fAlphaB;
         fStep[1] = fAlphaA;

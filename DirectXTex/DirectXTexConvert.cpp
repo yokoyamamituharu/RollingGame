@@ -223,13 +223,13 @@ void DirectX::Internal::CopyScanline(
         case DXGI_FORMAT_R32G32B32A32_SINT:
             if (inSize >= 16 && outSize >= 16)
             {
-                uint32_t alpha;
+                uint32_t blackOutAlpha;
                 if (format == DXGI_FORMAT_R32G32B32A32_FLOAT)
-                    alpha = 0x3f800000;
+                    blackOutAlpha = 0x3f800000;
                 else if (format == DXGI_FORMAT_R32G32B32A32_SINT)
-                    alpha = 0x7fffffff;
+                    blackOutAlpha = 0x7fffffff;
                 else
-                    alpha = 0xffffffff;
+                    blackOutAlpha = 0xffffffff;
 
                 if (pDestination == pSource)
                 {
@@ -237,7 +237,7 @@ void DirectX::Internal::CopyScanline(
                     for (size_t count = 0; count < (outSize - 15); count += 16)
                     {
                         dPtr += 3;
-                        *(dPtr++) = alpha;
+                        *(dPtr++) = blackOutAlpha;
                     }
                 }
                 else
@@ -250,7 +250,7 @@ void DirectX::Internal::CopyScanline(
                         *(dPtr++) = *(sPtr++);
                         *(dPtr++) = *(sPtr++);
                         *(dPtr++) = *(sPtr++);
-                        *(dPtr++) = alpha;
+                        *(dPtr++) = blackOutAlpha;
                         ++sPtr;
                     }
                 }
@@ -267,13 +267,13 @@ void DirectX::Internal::CopyScanline(
         case DXGI_FORMAT_Y416:
             if (inSize >= 8 && outSize >= 8)
             {
-                uint16_t alpha;
+                uint16_t blackOutAlpha;
                 if (format == DXGI_FORMAT_R16G16B16A16_FLOAT)
-                    alpha = 0x3c00;
+                    blackOutAlpha = 0x3c00;
                 else if (format == DXGI_FORMAT_R16G16B16A16_SNORM || format == DXGI_FORMAT_R16G16B16A16_SINT)
-                    alpha = 0x7fff;
+                    blackOutAlpha = 0x7fff;
                 else
-                    alpha = 0xffff;
+                    blackOutAlpha = 0xffff;
 
                 if (pDestination == pSource)
                 {
@@ -281,7 +281,7 @@ void DirectX::Internal::CopyScanline(
                     for (size_t count = 0; count < (outSize - 7); count += 8)
                     {
                         dPtr += 3;
-                        *(dPtr++) = alpha;
+                        *(dPtr++) = blackOutAlpha;
                     }
                 }
                 else
@@ -294,7 +294,7 @@ void DirectX::Internal::CopyScanline(
                         *(dPtr++) = *(sPtr++);
                         *(dPtr++) = *(sPtr++);
                         *(dPtr++) = *(sPtr++);
-                        *(dPtr++) = alpha;
+                        *(dPtr++) = blackOutAlpha;
                         ++sPtr;
                     }
                 }
@@ -347,7 +347,7 @@ void DirectX::Internal::CopyScanline(
         case DXGI_FORMAT_AYUV:
             if (inSize >= 4 && outSize >= 4)
             {
-                const uint32_t alpha = (format == DXGI_FORMAT_R8G8B8A8_SNORM || format == DXGI_FORMAT_R8G8B8A8_SINT) ? 0x7f000000 : 0xff000000;
+                const uint32_t blackOutAlpha = (format == DXGI_FORMAT_R8G8B8A8_SNORM || format == DXGI_FORMAT_R8G8B8A8_SINT) ? 0x7f000000 : 0xff000000;
 
                 if (pDestination == pSource)
                 {
@@ -355,7 +355,7 @@ void DirectX::Internal::CopyScanline(
                     for (size_t count = 0; count < (outSize - 3); count += 4)
                     {
                         uint32_t t = *dPtr & 0xFFFFFF;
-                        t |= alpha;
+                        t |= blackOutAlpha;
                         *(dPtr++) = t;
                     }
                 }
@@ -367,7 +367,7 @@ void DirectX::Internal::CopyScanline(
                     for (size_t count = 0; count < (size - 3); count += 4)
                     {
                         uint32_t t = *(sPtr++) & 0xFFFFFF;
-                        t |= alpha;
+                        t |= blackOutAlpha;
                         *(dPtr++) = t;
                     }
                 }

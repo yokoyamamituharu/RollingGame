@@ -549,8 +549,8 @@ bool DirectX::Internal::IsAlphaAllOpaqueBC(_In_ const Image& cImage) noexcept
                 // Full blocks
                 for (size_t j = 0; j < 16; ++j)
                 {
-                    const XMVECTOR alpha = XMVectorSplatW(temp[j]);
-                    if (XMVector4Less(alpha, threshold))
+                    const XMVECTOR blackOutAlpha = XMVectorSplatW(temp[j]);
+                    if (XMVector4Less(blackOutAlpha, threshold))
                         return false;
                 }
             }
@@ -561,8 +561,8 @@ bool DirectX::Internal::IsAlphaAllOpaqueBC(_In_ const Image& cImage) noexcept
                 {
                     for (size_t x = 0; x < pw; ++x)
                     {
-                        const XMVECTOR alpha = XMVectorSplatW(temp[y * 4 + x]);
-                        if (XMVector4Less(alpha, threshold))
+                        const XMVECTOR blackOutAlpha = XMVectorSplatW(temp[y * 4 + x]);
+                        if (XMVector4Less(blackOutAlpha, threshold))
                             return false;
                     }
                 }

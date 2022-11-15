@@ -184,7 +184,7 @@ namespace
                 const XMVECTOR normal = XMVector3Normalize(XMVector3Cross(vx, vy));
 
                 // Compute alpha (1.0 or an occlusion term)
-                float alpha = 1.f;
+                float blackOutAlpha = 1.f;
 
                 if (flags & CNMAP_COMPUTE_OCCLUSION)
                 {
@@ -207,7 +207,7 @@ namespace
                     {
                         // If < 0, then no occlusion
                         const float r = sqrtf(1.f + delta*delta);
-                        alpha = (r - delta) / r;
+                        blackOutAlpha = (r - delta) / r;
                     }
                 }
 
@@ -216,15 +216,15 @@ namespace
                 {
                     // 0.5f*normal + 0.5f -or- invert sign case: -0.5f*normal + 0.5f
                     const XMVECTOR n1 = XMVectorMultiplyAdd((flags & CNMAP_INVERT_SIGN) ? g_XMNegativeOneHalf : g_XMOneHalf, normal, g_XMOneHalf);
-                    *dptr++ = XMVectorSetW(n1, alpha);
+                    *dptr++ = XMVectorSetW(n1, blackOutAlpha);
                 }
                 else if (flags & CNMAP_INVERT_SIGN)
                 {
-                    *dptr++ = XMVectorSetW(XMVectorNegate(normal), alpha);
+                    *dptr++ = XMVectorSetW(XMVectorNegate(normal), blackOutAlpha);
                 }
                 else
                 {
-                    *dptr++ = XMVectorSetW(normal, alpha);
+                    *dptr++ = XMVectorSetW(normal, blackOutAlpha);
                 }
             }
 
