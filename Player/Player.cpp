@@ -19,6 +19,7 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 
 void Player::Update()
 {
+
 	if (Input::GetInstance()->PushKey(DIK_3)) {
 		object->SetRotation({
 			object->GetRotation().x,
@@ -215,6 +216,14 @@ void Player::Res(bool flag)
 		rollingSpeed = 0;
 		xvec = 4;
 	}
+
+	if (muteki == true) {
+		mutekiTime++;
+		if (mutekiTime > 60) {
+			muteki = false;
+			mutekiTime = 0;
+		}
+	}
 }
 
 float Player::Ease(float x, float s)
@@ -228,6 +237,14 @@ float Player::Ease(float x, float s)
 	{
 		//x‚ª1‚ð’´‚¦‚½’l‚¾‚Æpow‚Ì•Ô‚è’l‚ª‚¨‚©‚µ‚­‚È‚é‚Ì‚Å
 		return 1.0f;
+	}
+}
+
+void Player::Damage(int damage)
+{
+	if (muteki == false) {
+		hp -= damage;
+		muteki = true;
 	}
 }
 

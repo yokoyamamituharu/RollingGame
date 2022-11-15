@@ -42,7 +42,12 @@ public:
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
-	float Ease(float x,float s);
+	float Ease(float x, float s);
+
+	int GetHp() { return hp; }
+	int GetMaxHp() { return maxHp; }
+	void Damage(int damage);
+	void Cure(int amount) { hp += amount; }
 
 public:
 	OBJobject* object = nullptr;
@@ -56,6 +61,8 @@ private:
 	InputMouse* mouse;
 	Model* playermodel = nullptr;
 	Model* playerSpheremodel = nullptr;
+	bool muteki = false;
+	int mutekiTime = 0;
 
 	bool isSphere = false;		//ƒNƒŠƒbƒN‚µ‚Ä‚é‚Æ‚«
 	bool sphereFlag = false;	//‹Ê‚Ìó‘Ô‚Ì‚Æ‚«
@@ -83,5 +90,7 @@ private:
 
 	float gravity = 0.0f;
 
+	int maxHp = 5;
+	int hp = maxHp;
 };
 
