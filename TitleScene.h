@@ -16,7 +16,7 @@ private:
 public:
 	void Initialize(DirectXCommon* dxCommon);
 
-	void Update(int& sceneNo);
+	void Update(int& sceneNo, bool& initFlag);
 
 	void Draw();
 

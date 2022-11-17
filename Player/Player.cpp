@@ -2,6 +2,8 @@
 #include "../Useful.h"
 using namespace DirectX;
 
+int Player::breakEnemy = 0;
+
 void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 {
 	assert(input);

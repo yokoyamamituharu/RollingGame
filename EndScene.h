@@ -9,10 +9,11 @@ public:
 
 	void Update(int& sceneNo);
 
-	void Draw();
+	void Draw(int& sceneNo);
 
 private:
 	Sprite* sprite = nullptr;
+	Sprite* katisprite = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 };
 

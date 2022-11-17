@@ -14,7 +14,8 @@ public:
 		SCENE_TITLE,
 		SCENE_GAME,
 		SCENE_BATTLE,
-		SCENE_END
+		SCENE_END,
+		SCENE_KATI
 	};
 
 public:
@@ -28,5 +29,7 @@ public:
 	EndScene* endScene = nullptr;
 
 	int sceneNo = SCENE_NONE;
+
+	bool initFlag = 0;
 };
 

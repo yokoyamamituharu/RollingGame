@@ -47,9 +47,10 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 			}
 		}
 	}	
-	else{
+	if (targetEnemy.lock() == nullptr) {
 		attackFlag = false;
 	}
+
 
 	//‚±‚Á‚¿‚Å‚â‚Á‚½•û‚ª‚¢‚¢‚Ì‚©‚Ç‚¤‚©‚Í‚í‚©‚ñ‚Ë‚¥‚â
 	//std::shared_ptr<int> ptr = targetEnemy.lock();
@@ -92,7 +93,11 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 	for (std::unique_ptr<Bullet>& bullet : bullets) {
 		if (targetEnemy.expired() == false) {
 			if (5.0f >= Kyori(bullet->object->GetPosition(), targetEnemy.lock()->object->GetPosition())) {
-				//targetEnemy.lock()->Damege(1);
+				targetEnemy.lock()->Damege(1);
+				if (targetEnemy.lock()->GetHp()<=0) {
+					//Player::breakEnemy += 1;
+				}
+				bullet->Dead();
 			}
 		}
 		bullet->Update();
@@ -105,6 +110,9 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 			targetEnemy.reset();
 			attackFlag = false;
 		}
+		/*if (targetEnemy.lock()->GetHp() <= 0) {
+			Player::breakEnemy += 1;
+		}*/
 	}
 }
 

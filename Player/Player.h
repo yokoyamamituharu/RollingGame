@@ -58,7 +58,7 @@ public:
 
 	float grundHeight = -6.0f;
 
-	int breakEnemy;
+	static int breakEnemy;
 
 	XMFLOAT3 outPos = { 0,0,0 };	//中シーンに行くときに今の座標を保存しておく
 private:

@@ -43,7 +43,7 @@ public:	//メンバ関数
 	//デストラクタ
 	~EnemyZako();
 
-	void Damege(int attackPower) { hp -= attackPower; }
+	void Damege(int attackPower);
 
 	virtual void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
 	virtual void Update();

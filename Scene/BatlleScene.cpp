@@ -83,8 +83,8 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	}
 
 
-
-	EnemyZako::Action();
+	EnemyZako::isAction = 1;
+	//EnemyZako::Action();
 
 	XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
@@ -161,11 +161,11 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		player->Cure(5);
 		sceneNo = SceneManager::SCENE_END;
 	}
-	if (Input::GetInstance()->TriggerKey(DIK_B)) {
-		gameScene->SetEnemy(enemy1);
-		player->object->SetPosition(player->outPos);
-		sceneNo = SceneManager::SCENE_GAME;
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_B)) {
+	//	gameScene->SetEnemy(enemy1);
+	//	player->object->SetPosition(player->outPos);
+	//	sceneNo = SceneManager::SCENE_GAME;
+	//}
 
 }
 

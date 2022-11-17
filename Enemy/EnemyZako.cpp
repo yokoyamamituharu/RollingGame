@@ -25,6 +25,16 @@ EnemyZako::~EnemyZako()
 {
 }
 
+void EnemyZako::Damege(int attackPower)
+{
+	hp -= attackPower;
+	for (int i = 0; i < attackPower; i++) {
+		for (std::unique_ptr<EnemyZako>& enemy : enemies) {
+			enemy->SetDead();
+		}
+	}
+}
+
 void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
 	this->isFiled = filedFlag;
@@ -76,6 +86,11 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 		targetVec = XMVector3Normalize(targetVec);
 		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 	}
+
+	if (filedFlag == 1) {
+		maxHp = enemies.size();
+		hp = maxHp;
+	}
 }
 
 void EnemyZako::Update()
@@ -89,21 +104,22 @@ void EnemyZako::Update()
 
 
 	//外シーンでの処理
-	if (isFiled == FIELD_OUT && isAction > 0) {
+	if (isFiled == FIELD_OUT && isAction > 0 || isFiled == FIELD_OUT && IsDead() == false) {
 		if (isTarget == true) {
+			float speed = 0.15;
 			//目的地に向かって直進			
 			//XMFLOAT3 pos = object->GetPosition() - targetVec * 1;
 			//object->SetPosition(pos);
 			if (targetIndex == 1) {
 				if (targetPos1.z > 0) {
-					object->VecSetPosition(XMFLOAT3{ 0,0,1 });
+					object->VecSetPosition(XMFLOAT3{ 0,0,speed });
 					if (object->GetPosition().z >= oldPos.z + targetPos1.z) {
 						targetIndex = 2;
 						oldPos = object->GetPosition();
 					}
 				}
 				if (targetPos1.z < 0) {
-					object->VecSetPosition(XMFLOAT3{ 0,0,-1 });
+					object->VecSetPosition(XMFLOAT3{ 0,0,-speed });
 					if (object->GetPosition().z <= oldPos.z + targetPos1.z) {
 						targetIndex = 2;
 						oldPos = object->GetPosition();
@@ -112,18 +128,21 @@ void EnemyZako::Update()
 			}
 			else if (targetIndex == 2) {
 				if (targetPos2.x > 0) {
-					object->VecSetPosition(XMFLOAT3{ 1,0,0 });
+					object->VecSetPosition(XMFLOAT3{ speed,0,0 });
 					if (object->GetPosition().x >= targetPos2.x) {
 						targetIndex = 2;
 					}
 				}
 				if (targetPos2.x < 0) {
-					object->VecSetPosition(XMFLOAT3{ -1,0,0 });
+					object->VecSetPosition(XMFLOAT3{ -speed,0,0 });
 					if (object->GetPosition().x <= targetPos2.x) {
 						targetIndex = 2;
 					}
 				}
 			}
+		}
+		if (hp <= 0) {
+			SetDead();
 		}
 	}
 	//中シーンでの処理

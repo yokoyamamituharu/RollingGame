@@ -14,7 +14,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	black->SetAlpha(blackOutAlpha);
 }
 
-void TitleScene::Update(int& sceneNo)
+void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		blackOutFlag = true;
@@ -25,6 +25,7 @@ void TitleScene::Update(int& sceneNo)
 
 	if (BlackOut() == black_end) {
 		sceneNo = SceneManager::SCENE_GAME;
+		initFlag = true;
 	}
 	BlackIn();
 }

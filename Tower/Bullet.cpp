@@ -26,7 +26,7 @@ void Bullet::Update()
 	//float z = object->GetPosition().z;
 	//object->SetPosition({ object->GetPosition().x, object->GetPosition().y,z + 1.0f });	
 	//–Ú•W‚ÉŒü‚©‚Á‚Äi‚Þ
-	float speed = 10.0f;
+	float speed = 5.0f;
 	float posX = object->GetPosition().x;
 	float posY = object->GetPosition().y;
 	float posZ = object->GetPosition().z;

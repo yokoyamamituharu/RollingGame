@@ -40,6 +40,7 @@ using namespace DirectX;
 #include "FPSLock.h"
 
 #include "ParticleManager.h"
+#include "Bullet.h"
 
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
@@ -126,6 +127,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FBXObject::StaticInitialize(dxCommon->GetDev(), camera);
 
 	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+	Bullet::StaticInitialize();
 
 	//-----変数宣言-----//
 	//ポストエフェクトの初期化

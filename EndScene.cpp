@@ -7,6 +7,7 @@ void EndScene::Initialize(DirectXCommon* dxCommon)
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
 	sprite = Sprite::Create(6, { 0,0 });
+	katisprite = Sprite::Create(8, { 0,0 });
 }
 
 void EndScene::Update(int& sceneNo)
@@ -16,9 +17,15 @@ void EndScene::Update(int& sceneNo)
 	}
 }
 
-void EndScene::Draw()
+void EndScene::Draw(int& sceneNo)
 {
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	sprite->Draw();
+	if (sceneNo == SceneManager::SCENE_KATI) {
+		katisprite->Draw();
+	}
+	else{
+		sprite->Draw();
+	}
+	
 	Sprite::PostDraw();
 }

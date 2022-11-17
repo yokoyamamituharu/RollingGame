@@ -32,7 +32,7 @@ private:
 	int hp = maxHp;
 	std::list<std::unique_ptr<Bullet>>bullets;
 
-	const int maxInterval = 10;
+	const int maxInterval = 120;
 	int interval = maxInterval;
 
 	std::weak_ptr<EnemyZako> targetEnemy;

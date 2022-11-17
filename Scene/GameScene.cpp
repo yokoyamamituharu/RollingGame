@@ -59,6 +59,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	Sprite::LoadTexture(5, L"Resources/title.png");
 	Sprite::LoadTexture(6, L"Resources/end.png");
 	Sprite::LoadTexture(7, L"Resources/black.png");
+	Sprite::LoadTexture(8, L"Resources/kati.png");
 
 	Sprite::LoadTexture(9, L"Resources/num/slash.png");
 	Sprite::LoadTexture(10, L"Resources/num/0.png");
@@ -81,7 +82,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 
 	//弾の静的初期化
-	Bullet::StaticInitialize();
+	
 
 	EnemyZako::EnemyCreateModel();
 
@@ -133,7 +134,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 	kabe = OBJobject::Create();
 	kabe->SetModel(kabeModel);
-	kabe->SetPosition({ 70.0f,-5.0f,30.0f });
+	kabe->SetPosition({ 70.0f,-5.0f,50.0f });
 	kabe->SetScale({ 5.0f,5.0f,5.0f });
 	kabe->SetRotation({ 0,0,0 });
 
@@ -155,11 +156,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
 	//敵の生成処理
-	std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();
-	enemy1->Initialize(EnemyZako::FIELD_OUT, camera, { -50, EnemyZako::groundOutPos,0 });
-	enemy1->SetPlayer(player);
-	enemy1->object->SetRotation({ 0,90,0 });
-	enemiesG.push_back(std::move(enemy1));
+	//std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();
+	//enemy1->Initialize(EnemyZako::FIELD_OUT, camera, { -50, EnemyZako::groundOutPos,0 });
+	//enemy1->SetPlayer(player);
+	//enemy1->object->SetRotation({ 0,90,0 });
+	//enemiesG.push_back(std::move(enemy1));
+	enemiesG.clear();
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -174,9 +176,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 	index = 0;
 	timer[0] = 0;
-	timer[1] = 120;
-	timer[2] = 60;
-	timer[3] = 60;
+	timer[1] = 160;
+	timer[2] = 100;
+	timer[3] = 100;
 	timer[4] = 210;
 	timer[5] = 200;
 
@@ -186,6 +188,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	dasuteki[3] = 1;
 	dasuteki[4] = 2;
 	dasuteki[5] = 1;
+
+	Player::breakEnemy = 0;
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -197,7 +201,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//}
 	//else if (input->PushKey(DIK_LEFT)) {
 	//	camera->matRot *= XMMatrixRotationY(-0.1f);
-	//}
+	//}	
 
 	//敵生成処理
 	timer[index]--;
@@ -218,39 +222,39 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		index++;
 	}
 
-	if (Input::GetInstance()->PushKey(DIK_H)) {
-		int num = 0;
-	}
+	//if (Input::GetInstance()->PushKey(DIK_H)) {
+	//	int num = 0;
+	//}
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
 		cameraToMouse *= -1;
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_0)) {
-		sceneNo = 2;
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
+	//	sceneNo = 2;
+	//}
 
 	//敵を行動させるかさせないかのトルグスイッチ
-	EnemyZako::Action();
+	//EnemyZako::Action();
 
-	//巣穴１から敵を生成
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
-		enemiesG.push_back(std::move(newEnemy));
-	}
+	////巣穴１から敵を生成
+	//if (Input::GetInstance()->TriggerKey(DIK_1)) {
+	//	std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
+	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
+	//	enemiesG.push_back(std::move(newEnemy));
+	//}
 
-	//巣穴２から敵を生成
-	if (Input::GetInstance()->TriggerKey(DIK_2)) {
-		std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
-		enemiesG.push_back(std::move(newEnemy));
-	}
+	////巣穴２から敵を生成
+	//if (Input::GetInstance()->TriggerKey(DIK_2)) {
+	//	std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
+	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
+	//	enemiesG.push_back(std::move(newEnemy));
+	//}
 
-	if (Input::GetInstance()->TriggerKey(DIK_3)) {
-		std::shared_ptr<StrongZakoEnemy> newEnemy = std::make_shared<StrongZakoEnemy>();
-		newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
-		enemiesG.push_back(std::move(newEnemy));
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_3)) {
+	//	std::shared_ptr<StrongZakoEnemy> newEnemy = std::make_shared<StrongZakoEnemy>();
+	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
+	//	enemiesG.push_back(std::move(newEnemy));
+	//}
 
 
 	//std::list<std::unique_ptr<EnemyZako>>enemies1 = std::move(enemy1->GetEnemies());
@@ -258,15 +262,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-			//バトルシーンに行く処理
-			batlleScene->SetEnemies(enemy);
-			enemiesG.remove(enemy);
-			player->outPos = player->object->GetPosition();
-			player->Stop();
-			//プレイヤーを原点に発生させる
-			player->object->SetPosition({ 0,-6,0 });
-			sceneNo = SceneManager::SCENE_BATTLE;
-			break;
+			if (enemy->IsDead() == false) {
+				//バトルシーンに行く処理
+				batlleScene->SetEnemies(enemy);
+				enemiesG.remove(enemy);
+				player->outPos = player->object->GetPosition();
+				player->Stop();
+				//プレイヤーを原点に発生させる
+				player->object->SetPosition({ 0,-6,0 });
+				sceneNo = SceneManager::SCENE_BATTLE;
+				break;
+			}
 		}
 
 		//敵と城の当たり判定
@@ -278,12 +284,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
-	if (Input::GetInstance()->TriggerKey(DIK_PGUP)) {
-		player->Cure(1);
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_PGDN)) {
-		player->Damage(1);
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_PGUP)) {
+	//	player->Cure(1);
+	//}
+	//if (Input::GetInstance()->TriggerKey(DIK_PGDN)) {
+	//	player->Damage(1);
+	//}
 
 	//3Dオブジェクト更新
 	fbxobject->Update();
@@ -292,7 +298,9 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	bullet->Update();
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		enemy->Update();
+		//if (enemy->IsDead() == false) {
+			enemy->Update();
+	//	}
 	}
 	defenseTower->Update(enemiesG);
 
@@ -340,6 +348,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//	player->object->GetPosition().z + initTarget.z });
 	camera->SetWorldMatrix(player->object->GetWorldMatrix());
 	camera->Update();
+
+	if (enemiesG.size() <= 0 && index >=5) {
+		sceneNo = SceneManager::SCENE_KATI;
+	}
 }
 
 void GameScene::Draw()
@@ -363,7 +375,7 @@ void GameScene::Draw()
 	OBJobject::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();	
+	spriteBG->Draw();	
 	canvas->Draw();
 	Sprite::PostDraw();
 }

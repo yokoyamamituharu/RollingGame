@@ -14,6 +14,7 @@ public:
 	void Update();
 	void Draw();
 	bool IsDead() { return dead; }
+	void Dead() { dead = true; }
 
 public:
 OBJobject* object = nullptr;
