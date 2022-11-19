@@ -178,9 +178,6 @@
     <ClInclude Include="ObjectFBX\FbxModel.h">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectFBX\FBXObject.h">
-      <Filter>ソース ファイル\ObjectFBX</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectFBX\FbxLoader.h">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="ObjectOBJ\ObjectOBJ.h">
       <Filter>ソース ファイル\ObjectOBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFBX\ObjectFBX.h">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +279,6 @@
     <ClCompile Include="ObjectFBX\FbxModel.cpp">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectFBX\FBXObject.cpp">
-      <Filter>ソース ファイル\ObjectFBX</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectFBX\FbxLoader.cpp">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
@@ -317,6 +314,9 @@
     </ClCompile>
     <ClCompile Include="ObjectOBJ\ObjectOBJ.cpp">
       <Filter>ソース ファイル\ObjectOBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFBX\ObjectFBX.cpp">
+      <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

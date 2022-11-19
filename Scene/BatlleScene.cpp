@@ -180,7 +180,7 @@ void BatlleScene::Draw()
 
 	player->object->Draw();
 	ground->Draw();
-	//fbxobject->Draw(dxCommon->GetCmdList());
+	//ObjectFBX->Draw(dxCommon->GetCmdList());
 
 	int aliveNum = 0;
 

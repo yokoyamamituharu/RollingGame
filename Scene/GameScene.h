@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "ObjectOBJ.h"
-#include "FBXObject.h"
+#include "ObjectFBX.h"
 #include "FbxLoader.h"
 #include "Player.h"
 #include "EnemyZako.h"
@@ -67,7 +67,7 @@ private: // メンバ変数
 	Sprite* clearsprite = nullptr;
 	//3Dオブジェクト
 	FbxModel* fbxmodel = nullptr;
-	FBXObject* fbxobject = nullptr;
+	ObjectFBX* objectFBX = nullptr;
 
 	//プレイヤー
 	Player* player = nullptr;

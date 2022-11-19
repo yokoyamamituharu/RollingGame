@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "ObjectOBJ.h"
-#include "FBXObject.h"
+#include "ObjectFBX.h"
 #include "FbxLoader.h"
 #include "Player.h"
 #include "EnemyZako.h"
@@ -54,7 +54,7 @@ class BatlleScene
         Sprite* claerSprite = nullptr;
         //3Dオブジェクト
         //FbxModel* fbxmodel = nullptr;
-        //FBXObject* fbxobject = nullptr;
+        //ObjectFBX* ObjectFBX = nullptr;
 
         Player* player = nullptr;
         ObjectObj* ground = nullptr;

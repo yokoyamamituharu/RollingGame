@@ -9,7 +9,7 @@
 #include <DirectXMath.h>
 #include <string>
 
-class FBXObject
+class ObjectFBX
 {
 protected://エイリアス
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -41,16 +41,16 @@ public://サブクラス
 public://静的メンバ関数
 	static bool StaticInitialize(ID3D12Device* device, Camera* camera);
 
-	static void SetDevice(ID3D12Device* device) { FBXObject::device = device; }
-	static void SetCamera(Camera* camera) { FBXObject::camera = camera; }
+	static void SetDevice(ID3D12Device* device) { ObjectFBX::device = device; }
+	static void SetCamera(Camera* camera) { ObjectFBX::camera = camera; }
 	//グラッフィクパイプラインの生成
 	static void CreateGraphicsPipline();
 
 public:
 	//コンストラクタ
-	FBXObject();
+	ObjectFBX();
 	//デストラクタ
-	~FBXObject();
+	~ObjectFBX();
 
 	//アニメーションの開始
 	void PlayAnimetion();

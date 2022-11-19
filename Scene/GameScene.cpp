@@ -42,7 +42,7 @@ GameScene::~GameScene()
 	safe_delete(postEffect);
 
 	//3Dオブジェクト解放
-	safe_delete(fbxobject);
+	safe_delete(objectFBX);
 	safe_delete(fbxmodel);
 	safe_delete(kabe);
 	safe_delete(kabe2);
@@ -101,11 +101,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 
 	//3Dオブジェクトの生成
-	fbxobject = new FBXObject;
-	fbxobject->Initialize();
-	fbxobject->SetModel(fbxmodel);
-	fbxobject->PlayAnimetion();
-	fbxobject->SetPos({ 0,0,+80 });
+	objectFBX = new ObjectFBX;
+	objectFBX->Initialize();
+	objectFBX->SetModel(fbxmodel);
+	objectFBX->PlayAnimetion();
+	objectFBX->SetPos({ 0,0,+80 });
 
 	ground = ObjectObj::Create();
 	ground->SetModel(ModelManager::GetModel("ground"));
@@ -288,7 +288,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//}
 
 	//3Dオブジェクト更新
-	fbxobject->Update();
+	objectFBX->Update();
 	player->Update();
 	ground->Update();
 
@@ -352,7 +352,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 void GameScene::Draw()
 {
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	//fbxobject->Draw(dxCommon->GetCmdList());
+	//objectFBX->Draw(dxCommon->GetCmdList());
 	ground->Draw();
 	defenseTower->Draw();
 

@@ -1,4 +1,4 @@
-#include "FBXObject.h"
+#include "ObjectFBX.h"
 #include <d3dcompiler.h>
 #include "FbxLoader.h"
 #pragma comment(lib,"d3dcompiler.lib")
@@ -6,23 +6,23 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-ID3D12Device* FBXObject::device = nullptr;
-Camera* FBXObject::camera = nullptr;
-ComPtr<ID3D12RootSignature> FBXObject::rootsignature;
-ComPtr<ID3D12PipelineState> FBXObject::pipelinestate;
+ID3D12Device* ObjectFBX::device = nullptr;
+Camera* ObjectFBX::camera = nullptr;
+ComPtr<ID3D12RootSignature> ObjectFBX::rootsignature;
+ComPtr<ID3D12PipelineState> ObjectFBX::pipelinestate;
 
-bool FBXObject::StaticInitialize(ID3D12Device* device, Camera* camera)
+bool ObjectFBX::StaticInitialize(ID3D12Device* device, Camera* camera)
 {
 	// nullptrチェック
 	assert(device);
-	FBXObject::device = device;
-	FBXObject::camera = camera;
+	ObjectFBX::device = device;
+	ObjectFBX::camera = camera;
 	CreateGraphicsPipline();
 
 	return true;
 }
 
-void FBXObject::CreateGraphicsPipline()
+void ObjectFBX::CreateGraphicsPipline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -185,15 +185,15 @@ void FBXObject::CreateGraphicsPipline()
 	if (FAILED(result)) { assert(0); }
 }
 
-FBXObject::FBXObject()
+ObjectFBX::ObjectFBX()
 {
 }
 
-FBXObject::~FBXObject()
+ObjectFBX::~ObjectFBX()
 {
 }
 
-void FBXObject::PlayAnimetion()
+void ObjectFBX::PlayAnimetion()
 {
 	FbxScene* fbxScene = model->GetFbxScene();
 	//0番のアニメーション取得
@@ -213,7 +213,7 @@ void FBXObject::PlayAnimetion()
 	isPlay = true;
 }
 
-void FBXObject::Initialize()
+void ObjectFBX::Initialize()
 {
 	HRESULT result;
 	//定数バッファの生成
@@ -238,7 +238,7 @@ void FBXObject::Initialize()
 	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
 }
 
-void FBXObject::Update()
+void ObjectFBX::Update()
 {
 	if (isPlay) {
 		//1フレーム進める
@@ -304,7 +304,7 @@ void FBXObject::Update()
 	constBuffSkin->Unmap(0, nullptr);
 }
 
-void FBXObject::Draw(ID3D12GraphicsCommandList* cmdList)
+void ObjectFBX::Draw(ID3D12GraphicsCommandList* cmdList)
 {
 	//モデルの割り当てがなければ描画しない
 	if (model == nullptr) {

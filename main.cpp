@@ -20,7 +20,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "ObjectOBJ.h"
-#include "FBXObject.h"
+#include "ObjectFBX.h"
 #include "GameScene.h"
 
 #pragma comment(lib, "d3d12.lib")
@@ -126,7 +126,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	ObjectObj::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height, camera);
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
-	FBXObject::StaticInitialize(dxCommon->GetDev(), camera);
+	ObjectFBX::StaticInitialize(dxCommon->GetDev(), camera);
 
 	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 

@@ -281,7 +281,7 @@
     <ClInclude Include="Input\InputMouse.h" />
     <ClInclude Include="ObjectFBX\FbxLoader.h" />
     <ClInclude Include="ObjectFBX\FbxModel.h" />
-    <ClInclude Include="ObjectFBX\FBXObject.h" />
+    <ClInclude Include="ObjectFBX\ObjectFBX.h" />
     <ClInclude Include="ObjectOBJ\Model.h" />
     <ClInclude Include="ObjectOBJ\ModelManager.h" />
     <ClInclude Include="ObjectOBJ\ObjectOBJ.h" />
@@ -316,7 +316,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ObjectFBX\FbxLoader.cpp" />
     <ClCompile Include="ObjectFBX\FbxModel.cpp" />
-    <ClCompile Include="ObjectFBX\FBXObject.cpp" />
+    <ClCompile Include="ObjectFBX\ObjectFBX.cpp" />
     <ClCompile Include="ObjectOBJ\Model.cpp" />
     <ClCompile Include="ObjectOBJ\ModelManager.cpp" />
     <ClCompile Include="ObjectOBJ\ObjectOBJ.cpp" />
