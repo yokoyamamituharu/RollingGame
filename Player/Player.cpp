@@ -1,8 +1,20 @@
 #include "Player.h"
 #include "../Useful.h"
+#include "ModelManager.h"
+#include "safe_delete.h"
+
 using namespace DirectX;
 
 int Player::breakEnemy = 0;
+
+Player::Player()
+{
+}
+
+Player::~Player()
+{
+	safe_delete(object);
+}
 
 void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 {
@@ -12,8 +24,8 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	this->mouse = mouse;
 	this->camera = camera;
 	//プレイヤー用モデルを読み込み
-	playermodel = Model::Create("player");
-	playerSpheremodel = Model::Create("playerSphere");
+	playermodel = ModelManager::GetModel("player");
+	playerSpheremodel = ModelManager::GetModel("playerSphere");
 
 	//オブジェクトの作成
 	object = OBJobject::Create();

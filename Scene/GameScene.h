@@ -72,29 +72,23 @@ private: // メンバ変数
 	//プレイヤー
 	Player* player = nullptr;
 	//地面
-	Model* groundmodel = nullptr;
 	OBJobject* ground = nullptr;
 	//敵
-	Model* enemymodel = nullptr;
 	//タワー
 	DefenseTower* defenseTower = nullptr;
 	Bullet* bullet = nullptr;
 	//EnemyZako* enemy1 = nullptr;
 	//お城
-	Model* castleModel = nullptr;
 	OBJobject* castle = nullptr;
 
 	//巣穴
-	Model* suanaModel = nullptr;
 	OBJobject* suana = nullptr;
 	OBJobject* suana2 = nullptr;
 	//壁
-	Model* kabeModel = nullptr;
 	OBJobject* kabe = nullptr;
 	OBJobject* kabe2 = nullptr;
 
 	//天球
-	Model* tenqModel = nullptr;
 	OBJobject* tenQ = nullptr;
 
 	bool flag1 = false;

@@ -2,7 +2,9 @@
 #include "BatlleScene.h"
 #include "SceneManager.h"
 #include "StrongZakoEnemy.h"
-#include "/K020G1196/RollingGame_ryuunen/tuyoEnemy.h"
+#include "tuyoEnemy.h"
+#include "safe_delete.h"
+#include "ModelManager.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -33,8 +35,24 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	//スプライト解放
+	safe_delete(canvas);
+	safe_delete(spriteBG);
+	safe_delete(clearsprite);
+	safe_delete(postEffect);
+
 	//3Dオブジェクト解放
-	delete fbxobject;
+	safe_delete(fbxobject);
+	safe_delete(fbxmodel);
+	safe_delete(kabe);
+	safe_delete(kabe2);
+	safe_delete(tenQ);
+	safe_delete(ground);
+	safe_delete(castle);
+	safe_delete(suana);
+	safe_delete(suana2);
+	safe_delete(defenseTower);
+	safe_delete(player);	
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
@@ -73,29 +91,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	Sprite::LoadTexture(18, L"Resources/num/8.png");
 	Sprite::LoadTexture(19, L"Resources/num/9.png");
 
-
-	//Sprite::LoadTexture(5, L"Resources/hp.png");
-
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
-
-
-	//弾の静的初期化
 	
-
-	EnemyZako::EnemyCreateModel();
-
-	StrongZakoEnemy::CreateStrongEnemyModel();
 
 	//モデルの読み込み
 	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-	groundmodel = Model::Create("ground");
-	enemymodel = Model::Create("enemy");
-	castleModel = Model::Create("castle");
-	suanaModel = Model::Create("suana");
-	kabeModel = Model::Create("kabe");
-	tenqModel = Model::Create("tenQ");
+
 
 	//3Dオブジェクトの生成
 	fbxobject = new FBXObject;
@@ -105,47 +108,41 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	fbxobject->SetPos({ 0,0,+80 });
 
 	ground = OBJobject::Create();
-	ground->SetModel(groundmodel);
-	ground->SetScale({ 10.0f,1.0f,10.0f });
-	ground->SetPosition({ 0.0f,-10.0f,0.0f });
-	ground->SetRotation({ 0.0f,0.0f,0.0f });
-
-	ground = OBJobject::Create();
-	ground->SetModel(groundmodel);
+	ground->SetModel(ModelManager::GetModel("ground"));
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
 	castle = OBJobject::Create();
-	castle->SetModel(castleModel);
+	castle->SetModel(ModelManager::GetModel("castle"));
 	castle->SetScale({ 10.0f,10.0f,10.0f });
 
 	suana = OBJobject::Create();
-	suana->SetModel(suanaModel);
+	suana->SetModel(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
 	suana->SetRotation({ 0,90,0 });
 
 	suana2 = OBJobject::Create();
-	suana2->SetModel(suanaModel);
+	suana2->SetModel(ModelManager::GetModel("suana"));
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
 
 	kabe = OBJobject::Create();
-	kabe->SetModel(kabeModel);
+	kabe->SetModel(ModelManager::GetModel("kabe"));
 	kabe->SetPosition({ 70.0f,-5.0f,50.0f });
 	kabe->SetScale({ 5.0f,5.0f,5.0f });
 	kabe->SetRotation({ 0,0,0 });
 
 	kabe2 = OBJobject::Create();
-	kabe2->SetModel(kabeModel);
+	kabe2->SetModel(ModelManager::GetModel("kabe"));
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
 	kabe2->SetRotation({ 0,180,0 });
 
 	tenQ = OBJobject::Create();
-	tenQ->SetModel(tenqModel);
+	tenQ->SetModel(ModelManager::GetModel("tenQ"));
 	tenQ->SetScale({ 5,5,5 });
 
 	//プレイヤーの生成処理
@@ -166,7 +163,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetOBJObject()->SetPosition({ 20,0,20 });
-	bullet = Bullet::Create();
 
 	postEffect = new PostEffect();
 	postEffect->Initialize();
@@ -296,7 +292,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	player->Update();
 	ground->Update();
 
-	bullet->Update();
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		//if (enemy->IsDead() == false) {
 			enemy->Update();
@@ -360,7 +355,6 @@ void GameScene::Draw()
 	//fbxobject->Draw(dxCommon->GetCmdList());
 	ground->Draw();
 	defenseTower->Draw();
-	bullet->Draw();
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Draw();

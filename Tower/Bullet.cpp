@@ -1,6 +1,6 @@
 #include "Bullet.h"
-
-Model* Bullet::model = nullptr;
+#include "ModelManager.h"
+#include "safe_delete.h"
 
 Bullet* Bullet::Create()
 {
@@ -14,11 +14,6 @@ Bullet* Bullet::Create()
 		return nullptr;
 	}	
 	return bullet;
-}
-
-void Bullet::StaticInitialize()
-{
-	model = Model::Create("bullet");
 }
 
 void Bullet::Update()
@@ -54,11 +49,10 @@ void Bullet::Draw()
 
 bool Bullet::Initialize(XMFLOAT3 pos,XMFLOAT3 target,bool flag)
 {
-	//弾用モデルを読み込み	
-	//model = Model::Create("bullet");
+	ModelManager::GetModel("bullet");
 	//オブジェクトの作成
 	object = OBJobject::Create();
-	object->SetModel(model);
+	object->SetModel(ModelManager::GetModel("bullet"));
 	object->SetPosition(pos);
 	this->target = target;
 	this->flag = flag;
@@ -73,5 +67,5 @@ Bullet::Bullet()
 
 Bullet::~Bullet()
 {
-	delete(object);
+	safe_delete(object);
 }

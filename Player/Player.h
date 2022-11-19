@@ -16,6 +16,9 @@ private:
 
 
 public:
+	Player();
+	~Player();
+
 	void Initialize(Input* input, InputMouse* mouse, Camera* camera);
 	void Update();
 	void Move();

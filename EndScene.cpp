@@ -1,6 +1,17 @@
 #include "EndScene.h"
 #include "Input.h"
 #include "SceneManager.h"
+#include "safe_delete.h"
+
+EndScene::EndScene()
+{
+}
+
+EndScene::~EndScene()
+{
+	safe_delete(sprite);
+	safe_delete(katisprite);
+}
 
 void EndScene::Initialize(DirectXCommon* dxCommon)
 {

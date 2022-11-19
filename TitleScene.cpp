@@ -1,6 +1,17 @@
 #include "TitleScene.h"
 #include "Input.h"
 #include "SceneManager.h"
+#include "safe_delete.h"
+
+TitleScene::TitleScene()
+{
+}
+
+TitleScene::~TitleScene()
+{
+	safe_delete(sprite);
+	safe_delete(black);
+}
 
 void TitleScene::Initialize(DirectXCommon* dxCommon)
 {

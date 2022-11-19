@@ -16,6 +16,9 @@ public:
 	static DefenseTower* Create();
 
 public:
+	DefenseTower();
+	~DefenseTower();
+
 	void Update(std::list<std::shared_ptr<EnemyZako>>& enemies);
 	void Draw();
 	OBJobject* GetOBJObject() { return object; }
@@ -25,7 +28,6 @@ private:
 
 private:
 	int type = NONE_TOWER;
-	Model* model = nullptr;
 	OBJobject* object = nullptr;
 	bool attackFlag = false;
 	const int maxHp = 10;

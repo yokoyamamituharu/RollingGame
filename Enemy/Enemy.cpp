@@ -1,11 +1,22 @@
 #include "Enemy.h"
+#include "ModelManager.h"
+#include "safe_delete.h"
+
+Enemy::Enemy()
+{
+}
+
+Enemy::~Enemy()
+{
+	safe_delete(object);
+}
 
 void Enemy::Initialize(std::string modelName)
 {
 	if (modelName != "") {
 		this->modelName = modelName;
 	}
-	model = Model::Create(this->modelName);
+	model = ModelManager::GetModel(this->modelName);
 	object = OBJobject::Create();
 	object->SetModel(model);
 }

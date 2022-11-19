@@ -42,6 +42,8 @@ using namespace DirectX;
 #include "ParticleManager.h"
 #include "Bullet.h"
 
+#include "safe_delete.h"
+
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
 
@@ -127,7 +129,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	FBXObject::StaticInitialize(dxCommon->GetDev(), camera);
 
 	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
-	Bullet::StaticInitialize();
 
 	//-----変数宣言-----//
 	//ポストエフェクトの初期化
@@ -190,7 +191,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		if (winApp->ProcessMessage())
 		{
 			break;
-		}
+		}		
+
 		//-----更新処理-----//
 		//入力の更新処理
 		input->Update();
@@ -219,11 +221,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//sceneManager->Draw();
 		//postEffect->PosDrawScene(dxCommon->GetCmdList());
 
-		//sceneManager->gameScene->PostReserve();
-
-
 		dxCommon->PreDraw();
-
 		sceneManager->Draw();
 		//postEffect->Draw(dxCommon->GetCmdList());
 		dxCommon->PostDraw();
@@ -231,25 +229,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//winAppの解放
 	winApp->Finalize();
-	delete winApp;
-	winApp = nullptr;
+	safe_delete(winApp);	
 	//DirectX解放
-	delete dxCommon;
-	dxCommon = nullptr;
+	safe_delete(dxCommon);	
 	//入力の解放
-	delete mouse;
+	safe_delete(mouse);
 	//カメラの開放
-	delete camera;
+	safe_delete(camera);
 	//シーンの開放
-	delete sceneManager;
+	safe_delete(sceneManager);
 	//ポストエフェクトの開放
-	delete postEffect;
+	safe_delete(postEffect);
 	//パーティクルマネージャーの開放
-	delete particleMan;
+	safe_delete(particleMan);
 	//FBXの解放処理
 	FbxLoader::GetInstance()->Finalize();
 
 	//input->Finalize();
-
+	//safe_delete(input);
 	return 0;
 }

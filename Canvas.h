@@ -17,6 +17,9 @@ public:
 		breakEnemyNum = enemy;
 	}
 
+	Canvas();
+	~Canvas();
+
 private:
 	// const int maxHp = 10;
 	static const int limitHp = 20;

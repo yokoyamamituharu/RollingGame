@@ -1,12 +1,20 @@
 #pragma once
 #include "Model.h"
+#include <map>
+
 class ModelManager
 {
 public:
-	static void Initialize();
+	ModelManager();
+	~ModelManager();
+
 	static ModelManager* GetIns();
-public:
-	static Model* bulletModel;
+	static void SetModelName();
+	static void Initialize();
+	static void Finalize();
+	static Model* GetModel(std::string name) { return models[name]; }
 
+private:
+	static std::map<std::string, Model*> models;
+	static std::list<std::string> modelname;
 };
-

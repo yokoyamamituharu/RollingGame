@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include "safe_delete.h"
 
 void Canvas::Initialize()
 {
@@ -59,4 +60,26 @@ void Canvas::Draw()
 	//breakEnemyNum3[breaknum3]->Draw();
 
 	slash->Draw();
+}
+
+Canvas::Canvas()
+{
+}
+
+Canvas::~Canvas()
+{
+	for (int i = 0; i < limitHp; i++) {
+		safe_delete(playerHp[i]);
+		safe_delete(damagePlayerHp[i]);
+	}
+
+	for (int i = 0; i < 10; i++) {
+		safe_delete(enemyNum1[i]);
+		safe_delete(enemyNum2[i]);
+		safe_delete(enemyNum3[i]);
+		safe_delete(breakEnemyNum1[i]);
+		safe_delete(breakEnemyNum2[i]);
+		safe_delete(breakEnemyNum3[i]);
+	}
+	safe_delete(slash);
 }

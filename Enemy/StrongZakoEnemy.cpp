@@ -1,6 +1,16 @@
 #include "StrongZakoEnemy.h"
+#include "ModelManager.h"
+#include "safe_delete.h"
 
-Model* StrongZakoEnemy::strongEnemyModel = nullptr;
+
+StrongZakoEnemy::StrongZakoEnemy()
+{
+}
+
+StrongZakoEnemy::~StrongZakoEnemy()
+{
+	safe_delete(tuyoObject);
+}
 
 void StrongZakoEnemy::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
@@ -12,7 +22,7 @@ void StrongZakoEnemy::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bo
 	this->targetPos.m128_f32[2] = targetPos1.z;
 	//オブジェクトの作成
 	object = OBJobject::Create();
-	object->SetModel(strongEnemyModel);
+	object->SetModel(ModelManager::GetModel("strongEnemy"));
 
 	//外用の敵としてインスタンスが生成された場合
 	if (filedFlag == 1) {
@@ -84,12 +94,6 @@ void StrongZakoEnemy::Update()
 	}
 	//オブジェクトの更新
 	object->Update();
-}
-
-void StrongZakoEnemy::CreateStrongEnemyModel()
-{
-	//敵用モデルを読み込み
-	strongEnemyModel = Model::Create("strongEnemy");
 }
 
 void StrongZakoEnemy::Move()

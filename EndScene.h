@@ -5,6 +5,9 @@
 class EndScene
 {
 public:
+	EndScene();
+	~EndScene();
+
 	void Initialize(DirectXCommon* dxCommon);
 
 	void Update(int& sceneNo);

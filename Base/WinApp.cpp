@@ -1,4 +1,5 @@
 #include"WinApp.h"
+#include "Input/Input.h"
 
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -61,11 +62,18 @@ bool WinApp::ProcessMessage()
 		DispatchMessage(&msg); // プロシージャにメッセージを送る
 	}
 
+	//終了キーを押されたら終了
+	if (Input::GetInstance()->TriggerKey(DIK_F1)) {
+		DestroyWindow(hwnd);
+	}
+
 	// ばつボタンで終了メッセージが来たらゲームループを抜ける
 	if (msg.message == WM_QUIT)
 	{
 		return true;
 	}
+	
+
 	return false;
 }
 

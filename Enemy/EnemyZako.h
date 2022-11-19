@@ -23,8 +23,6 @@ public:	//静的メンバ関数
 			isAction *= -1;
 		}
 	}
-	static void EnemyCreateModel();
-
 
 public:	//メンバ関数
 #pragma region メンバ関数

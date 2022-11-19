@@ -1,9 +1,9 @@
 #pragma once
 #include "GameScene.h"
 #include "BatlleScene.h"
-#include "../TitleScene.h"
-#include "../EndScene.h"
-
+#include "TitleScene.h"
+#include "EndScene.h"
+#include "ModelManager.h"
 
 class SceneManager
 {
@@ -22,6 +22,8 @@ public:
 	void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
 	void Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
 	void Draw();
+	SceneManager();
+	~SceneManager();
 public:
 	GameScene* gameScene = nullptr;
 	BatlleScene* batlleScene = nullptr;

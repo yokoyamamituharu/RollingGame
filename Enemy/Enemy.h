@@ -3,6 +3,9 @@
 class Enemy
 {
 public:
+	Enemy();
+	~Enemy();
+
 	void Initialize(std::string modelName = "");
 
 	void Update();

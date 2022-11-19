@@ -1,5 +1,7 @@
 #include "DefenseTower.h"
 #include "Input.h"
+#include "ModelManager.h"
+#include "safe_delete.h"
 
 float Kyori(XMFLOAT3 pos1, XMFLOAT3 pos2)
 {
@@ -24,6 +26,15 @@ DefenseTower* DefenseTower::Create()
 	defenseTower->object->SetScale({ 7, 7, 7 });
 	defenseTower->object->SetPosition({ 0, 10, 0 });
 	return defenseTower;
+}
+
+DefenseTower::DefenseTower()
+{
+}
+
+DefenseTower::~DefenseTower()
+{
+	safe_delete(object);
 }
 
 void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
@@ -127,10 +138,9 @@ void DefenseTower::Draw()
 bool DefenseTower::Initialize()
 {
 	//タワー用モデルを読み込み
-	model = Model::Create("defenseTower");
 	//オブジェクトの作成
 	object = OBJobject::Create();
-	object->SetModel(model);
+	object->SetModel(ModelManager::GetModel("defenseTower"));
 
 	return true;
 }

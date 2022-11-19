@@ -14,6 +14,9 @@ private:
 		black_end,		//ˆ—I‚í‚è
 	};
 public:
+	TitleScene();
+	~TitleScene();
+
 	void Initialize(DirectXCommon* dxCommon);
 
 	void Update(int& sceneNo, bool& initFlag);

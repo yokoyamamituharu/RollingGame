@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include <DirectXMath.h>
 #include "../Useful.h"
+#include "safe_delete.h"
+
 using namespace DirectX;
 
 bool CubeCollision1(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
@@ -28,6 +30,13 @@ BatlleScene::BatlleScene()
 
 BatlleScene::~BatlleScene()
 {
+	//スプライト解放
+	safe_delete(canvas);
+
+	//3Dオブジェクト解放
+	safe_delete(ground);
+	safe_delete(tenQ);
+	enemy1.reset();
 }
 
 void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera, GameScene* gameScene)
@@ -44,23 +53,18 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 	claerSprite = Sprite::Create(2, { 100.0f,100.0f });
 
 
-	groundmodel = Model::Create("battlegrund");
 	ground = OBJobject::Create();
-	ground->SetModel(groundmodel);
+	ground->SetModel(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
-
-	tenQQModel = Model::Create("IntenQ");
 	tenQ = OBJobject::Create();
-	tenQ->SetModel(tenQQModel);
+	tenQ->SetModel(ModelManager::GetModel("IntenQ"));
 	tenQ->SetScale({ 10.0f,1.0f,10.0f });
 	tenQ->SetPosition({ 0.0f,-10.0f,0.0f });
 	tenQ->SetRotation({ 0.0f,0.0f,0.0f });
 	tenQ->Update();
-
-	enemymodel = Model::Create("enemy");
 
 	canvas = new Canvas();
 	canvas->Initialize();

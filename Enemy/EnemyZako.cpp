@@ -1,7 +1,8 @@
 #include "EnemyZako.h"
 using namespace DirectX;
 #include "../Useful.h"
-
+#include "ModelManager.h"
+#include "safe_delete.h"
 
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -4.0f;
@@ -23,6 +24,8 @@ EnemyZako::EnemyZako()
 
 EnemyZako::~EnemyZako()
 {
+	safe_delete(object);
+	enemies.clear();
 }
 
 void EnemyZako::Damege(int attackPower)
@@ -48,6 +51,7 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 
 	targetIndex = 1;
 	//オブジェクトの作成
+	enemyModel = ModelManager::GetModel("enemy");
 	object = OBJobject::Create();
 	object->SetModel(enemyModel);
 
@@ -264,12 +268,6 @@ void EnemyZako::Direction(Player* player)
 	object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 }
 
-
-void EnemyZako::EnemyCreateModel()
-{
-	//敵用モデルを読み込み
-	enemyModel = Model::Create("enemy");
-}
 
 void EnemyZako::Stop()
 {

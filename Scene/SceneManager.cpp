@@ -1,7 +1,9 @@
 #include "SceneManager.h"
+#include "safe_delete.h"
 
 void SceneManager::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
 {
+	ModelManager::GetIns()->Initialize();
 	gameScene = new GameScene;
 	gameScene->Initialize(dxCommon, input, mouse, camera);
 	batlleScene = new BatlleScene;
@@ -32,6 +34,10 @@ void SceneManager::Update(DirectXCommon* dxCommon, Input* input, InputMouse* mou
 
 	//ゲームリセット
 	if (Input::GetInstance()->PushKey(DIK_R)||initFlag==true) {
+		safe_delete(gameScene);
+		safe_delete(batlleScene);
+		gameScene = new GameScene();
+		batlleScene = new BatlleScene();
 		gameScene->Initialize(dxCommon, input, mouse, camera);
 		batlleScene->Initialize(dxCommon, input, mouse, camera,gameScene);
 		initFlag = false;
@@ -67,4 +73,17 @@ void SceneManager::Draw()
 		batlleScene->Draw();
 	}
 
+}
+
+SceneManager::SceneManager()
+{
+}
+
+SceneManager::~SceneManager()
+{
+	safe_delete(titleScene);
+	safe_delete(endScene);
+	safe_delete(gameScene);
+	safe_delete(batlleScene);
+	ModelManager::Finalize();
 }

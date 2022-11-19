@@ -53,25 +53,17 @@ class BatlleScene
         Sprite* spriteBG = nullptr;
         Sprite* claerSprite = nullptr;
         //3Dオブジェクト
-        FbxModel* fbxmodel = nullptr;
-        FBXObject* fbxobject = nullptr;
+        //FbxModel* fbxmodel = nullptr;
+        //FBXObject* fbxobject = nullptr;
 
-        Model* playermodel = nullptr;
-        Model* playerSpheremodel = nullptr;
         Player* player = nullptr;
-        Model* groundmodel = nullptr;
         OBJobject* ground = nullptr;
-        Model* tenQQModel = nullptr;
         OBJobject* tenQ = nullptr;
-
-        Model* enemymodel = nullptr;
 
         //EnemyZako* enemys[6] = { nullptr };
 
         std::shared_ptr<EnemyZako>enemy1;
-
-        //
-        EnemyZako* parentEnemy = nullptr;
+        
         Canvas* canvas = nullptr;
 
         bool alive[6];

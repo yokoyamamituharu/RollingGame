@@ -13,11 +13,12 @@ private:
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public:
+	StrongZakoEnemy();
+	~StrongZakoEnemy();
+
 	void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false,XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 })override;
 
 	void Update()override;
-
-	static void CreateStrongEnemyModel();
 
 
 	//ëOÇ…êiÇﬁ
@@ -29,17 +30,12 @@ public:
 	void Dossun();
 
 private:
-	//int hp = 10;
 	XMFLOAT3 maxScale = { 4,4,4 };
 	OBJobject* tuyoObject = nullptr;
 
-	static Model* strongEnemyModel;
-
 	int maeTime = 0;
-
 	int dosuntime1 = 0;
 	int dosuntime2 = 0;
-
 	bool dossunFlag = false;
 };
 
