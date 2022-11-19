@@ -6,7 +6,7 @@
 #include "PostEffect.h"
 #include "Camera.h"
 #include "Sprite.h"
-#include "OBJobject.h"
+#include "ObjectOBJ.h"
 #include "FBXObject.h"
 #include "FbxLoader.h"
 #include "Player.h"
@@ -72,24 +72,24 @@ private: // メンバ変数
 	//プレイヤー
 	Player* player = nullptr;
 	//地面
-	OBJobject* ground = nullptr;
+	ObjectObj* ground = nullptr;
 	//敵
 	//タワー
 	DefenseTower* defenseTower = nullptr;
 	Bullet* bullet = nullptr;
 	//EnemyZako* enemy1 = nullptr;
 	//お城
-	OBJobject* castle = nullptr;
+	ObjectObj* castle = nullptr;
 
 	//巣穴
-	OBJobject* suana = nullptr;
-	OBJobject* suana2 = nullptr;
+	ObjectObj* suana = nullptr;
+	ObjectObj* suana2 = nullptr;
 	//壁
-	OBJobject* kabe = nullptr;
-	OBJobject* kabe2 = nullptr;
+	ObjectObj* kabe = nullptr;
+	ObjectObj* kabe2 = nullptr;
 
 	//天球
-	OBJobject* tenQ = nullptr;
+	ObjectObj* tenQ = nullptr;
 
 	bool flag1 = false;
 	bool clear = false;

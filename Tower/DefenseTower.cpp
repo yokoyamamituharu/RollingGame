@@ -139,7 +139,7 @@ bool DefenseTower::Initialize()
 {
 	//タワー用モデルを読み込み
 	//オブジェクトの作成
-	object = OBJobject::Create();
+	object = ObjectObj::Create();
 	object->SetModel(ModelManager::GetModel("defenseTower"));
 
 	return true;

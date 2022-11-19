@@ -1,5 +1,5 @@
 #pragma once
-#include "OBJObject.h"
+#include "ObjectOBJ.h"
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>
@@ -68,7 +68,7 @@ public:
 	XMFLOAT3 oldPos = { 0,0,0 };
 
 public:
-	OBJobject* object = nullptr;
+	ObjectObj* object = nullptr;
 	float GetHp() { return hp; }
 
 

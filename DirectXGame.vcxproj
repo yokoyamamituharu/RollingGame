@@ -284,7 +284,7 @@
     <ClInclude Include="ObjectFBX\FBXObject.h" />
     <ClInclude Include="ObjectOBJ\Model.h" />
     <ClInclude Include="ObjectOBJ\ModelManager.h" />
-    <ClInclude Include="ObjectOBJ\OBJObject.h" />
+    <ClInclude Include="ObjectOBJ\ObjectOBJ.h" />
     <ClInclude Include="Particle\ParticleManager.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="safe_delete.h" />
@@ -319,7 +319,7 @@
     <ClCompile Include="ObjectFBX\FBXObject.cpp" />
     <ClCompile Include="ObjectOBJ\Model.cpp" />
     <ClCompile Include="ObjectOBJ\ModelManager.cpp" />
-    <ClCompile Include="ObjectOBJ\OBJObject.cpp" />
+    <ClCompile Include="ObjectOBJ\ObjectOBJ.cpp" />
     <ClCompile Include="Particle\ParticleManager.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Scene\BatlleScene.cpp" />

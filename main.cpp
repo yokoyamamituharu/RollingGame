@@ -19,7 +19,7 @@
 #include "PostEffect.h"
 #include "Camera.h"
 #include "Sprite.h"
-#include "OBJobject.h"
+#include "ObjectOBJ.h"
 #include "FBXObject.h"
 #include "GameScene.h"
 
@@ -123,7 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//モデルの静的初期化
 	Model::StaticInitialize(dxCommon->GetDev());
 	//3Dオブジェクト静的初期化
-	OBJobject::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height, camera);
+	ObjectObj::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height, camera);
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
 	FBXObject::StaticInitialize(dxCommon->GetDev(), camera);

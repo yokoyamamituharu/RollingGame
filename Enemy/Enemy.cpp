@@ -17,7 +17,7 @@ void Enemy::Initialize(std::string modelName)
 		this->modelName = modelName;
 	}
 	model = ModelManager::GetModel(this->modelName);
-	object = OBJobject::Create();
+	object = ObjectObj::Create();
 	object->SetModel(model);
 }
 

@@ -31,7 +31,7 @@ public:
 
 private:
 	XMFLOAT3 maxScale = { 4,4,4 };
-	OBJobject* tuyoObject = nullptr;
+	ObjectObj* tuyoObject = nullptr;
 
 	int maeTime = 0;
 	int dosuntime1 = 0;

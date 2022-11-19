@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <DirectXMath.h>
-//class OBJobject;
+//class ObjectOBJ;
 
 /// <summary>
 /// カメラ基本機能

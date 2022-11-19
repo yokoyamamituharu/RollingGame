@@ -1,5 +1,5 @@
 #pragma once
-#include "OBJObject.h"
+#include "ObjectOBJ.h"
 class Enemy
 {
 public:
@@ -13,7 +13,7 @@ public:
 	void Draw();
 private:
 	Model* model = nullptr;
-	OBJobject* object = nullptr;
+	ObjectObj* object = nullptr;
 	std::string modelName = "enemy";
 
 	const int maxHp = 5;

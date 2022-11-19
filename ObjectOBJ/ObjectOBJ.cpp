@@ -1,4 +1,4 @@
-﻿#include "OBJobject.h"
+﻿#include "ObjectOBJ.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 #include<fstream>
@@ -15,15 +15,15 @@ using namespace Microsoft::WRL;
 /// <summary>
 /// 静的メンバ変数の実体
 /// </summary>
-const float OBJobject::radius = 5.0f;				// 底面の半径
-const float OBJobject::prizmHeight = 8.0f;			// 柱の高さ
-ID3D12Device *OBJobject::device = nullptr;
-UINT OBJobject::descriptorHandleIncrementSize = 0;
-ID3D12GraphicsCommandList *OBJobject::commandList = nullptr;
-ComPtr<ID3D12RootSignature> OBJobject::rootsignature;
-ComPtr<ID3D12PipelineState> OBJobject::pipelinestate;
+const float ObjectObj::radius = 5.0f;				// 底面の半径
+const float ObjectObj::prizmHeight = 8.0f;			// 柱の高さ
+ID3D12Device *ObjectObj::device = nullptr;
+UINT ObjectObj::descriptorHandleIncrementSize = 0;
+ID3D12GraphicsCommandList *ObjectObj::commandList = nullptr;
+ComPtr<ID3D12RootSignature> ObjectObj::rootsignature;
+ComPtr<ID3D12PipelineState> ObjectObj::pipelinestate;
 
-Camera* OBJobject::camera = nullptr;
+Camera* ObjectObj::camera = nullptr;
 
 //XMFLOAT3同士の加算処理
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
@@ -118,12 +118,12 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::X
 
 
 
-bool OBJobject::StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera)
+bool ObjectObj::StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera)
 {
 	// nullptrチェック
 	assert(device);
 
-	OBJobject::device = device;
+	ObjectObj::device = device;
 
 	SetCamera(camera);
 
@@ -134,13 +134,13 @@ bool OBJobject::StaticInitialize(ID3D12Device *device, int window_width, int win
 	return true;
 }
 
-void OBJobject::PreDraw(ID3D12GraphicsCommandList *commandList)
+void ObjectObj::PreDraw(ID3D12GraphicsCommandList *commandList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(OBJobject::commandList == nullptr);
+	assert(ObjectObj::commandList == nullptr);
 
 	// コマンドリストをセット
-	OBJobject::commandList = commandList;
+	ObjectObj::commandList = commandList;
 
 	// パイプラインステートの設定
 	commandList->SetPipelineState(pipelinestate.Get());
@@ -150,16 +150,16 @@ void OBJobject::PreDraw(ID3D12GraphicsCommandList *commandList)
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void OBJobject::PostDraw()
+void ObjectObj::PostDraw()
 {
 	// コマンドリストを解除
-	OBJobject::commandList = nullptr;
+	ObjectObj::commandList = nullptr;
 }
 
-OBJobject *OBJobject::Create()
+ObjectObj *ObjectObj::Create()
 {
 	// 3Dオブジェクトのインスタンスを生成
-	OBJobject *object3d = new OBJobject();
+	ObjectObj *object3d = new ObjectObj();
 	if (object3d == nullptr) {
 		return nullptr;
 	}
@@ -180,7 +180,7 @@ OBJobject *OBJobject::Create()
 
 
 
-bool OBJobject::InitializeGraphicsPipeline()
+bool ObjectObj::InitializeGraphicsPipeline()
 {
 	HRESULT result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
@@ -334,7 +334,7 @@ bool OBJobject::InitializeGraphicsPipeline()
 }
 
 
-bool OBJobject::Initialize()
+bool ObjectObj::Initialize()
 {
 	// nullptrチェック
 	assert(device);
@@ -363,7 +363,7 @@ bool OBJobject::Initialize()
 	return true;
 }
 
-void OBJobject::Update()
+void ObjectObj::Update()
 {
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
@@ -405,11 +405,11 @@ void OBJobject::Update()
 	constBuffB1->Unmap(0, nullptr);
 }
 
-void OBJobject::Draw()
+void ObjectObj::Draw()
 {
 	// nullptrチェック
 	assert(device);
-	assert(OBJobject::commandList);
+	assert(ObjectObj::commandList);
 
 	// 頂点バッファの設定
 	commandList->IASetVertexBuffers(0, 1, &modelData->vbView);
@@ -430,7 +430,7 @@ void OBJobject::Draw()
 	commandList->DrawIndexedInstanced((UINT)modelData->indices.size(), 1, 0, 0, 0);
 }
 
-XMMATRIX OBJobject::GetMatRot()
+XMMATRIX ObjectObj::GetMatRot()
 {
 	XMMATRIX matRot;
 	matRot = XMMatrixIdentity();
@@ -440,12 +440,12 @@ XMMATRIX OBJobject::GetMatRot()
 	return matRot;
 }
 
-XMMATRIX OBJobject::GetWorldMatrix()
+XMMATRIX ObjectObj::GetWorldMatrix()
 {
 	return matWorld;
 }
 
-void OBJobject::SetModel(Model *model)
+void ObjectObj::SetModel(Model *model)
 {
 	modelData = model;
 }

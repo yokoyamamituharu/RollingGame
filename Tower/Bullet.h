@@ -1,5 +1,5 @@
 #pragma once
-#include "OBJObject.h"	
+#include "ObjectOBJ.h"	
 class Bullet
 {
 	using XMFLOAT3 = DirectX::XMFLOAT3;
@@ -15,7 +15,7 @@ public:
 	void Dead() { dead = true; }
 
 public:
-	OBJobject* object = nullptr;
+	ObjectObj* object = nullptr;
 private:
 	//’…’e–Ú•W
 	XMFLOAT3 target;

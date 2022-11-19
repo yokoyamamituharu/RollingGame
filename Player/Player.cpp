@@ -28,7 +28,7 @@ void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
 	playerSpheremodel = ModelManager::GetModel("playerSphere");
 
 	//オブジェクトの作成
-	object = OBJobject::Create();
+	object = ObjectObj::Create();
 	object->SetModel(playermodel);
 	breakEnemy = 0;
 }

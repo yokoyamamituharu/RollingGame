@@ -51,7 +51,7 @@ bool Bullet::Initialize(XMFLOAT3 pos,XMFLOAT3 target,bool flag)
 {
 	ModelManager::GetModel("bullet");
 	//オブジェクトの作成
-	object = OBJobject::Create();
+	object = ObjectObj::Create();
 	object->SetModel(ModelManager::GetModel("bullet"));
 	object->SetPosition(pos);
 	this->target = target;

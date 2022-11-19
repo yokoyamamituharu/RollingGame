@@ -107,41 +107,41 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	fbxobject->PlayAnimetion();
 	fbxobject->SetPos({ 0,0,+80 });
 
-	ground = OBJobject::Create();
+	ground = ObjectObj::Create();
 	ground->SetModel(ModelManager::GetModel("ground"));
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
-	castle = OBJobject::Create();
+	castle = ObjectObj::Create();
 	castle->SetModel(ModelManager::GetModel("castle"));
 	castle->SetScale({ 10.0f,10.0f,10.0f });
 
-	suana = OBJobject::Create();
+	suana = ObjectObj::Create();
 	suana->SetModel(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
 	suana->SetRotation({ 0,90,0 });
 
-	suana2 = OBJobject::Create();
+	suana2 = ObjectObj::Create();
 	suana2->SetModel(ModelManager::GetModel("suana"));
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
 
-	kabe = OBJobject::Create();
+	kabe = ObjectObj::Create();
 	kabe->SetModel(ModelManager::GetModel("kabe"));
 	kabe->SetPosition({ 70.0f,-5.0f,50.0f });
 	kabe->SetScale({ 5.0f,5.0f,5.0f });
 	kabe->SetRotation({ 0,0,0 });
 
-	kabe2 = OBJobject::Create();
+	kabe2 = ObjectObj::Create();
 	kabe2->SetModel(ModelManager::GetModel("kabe"));
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
 	kabe2->SetRotation({ 0,180,0 });
 
-	tenQ = OBJobject::Create();
+	tenQ = ObjectObj::Create();
 	tenQ->SetModel(ModelManager::GetModel("tenQ"));
 	tenQ->SetScale({ 5,5,5 });
 
@@ -162,7 +162,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
-	defenseTower->GetOBJObject()->SetPosition({ 20,0,20 });
+	defenseTower->GetObjectOBJ()->SetPosition({ 20,0,20 });
 
 	postEffect = new PostEffect();
 	postEffect->Initialize();
@@ -351,7 +351,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 void GameScene::Draw()
 {
-	OBJobject::PreDraw(dxCommon->GetCmdList());
+	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	//fbxobject->Draw(dxCommon->GetCmdList());
 	ground->Draw();
 	defenseTower->Draw();
@@ -366,7 +366,7 @@ void GameScene::Draw()
 	kabe2->Draw();
 	tenQ->Draw();
 	player->object->Draw();
-	OBJobject::PostDraw();
+	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();	
@@ -379,9 +379,9 @@ void GameScene::PostReserve()
 	postEffect->PreDrawScene(dxCommon->GetCmdList());
 
 	//ポストエフェクトさせたいオブジェクト
-	OBJobject::PreDraw(dxCommon->GetCmdList());
+	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	//player->object->Draw();
-	OBJobject::PostDraw();
+	ObjectObj::PostDraw();
 
 	//ポストエフェクトさせたいスプライト
 	Sprite::PreDraw(dxCommon->GetCmdList());

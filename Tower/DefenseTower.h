@@ -1,5 +1,5 @@
 #pragma once
-#include "OBJObject.h"
+#include "ObjectOBJ.h"
 #include "Bullet.h"
 #include "Player.h"
 #include "EnemyZako.h"
@@ -21,14 +21,14 @@ public:
 
 	void Update(std::list<std::shared_ptr<EnemyZako>>& enemies);
 	void Draw();
-	OBJobject* GetOBJObject() { return object; }
+	ObjectObj* GetObjectOBJ() { return object; }
 
 private:
 	bool Initialize();
 
 private:
 	int type = NONE_TOWER;
-	OBJobject* object = nullptr;
+	ObjectObj* object = nullptr;
 	bool attackFlag = false;
 	const int maxHp = 10;
 	int hp = maxHp;

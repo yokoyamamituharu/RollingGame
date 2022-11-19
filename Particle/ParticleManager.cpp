@@ -1,7 +1,7 @@
 ﻿#include "ParticleManager.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
-#include "OBJObject.h"
+#include "ObjectOBJ.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 

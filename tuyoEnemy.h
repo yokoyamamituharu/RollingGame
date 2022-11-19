@@ -4,6 +4,6 @@ class tuyoEnemy :
     public EnemyZako
 {
     int tuyoNum = 0;
-    OBJobject* tuyoobjrcy = nullptr;
+    ObjectObj* tuyoobjrcy = nullptr;
 };
 

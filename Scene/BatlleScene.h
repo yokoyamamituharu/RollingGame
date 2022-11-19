@@ -6,7 +6,7 @@
 #include "PostEffect.h"
 #include "Camera.h"
 #include "Sprite.h"
-#include "OBJobject.h"
+#include "ObjectOBJ.h"
 #include "FBXObject.h"
 #include "FbxLoader.h"
 #include "Player.h"
@@ -57,8 +57,8 @@ class BatlleScene
         //FBXObject* fbxobject = nullptr;
 
         Player* player = nullptr;
-        OBJobject* ground = nullptr;
-        OBJobject* tenQ = nullptr;
+        ObjectObj* ground = nullptr;
+        ObjectObj* tenQ = nullptr;
 
         //EnemyZako* enemys[6] = { nullptr };
 

@@ -39,7 +39,7 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::X
 /// <summary>
 /// 3Dオブジェクト
 /// </summary>
-class OBJobject
+class ObjectObj
 {
 private: // エイリアス
 	// Microsoft::WRL::を省略
@@ -111,7 +111,7 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static OBJobject *Create();
+	static ObjectObj *Create();
 
 
 
@@ -138,7 +138,7 @@ private:// 静的メンバ関数
 	/// <returns>成否</returns>
 	static bool InitializeGraphicsPipeline();
 
-	static void SetCamera(Camera* camera) { OBJobject::camera = camera; }
+	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
 
 public: // メンバ関数
 	bool Initialize();
@@ -240,7 +240,7 @@ private: // メンバ変数
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	// 親オブジェクト
-	OBJobject *parent = nullptr;
+	ObjectObj *parent = nullptr;
 
 	static Camera* camera;
 

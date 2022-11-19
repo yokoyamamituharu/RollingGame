@@ -52,7 +52,7 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 	targetIndex = 1;
 	//オブジェクトの作成
 	enemyModel = ModelManager::GetModel("enemy");
-	object = OBJobject::Create();
+	object = ObjectObj::Create();
 	object->SetModel(enemyModel);
 
 	//外用の敵としてインスタンスが生成された場合

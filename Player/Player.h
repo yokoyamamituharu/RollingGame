@@ -1,5 +1,5 @@
 #pragma once
-#include "OBJObject.h"
+#include "ObjectOBJ.h"
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>
@@ -55,7 +55,7 @@ public:
 	void Cure(int amount) { hp += amount; }
 
 public:
-	OBJobject* object = nullptr;
+	ObjectObj* object = nullptr;
 
 	bool attackFlag = false;
 

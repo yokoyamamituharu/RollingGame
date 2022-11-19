@@ -53,13 +53,13 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 	claerSprite = Sprite::Create(2, { 100.0f,100.0f });
 
 
-	ground = OBJobject::Create();
+	ground = ObjectObj::Create();
 	ground->SetModel(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
-	tenQ = OBJobject::Create();
+	tenQ = ObjectObj::Create();
 	tenQ->SetModel(ModelManager::GetModel("IntenQ"));
 	tenQ->SetScale({ 10.0f,1.0f,10.0f });
 	tenQ->SetPosition({ 0.0f,-10.0f,0.0f });
@@ -175,7 +175,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 void BatlleScene::Draw()
 {
-	OBJobject::PreDraw(dxCommon->GetCmdList());
+	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	tenQ->Draw();
 
 	player->object->Draw();
@@ -193,7 +193,7 @@ void BatlleScene::Draw()
 
 
 
-	OBJobject::PostDraw();
+	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();
