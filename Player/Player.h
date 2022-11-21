@@ -42,6 +42,8 @@ public:
 
 	void Stop();
 
+	void Draw();
+
 public:
 	void SetInput(Input* input) { this->input = input; }
 	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }

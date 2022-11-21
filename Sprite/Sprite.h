@@ -94,13 +94,22 @@ public://メンバ関数
 	Sprite(UINT texNumber, XMFLOAT2 position, XMFLOAT2 size, XMFLOAT4 color);
 
 	//初期化	
-	bool Initialize();
+	bool Initialize();	
+
+	//スプライト単体描画
+	void Draw();
 
 	//アルファ値を設定
 	void SetAlpha(float blackOutAlpha) { color.w = blackOutAlpha; }
 
-	//スプライト単体描画
-	void Draw();
+	//サイズを変更
+	void SetSize(XMFLOAT2 size);
+
+	//場所を変更
+	void SetPos(XMFLOAT2 pos) { position = pos; }
+
+	XMFLOAT2 GetSize() { return size; }
+	XMFLOAT2 GetPos() { return position; }
 
 protected:
 	//頂点データ転送

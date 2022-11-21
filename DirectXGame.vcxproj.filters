@@ -52,6 +52,39 @@
     <Filter Include="ソース ファイル\Effect">
       <UniqueIdentifier>{70234543-3e09-493f-a4c2-863c90b4bf47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Scene\Title">
+      <UniqueIdentifier>{2e3a7a60-3ec0-4771-860b-15f80109173b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\End">
+      <UniqueIdentifier>{22504ba7-c1a6-4659-832a-e85afb5a701e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Game">
+      <UniqueIdentifier>{5f015be9-43d7-4c58-b7f6-49f987b49840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\Battle">
+      <UniqueIdentifier>{683b3d16-78af-4908-a953-087c7972352b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\DXCommon">
+      <UniqueIdentifier>{8d7c3497-eb0c-4f40-868c-74bba07e73b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\WinApp">
+      <UniqueIdentifier>{a7d0611d-3d93-4058-ba38-1e9d1a02c1c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\FPS">
+      <UniqueIdentifier>{2c63b0bb-f906-4c19-b142-00387b9fc4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Base\Use">
+      <UniqueIdentifier>{8c7a1ab7-f188-47fd-be1a-4dcb49ad2c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy\Enemy">
+      <UniqueIdentifier>{38415a17-e6d2-4258-baa7-f978e7df4b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ObjectOBJ\Model">
+      <UniqueIdentifier>{e9acebc5-00f7-4ac8-8d9e-cab24af81994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ObjectOBJ\OBJ">
+      <UniqueIdentifier>{8fd19b98-2738-4b34-81ca-c164ae4108c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -124,12 +157,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Base\DirectXCommon.h">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\WinApp.h">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Input\InputMouse.h">
       <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
@@ -139,28 +166,13 @@
     <ClInclude Include="Camera\Camera.h">
       <Filter>ソース ファイル\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\Enemy.h">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy\EnemyManager.h">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy\EnemyZako.h">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy\StrongZakoEnemy.h">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Player\Player.h">
       <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\GameScene.h">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneManager.h">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\BatlleScene.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Sprite\PostEffect.h">
@@ -181,14 +193,8 @@
     <ClInclude Include="ObjectFBX\FbxLoader.h">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectOBJ\Model.h">
-      <Filter>ソース ファイル\ObjectOBJ</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectOBJ\ModelManager.h">
       <Filter>ソース ファイル\ObjectOBJ</Filter>
-    </ClInclude>
-    <ClInclude Include="FPSLock.h">
-      <Filter>ソース ファイル\Base</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
       <Filter>ソース ファイル\Canvas</Filter>
@@ -199,37 +205,61 @@
     <ClInclude Include="Particle\ParticleManager.h">
       <Filter>ソース ファイル\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="EndScene.h">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="tuyoEnemy.h">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Useful.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="safe_delete.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectOBJ\ObjectOBJ.h">
-      <Filter>ソース ファイル\ObjectOBJ</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectFBX\ObjectFBX.h">
       <Filter>ソース ファイル\ObjectFBX</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>ソース ファイル\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScene.h">
+      <Filter>ソース ファイル\Scene\End</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BatlleScene.h">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>ソース ファイル\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\DirectXCommon.h">
+      <Filter>ソース ファイル\Base\DXCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\WinApp.h">
+      <Filter>ソース ファイル\Base\WinApp</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSLock.h">
+      <Filter>ソース ファイル\Base\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Useful.h">
+      <Filter>ソース ファイル\Base\Use</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\Enemy.h">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyManager.h">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\StrongZakoEnemy.h">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="tuyoEnemy.h">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectOBJ\Model.h">
+      <Filter>ソース ファイル\ObjectOBJ\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectOBJ\ObjectOBJ.h">
+      <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
+    </ClInclude>
+    <ClInclude Include="CopyObject.h">
+      <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\WinApp.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\DirectXCommon.cpp">
-      <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
     <ClCompile Include="Input\Input.cpp">
       <Filter>ソース ファイル\Input</Filter>
@@ -240,28 +270,13 @@
     <ClCompile Include="Camera\Camera.cpp">
       <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\EnemyManager.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy\EnemyZako.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy\StrongZakoEnemy.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy\Enemy.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Player\Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\BatlleScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\Sprite.cpp">
@@ -285,38 +300,62 @@
     <ClCompile Include="ObjectOBJ\ModelManager.cpp">
       <Filter>ソース ファイル\ObjectOBJ</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectOBJ\Model.cpp">
-      <Filter>ソース ファイル\ObjectOBJ</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSLock.cpp">
-      <Filter>ソース ファイル\Base</Filter>
-    </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>ソース ファイル\Canvas</Filter>
     </ClCompile>
     <ClCompile Include="Canvas.cpp">
       <Filter>ソース ファイル\Canvas</Filter>
     </ClCompile>
-    <ClCompile Include="EndScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Particle\ParticleManager.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="tuyoEnemy.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Useful.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectOBJ\ObjectOBJ.cpp">
-      <Filter>ソース ファイル\ObjectOBJ</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectFBX\ObjectFBX.cpp">
       <Filter>ソース ファイル\ObjectFBX</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>ソース ファイル\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScene.cpp">
+      <Filter>ソース ファイル\Scene\End</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BatlleScene.cpp">
+      <Filter>ソース ファイル\Scene\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>ソース ファイル\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\DirectXCommon.cpp">
+      <Filter>ソース ファイル\Base\DXCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\WinApp.cpp">
+      <Filter>ソース ファイル\Base\WinApp</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSLock.cpp">
+      <Filter>ソース ファイル\Base\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Useful.cpp">
+      <Filter>ソース ファイル\Base\Use</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\Enemy.cpp">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\EnemyManager.cpp">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\StrongZakoEnemy.cpp">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="tuyoEnemy.cpp">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectOBJ\Model.cpp">
+      <Filter>ソース ファイル\ObjectOBJ\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectOBJ\ObjectOBJ.cpp">
+      <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="CopyObject.cpp">
+      <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -123,7 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//モデルの静的初期化
 	Model::StaticInitialize(dxCommon->GetDev());
 	//3Dオブジェクト静的初期化
-	ObjectObj::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height, camera);
+	ObjectObj::StaticInitialize(dxCommon->GetDev(), camera);
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
 	ObjectFBX::StaticInitialize(dxCommon->GetDev(), camera);
@@ -191,7 +191,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		if (winApp->ProcessMessage())
 		{
 			break;
-		}		
+		}
 
 		//-----更新処理-----//
 		//入力の更新処理
@@ -220,18 +220,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ParticleManager::PostDraw();
 		//sceneManager->Draw();
 		//postEffect->PosDrawScene(dxCommon->GetCmdList());
+		
 
-		dxCommon->PreDraw();
-		sceneManager->Draw();
-		//postEffect->Draw(dxCommon->GetCmdList());
+		dxCommon->PreDraw();		
+		sceneManager->Draw();		
 		dxCommon->PostDraw();
+
+		//dxCommon->PreDraw();
+		//sceneManager->gameScene->PostDraw();				
+		//dxCommon->PostDraw();
+
+
 	}
 
 	//winAppの解放
 	winApp->Finalize();
-	safe_delete(winApp);	
+	safe_delete(winApp);
 	//DirectX解放
-	safe_delete(dxCommon);	
+	safe_delete(dxCommon);
 	//入力の解放
 	safe_delete(mouse);
 	//カメラの開放

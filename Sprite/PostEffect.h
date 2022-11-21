@@ -23,8 +23,10 @@ private:
 	//パイプライン生成
 	void CreateGraphicsPipeLineState();
 
+	//ピクセルシェーダーを読み込む
 	void LoadPsShader(const wchar_t* name, ComPtr<ID3DBlob>& psBlob);
 
+	//頂点シェーダーを読み込む
 	void LoadVsShader(const wchar_t* name, ComPtr<ID3DBlob>& vsBlob);
 
 private://静的メンバ変数

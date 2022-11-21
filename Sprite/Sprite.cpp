@@ -417,6 +417,12 @@ void Sprite::Draw()
 }
 
 
+void Sprite::SetSize(XMFLOAT2 size)
+{
+	this->size = size;
+	TransferVertices();
+}
+
 void Sprite::TransferVertices()
 {
 	HRESULT result = S_FALSE;

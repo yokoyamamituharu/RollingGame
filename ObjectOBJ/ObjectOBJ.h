@@ -41,7 +41,7 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::X
 /// </summary>
 class ObjectObj
 {
-private: // エイリアス
+protected: // エイリアス
 	// Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	// DirectX::を省略
@@ -91,16 +91,15 @@ public: // 静的メンバ関数
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	/// <param name="window_width">画面幅</param>
-	/// <param name="window_height">画面高さ</param>
+	/// <param name="camera">カメラ</param>	
 	/// <returns>成否</returns>
-	static bool StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera);
+	static bool StaticInitialize(ID3D12Device* device, Camera* camera);
 
 	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	/// <param name="commandList">描画コマンドリスト</param>
-	static void PreDraw(ID3D12GraphicsCommandList *commandList);
+	static void PreDraw(ID3D12GraphicsCommandList* commandList);
 
 	/// <summary>
 	/// 描画後処理
@@ -111,65 +110,64 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static ObjectObj *Create();
+	static ObjectObj* Create();
 
+	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
 
-
-private: // 静的メンバ変数
+protected: // 静的メンバ変数
 #pragma region 静的メンバ変数
 	// デバイス
-	static ID3D12Device *device;
+	static ID3D12Device* device;
 	// デスクリプタサイズ
 	static UINT descriptorHandleIncrementSize;
 	// コマンドリスト
-	static ID3D12GraphicsCommandList *commandList;
+	static ID3D12GraphicsCommandList* commandList;
 	// ルートシグネチャ
 	static ComPtr<ID3D12RootSignature> rootsignature;
 	// パイプラインステートオブジェクト
 	static ComPtr<ID3D12PipelineState> pipelinestate;
-
-
+	//カメラ
+	static Camera* camera;
 
 #pragma endregion
-private:// 静的メンバ関数
+protected:// 静的メンバ関数
 	/// <summary>
 	/// グラフィックパイプライン生成
 	/// </summary>
 	/// <returns>成否</returns>
 	static bool InitializeGraphicsPipeline();
-
-	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
+	
 
 public: // メンバ関数
 	bool Initialize();
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
-	void Update();
+	virtual void Update();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	virtual void Draw();
 
 	/// <summary>
 	/// 座標の取得
 	/// </summary>
 	/// <returns>座標</returns>
-	const XMFLOAT3 &GetPosition() { return position; }
+	const XMFLOAT3& GetPosition() { return position; }
 
 	/// <summary>
 	/// スケールの取得
 	/// </summary>
 	///	<returns>スケール</returns>
-	const XMFLOAT3 &GetScale() { return scale; }
+	const XMFLOAT3& GetScale() { return scale; }
 
 
 	/// <summary>
 	/// 回転の取得
 	/// </summary>
 	/// <returns>回転</returns>
-	const XMFLOAT3 &GetRotation() { return rotation; }
+	const XMFLOAT3& GetRotation() { return rotation; }
 
 
 	/// <summary>
@@ -197,7 +195,7 @@ public: // メンバ関数
 	void SetPosZ(float z) { this->position.z = z; }
 
 	//指定した値分オブジェクトの座標を移動させる
-	void VecSetPosition(XMFLOAT3 scalar) 
+	void VecSetPosition(XMFLOAT3 scalar)
 	{
 		this->position.x += scalar.x;
 		this->position.y += scalar.y;
@@ -223,9 +221,10 @@ public: // メンバ関数
 	//オブジェクトの回転行列の取得
 	XMMATRIX GetMatRot();
 
+	//オブジェクトの行列を取得
 	XMMATRIX GetWorldMatrix();
 
-private: // メンバ変数
+protected: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
@@ -240,14 +239,12 @@ private: // メンバ変数
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	// 親オブジェクト
-	ObjectObj *parent = nullptr;
-
-	static Camera* camera;
+	ObjectObj* parent = nullptr;
+	//モデルデータ
+	Model* modelData;
 
 public:
-	//モデルデータ
-	Model *modelData;
-
-	void SetModel(Model *model);
+	void SetModel(Model* model);
+	Model* GetModel(){ return modelData; }
 };
 

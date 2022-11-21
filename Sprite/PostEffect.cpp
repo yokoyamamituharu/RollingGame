@@ -52,6 +52,7 @@ void PostEffect::Initialize()
 		memcpy(vertMap, vertices, sizeof(vertices));
 		vertBuff->Unmap(0, nullptr);
 	}
+	//TransferVertices();
 
 	//頂点バッファビューの作成
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
@@ -211,7 +212,7 @@ void PostEffect::PreDrawScene(ID3D12GraphicsCommandList* cmdList)
 	}
 
 	//ビューポートの設定
-	cmdList->RSSetViewports(2,viewports);
+	cmdList->RSSetViewports(2, viewports);
 	//シザリング短形の設定
 	cmdList->RSSetScissorRects(2, scissorRects);
 
@@ -234,6 +235,25 @@ void PostEffect::PosDrawScene(ID3D12GraphicsCommandList* cmdList)
 
 void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	HRESULT result;
+
+	////頂点データ
+	//VertexPosUv vertices[vertNum] = {
+	//	{{-1.0f,-1.0f * size.y,0.0f},{0.0f,1.0f}},
+	//	{{-1.0f,+1.0f ,0.0f},{0.0f,0.0f}},
+	//	{{+1.0f + size.x,-1.0f * size.y,0.0f},{1.0f,1.0f}},
+	//	{{+1.0f * size.x,+1.0f,0.0f},{1.0f,0.0f}},
+	//};
+
+	////頂点バッファへのデータ転送
+	//VertexPosUv* vertMap = nullptr;
+	//result = vertBuff->Map(0, nullptr, (void**)&vertMap);
+	//if (SUCCEEDED(result)) {
+	//	memcpy(vertMap, vertices, sizeof(vertices));
+	//	vertBuff->Unmap(0, nullptr);
+	//}
+
+
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		pipelineNum = 0;	//ADS合成
 	}
@@ -246,7 +266,7 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 
 	// 定数バッファにデータ転送
 	ConstBufferData* constMap = nullptr;
-	HRESULT result = this->constBuff->Map(0, nullptr, (void**)&constMap);
+	result = this->constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
 		constMap->color = this->color;
 		constMap->mat = XMMatrixIdentity();
@@ -287,7 +307,7 @@ void PostEffect::CreateGraphicsPipeLineState()
 #pragma region ADS合成
 	LoadVsShader(L"Resources/shaders/PostEffectTestVS_NONE.hlsl", vsBlob[0]);
 	LoadPsShader(L"Resources/shaders/PostEffectTestPS_NONE.hlsl", psBlob[0]);
-	
+
 #pragma endregion
 
 
@@ -321,7 +341,7 @@ void PostEffect::CreateGraphicsPipeLineState()
 	// グラフィックスパイプラインの流れを設定
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline[postNum]{};
 	for (int i = 0; i < postNum; i++)
-	{		
+	{
 		gpipeline[i].VS = CD3DX12_SHADER_BYTECODE(vsBlob[i].Get());
 		gpipeline[i].PS = CD3DX12_SHADER_BYTECODE(psBlob[i].Get());
 

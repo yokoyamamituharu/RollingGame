@@ -248,6 +248,11 @@ void Player::Stop()
 	backVec = { 0,0,0 };
 }
 
+void Player::Draw()
+{
+	object->Draw();
+}
+
 float Player::Ease(float x, float s)
 {
 	if (x < 1.0f) {

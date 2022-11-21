@@ -18,7 +18,8 @@ class BattleScene;
 class SceneManeger;
 #include <vector>
 #include "PostEffect.h"
-#include "../Canvas.h"
+#include "Canvas.h"
+#include "CopyObject.h"
 
 class GameScene
 {
@@ -91,10 +92,18 @@ private: // ÉÅÉìÉoïœêî
 	//ìVãÖ
 	ObjectObj* tenQ = nullptr;
 
+	CopyObject* copyPlayer = nullptr;
+	CopyObject* copyGround = nullptr;
+	CopyObject* copyCastle = nullptr;
+	CopyObject* copyDefenseTower = nullptr;
+	//CopyObject* copyGround = nullptr;
+
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;
 	int cameraToMouse = 1;
+
+	Camera* subCamera = nullptr;
 
 	std::list<std::shared_ptr<EnemyZako>>enemiesG;
 

@@ -52,7 +52,11 @@ GameScene::~GameScene()
 	safe_delete(suana);
 	safe_delete(suana2);
 	safe_delete(defenseTower);
-	safe_delete(player);	
+	safe_delete(player);
+	safe_delete(copyPlayer);
+	safe_delete(copyCastle);
+	safe_delete(copyGround);
+	safe_delete(copyDefenseTower);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
@@ -94,7 +98,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
-	
+
 
 	//モデルの読み込み
 	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
@@ -186,6 +190,24 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 	dasuteki[5] = 1;
 
 	Player::breakEnemy = 0;
+
+	subCamera = new Camera(1280, 700);
+	subCamera->SetEye({ 0, 100, -1 });
+	subCamera->SetTarget({ 0, 0, 0 });
+	//ObjectObj::SetCamera(subCamera);
+	copyPlayer = new CopyObject;
+	copyPlayer->InitializeC(player->object);
+	copyGround = new CopyObject;
+	copyGround->InitializeC(ground);
+
+	copyCastle = new CopyObject;
+	copyCastle->InitializeC(castle);
+	copyDefenseTower = new CopyObject;
+	copyDefenseTower->InitializeC(defenseTower->GetObjectOBJ());
+
+	//postEffect->SetSize({ 100,100 });
+
+	postEffect->SetSize({1,1});
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -193,11 +215,40 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//player->Update();
 	//カメラ操作
 	//if (input->PushKey(DIK_RIGHT)) {
-	//	camera->matRot *= XMMatrixRotationY(0.1f);
+	//	subCamera->matRot *= XMMatrixRotationY(0.1f);
 	//}
 	//else if (input->PushKey(DIK_LEFT)) {
-	//	camera->matRot *= XMMatrixRotationY(-0.1f);
+	//	subCamera->matRot *= XMMatrixRotationY(-0.1f);
 	//}	
+
+	////カメラ操作
+	//if (input->TriggerKey(DIK_UP)) {
+	//	subCamera->MoveEyeVector(XMFLOAT3{ 0,0,1 });
+	//}
+	//else if (input->TriggerKey(DIK_DOWN)) {
+	//	subCamera->MoveEyeVector(XMFLOAT3{ 0,0,-1 });
+	//}
+
+
+	if (input->PushKey(DIK_UP)) {
+		//spriteBG->SetSize({ 2, 2 });
+		XMFLOAT2 postSize = postEffect->GetSize();
+		postSize.x += 0.1;
+		postSize.y += 0.1;
+		postEffect->SetSize(postSize);
+	}
+	else if (input->PushKey(DIK_DOWN)) {
+		//spriteBG->SetSize({ 100, 100 });
+		//postEffect->SetSize({ 100,100 });
+		XMFLOAT2 postSize = postEffect->GetSize();
+		postSize.x -= 0.1;
+		postSize.y -= 0.1;
+		postEffect->SetSize(postSize);
+	}
+
+
+
+
 
 	//敵生成処理
 	timer[index]--;
@@ -206,7 +257,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		if (dasuteki[index] == 1) {
 			//タワーがある方
 			std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true,  XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
 			enemiesG.push_back(std::move(newEnemy));
 		}
 		if (dasuteki[index] == 2) {
@@ -274,7 +325,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//敵と城の当たり判定
 		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
 			//当たったら負け
-			sceneNo = SceneManager::SCENE_END;
+			//sceneNo = SceneManager::SCENE_END;
 		}
 	}
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
@@ -294,21 +345,19 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		//if (enemy->IsDead() == false) {
-			enemy->Update();
-	//	}
+		enemy->Update();
+		//	}
 	}
 	defenseTower->Update(enemiesG);
-
 	castle->Update();
-
 	suana->Update();
 	suana2->Update();
-
-
 	kabe->Update();
 	kabe2->Update();
 	tenQ->Update();
-
+	if (enemiesG.size() <= 0 && index >= 5) {
+		sceneNo = SceneManager::SCENE_KATI;
+	}
 
 	//カメラ操作
 	if (input->PushKey(DIK_RIGHT)) {
@@ -343,33 +392,48 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//	player->object->GetPosition().z + initTarget.z });
 	camera->SetWorldMatrix(player->object->GetWorldMatrix());
 	camera->Update();
+	subCamera->Update();
 
-	if (enemiesG.size() <= 0 && index >=5) {
-		sceneNo = SceneManager::SCENE_KATI;
-	}
+
+	copyPlayer->Update(player->object, subCamera);
+	copyGround->Update(ground, subCamera);
+
+	copyCastle->Update(castle, subCamera);
+	copyDefenseTower->Update(defenseTower->GetObjectOBJ(), subCamera);
+	PostReserve();	//ミニマップの描画前処理
 }
 
 void GameScene::Draw()
 {
+	//PostDraw();	//ミニマップの描画
+
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	//objectFBX->Draw(dxCommon->GetCmdList());
-	ground->Draw();
-	defenseTower->Draw();
-
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Draw();
 	}
+	ground->Draw();
+	defenseTower->Draw();
 	castle->Draw();
 	suana->Draw();
 	suana2->Draw();
 	kabe->Draw();
 	kabe2->Draw();
 	tenQ->Draw();
-	player->object->Draw();
+	player->Draw();
+	
 	ObjectObj::PostDraw();
 
+	//ObjectObj::PreDraw(dxCommon->GetCmdList());
+	//player->object->VecSetPosition({ 0,20,0 });
+	//player->object->Update();
+	//player->Draw();	
+	//ObjectObj::PostDraw();
+	//player->object->VecSetPosition({ 0,-20,0 });
+	//player->object->Update();
+
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	spriteBG->Draw();	
+	//spriteBG->Draw();
 	canvas->Draw();
 	Sprite::PostDraw();
 }
@@ -380,12 +444,28 @@ void GameScene::PostReserve()
 
 	//ポストエフェクトさせたいオブジェクト
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
+	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+		//enemy->Draw();
+	}
+	//ground->Draw();
+	//defenseTower->Draw();
+	//castle->Draw();
+	//suana->Draw();
+	//suana2->Draw();
+	//kabe->Draw();
+	//kabe2->Draw();
+	//tenQ->Draw();
 	//player->object->Draw();
+	copyPlayer->Draw();
+	copyGround->Draw();
+	copyCastle->Draw();
+	copyDefenseTower->Draw();
+	
 	ObjectObj::PostDraw();
 
 	//ポストエフェクトさせたいスプライト
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();	
+	spriteBG->Draw();	
 	Sprite::PostDraw();
 
 	postEffect->PosDrawScene(dxCommon->GetCmdList());

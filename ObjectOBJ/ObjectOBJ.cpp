@@ -22,7 +22,6 @@ UINT ObjectObj::descriptorHandleIncrementSize = 0;
 ID3D12GraphicsCommandList *ObjectObj::commandList = nullptr;
 ComPtr<ID3D12RootSignature> ObjectObj::rootsignature;
 ComPtr<ID3D12PipelineState> ObjectObj::pipelinestate;
-
 Camera* ObjectObj::camera = nullptr;
 
 //XMFLOAT3同士の加算処理
@@ -118,14 +117,15 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::X
 
 
 
-bool ObjectObj::StaticInitialize(ID3D12Device *device, int window_width, int window_height,Camera* camera)
+bool ObjectObj::StaticInitialize(ID3D12Device *device,Camera* camera)
 {
 	// nullptrチェック
 	assert(device);
+	assert(camera);
 
 	ObjectObj::device = device;
 
-	SetCamera(camera);
+	ObjectObj::camera = camera;
 
 	// パイプライン初期化
 	InitializeGraphicsPipeline();
@@ -365,6 +365,8 @@ bool ObjectObj::Initialize()
 
 void ObjectObj::Update()
 {
+	assert(camera);
+
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
