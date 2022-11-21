@@ -39,7 +39,7 @@ GameScene::~GameScene()
 	safe_delete(canvas);
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
-	safe_delete(postEffect);
+	//safe_delete(postEffect);
 
 	//3Dオブジェクト解放
 	safe_delete(objectFBX);
@@ -212,6 +212,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
+	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+		if (enemy->GetHp() <= 0) {
+			Player::breakEnemy += 1;
+		}
+	}
+	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
 	//player->Update();
 	//カメラ操作
 	//if (input->PushKey(DIK_RIGHT)) {

@@ -63,7 +63,7 @@ void SceneManager::Draw()
 	if (sceneNo == SCENE_TITLE) {
 		titleScene->Draw();
 	}
-	if (sceneNo == SCENE_END) {
+	if (sceneNo == SCENE_END||sceneNo ==SCENE_KATI) {
 		endScene->Draw(sceneNo);
 	}
 	if (sceneNo == SCENE_GAME) {

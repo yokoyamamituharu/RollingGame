@@ -117,13 +117,13 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 	//ƒ^[ƒQƒbƒg‚Ì”jŠü‚ÌðŒ
 	if (targetEnemy.expired() ==false) {
 		if (Kyori(object->GetPosition(), targetEnemy.lock()->object->GetPosition()) > 100.0f ||
-			targetEnemy.lock()->GetHp() < 0) {
+			targetEnemy.lock()->GetHp() <= 0) {
 			targetEnemy.reset();
 			attackFlag = false;
 		}
-		/*if (targetEnemy.lock()->GetHp() <= 0) {
-			Player::breakEnemy += 1;
-		}*/
+		//if (targetEnemy.lock()->GetHp() <= 0) {
+		//	Player::breakEnemy += 1;
+		//}
 	}
 }
 
