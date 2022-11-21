@@ -108,7 +108,7 @@ void EnemyZako::Update()
 
 
 	//外シーンでの処理
-	if (isFiled == FIELD_OUT && isAction > 0 || isFiled == FIELD_OUT && IsDead() == false) {
+	if (isFiled == FIELD_OUT && isAction > 0 && IsDead() == false) {
 		if (isTarget == true) {
 			float speed = 0.15;
 			//目的地に向かって直進			
@@ -150,7 +150,7 @@ void EnemyZako::Update()
 		}
 	}
 	//中シーンでの処理
-	else if (isFiled == FIELD_IN && isAction > 0) {
+	if (isFiled == FIELD_IN && isAction > 0) {
 
 		//移動処理
 		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
