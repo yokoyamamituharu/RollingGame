@@ -8,6 +8,12 @@ BOOL CALLBACK DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
 	return DIENUM_CONTINUE;
 }
 
+InputMouse* InputMouse::GetInstance()
+{
+	static InputMouse instance;
+	return &instance;
+}
+
 bool InputMouse::Initialize(HINSTANCE hInstance, HWND hwnd)
 {
 	HRESULT result = S_FALSE;

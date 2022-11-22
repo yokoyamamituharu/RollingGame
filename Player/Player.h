@@ -19,7 +19,7 @@ public:
 	Player();
 	~Player();
 
-	void Initialize(Input* input, InputMouse* mouse, Camera* camera);
+	void Initialize(Camera* camera);
 	void Update();
 	void Move();
 	void MoveVector(DirectX::XMFLOAT3 vec)
@@ -45,8 +45,6 @@ public:
 	void Draw();
 
 public:
-	void SetInput(Input* input) { this->input = input; }
-	void SetMouse(InputMouse* mouse) { this->mouse = mouse; }
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
 	float Ease(float x, float s);
@@ -67,8 +65,6 @@ public:
 
 	XMFLOAT3 outPos = { 0,0,0 };	//中シーンに行くときに今の座標を保存しておく
 private:
-	Input* input;
-	InputMouse* mouse;
 	Model* playermodel = nullptr;
 	Model* playerSpheremodel = nullptr;
 	bool muteki = false;

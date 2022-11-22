@@ -8,7 +8,6 @@ using namespace DirectX;
 const float EnemyZako::groundInPos = -4.0f;
 const float EnemyZako::groundOutPos = -4.0f;
 int EnemyZako::isAction = 1;
-Model* EnemyZako::enemyModel = nullptr;
 
 float EnemyZako::Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2)
 {
@@ -51,9 +50,8 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 
 	targetIndex = 1;
 	//オブジェクトの作成
-	enemyModel = ModelManager::GetModel("enemy");
 	object = ObjectObj::Create();
-	object->SetModel(enemyModel);
+	object->SetModel(ModelManager::GetModel("enemy"));
 
 	//外用の敵としてインスタンスが生成された場合
 	if (filedFlag == 1) {
@@ -108,7 +106,7 @@ void EnemyZako::Update()
 
 
 	//外シーンでの処理
-	if (isFiled == FIELD_OUT && isAction > 0 && IsDead() == false) {
+	if (isFiled == FIELD_OUT && isAction > 0 && GetDead() == false) {
 		if (isTarget == true) {
 			float speed = 0.15;
 			//目的地に向かって直進			

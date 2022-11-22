@@ -19,11 +19,14 @@ public:
 	};
 
 public:
-	void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
-	void Update(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
-	void Draw();
 	SceneManager();
 	~SceneManager();
+
+	void Initialize(DirectXCommon* dxCommon, Camera* camera);
+	void Update();
+	void Draw();
+
+	void GameSceneReset();
 public:
 	GameScene* gameScene = nullptr;
 	BatlleScene* batlleScene = nullptr;
@@ -33,5 +36,8 @@ public:
 	int sceneNo = SCENE_NONE;
 
 	bool initFlag = 0;
+
+	DirectXCommon* dxCommon = nullptr;
+	Camera* camera = nullptr;
 };
 

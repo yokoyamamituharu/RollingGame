@@ -16,12 +16,8 @@ Player::~Player()
 	safe_delete(object);
 }
 
-void Player::Initialize(Input* input, InputMouse* mouse, Camera* camera)
+void Player::Initialize( Camera* camera)
 {
-	assert(input);
-	assert(mouse);
-	this->input = input;
-	this->mouse = mouse;
 	this->camera = camera;
 	//プレイヤー用モデルを読み込み
 	playermodel = ModelManager::GetModel("player");
@@ -81,7 +77,7 @@ void Player::Move()
 
 #pragma region 回転移動
 	//回転移動
-	if (mouse->PushMouse(MouseDIK::M_LEFT)) {
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		isSphere = true;
 	}
 	else {
@@ -92,7 +88,7 @@ void Player::Move()
 		//モデルを変える
 		object->SetModel(playerSpheremodel);
 		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-		rollingSpeed += mouse->MoveMouseVector('y') / 30;
+		rollingSpeed += InputMouse::GetInstance()->MoveMouseVector('y') / 30;
 		if (rollingSpeed < 0) {
 			rollingSpeed = 0;
 		}

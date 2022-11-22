@@ -32,6 +32,7 @@ BatlleScene::~BatlleScene()
 {
 	//スプライト解放
 	safe_delete(canvas);
+	safe_delete(spriteBG);
 
 	//3Dオブジェクト解放
 	safe_delete(ground);
@@ -39,18 +40,15 @@ BatlleScene::~BatlleScene()
 	enemy1.reset();
 }
 
-void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera, GameScene* gameScene)
+void BatlleScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	this->input = input;
-	this->mouse = mouse;
 	this->camera = camera;
 
-	this->player = gameScene->GetPlayer();
+	//this->player = gameScene->GetPlayer();
 
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
-	claerSprite = Sprite::Create(2, { 100.0f,100.0f });
 
 
 	ground = ObjectObj::Create();
@@ -73,17 +71,17 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 {
 	//カメラ操作
-	if (input->PushKey(DIK_RIGHT)) {
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		camera->matRot *= XMMatrixRotationY(0.1f);
 	}
-	else if (input->PushKey(DIK_LEFT)) {
+	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 		camera->matRot *= XMMatrixRotationY(-0.1f);
 	}
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
 		cameraToMouse *= -1;
 	}
 	if (cameraToMouse > 0) {
-		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+		camera->matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
 	}
 
 
@@ -109,12 +107,12 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemy1 != 0) {
 		//死亡判定があったらエネミーを消す
-		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
+		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 		//敵とプレイヤーのローリング攻撃の当たり判定
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 			if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
 				) {
-				if (player->attackFlag == true) {
+				//if (player->attackFlag == true) {
 					enemy->SetDead();
 					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
 					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
@@ -122,10 +120,10 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 					vec = XMVector3Normalize(vec);
 					vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 					player->Res(true, Use::LoadXMVECTOR(vec));
-				}
-				else if (enemy->GetAttack()) {
-					player->Damage(1);
-				}
+				//}
+				//else if (enemy->GetAttack()) {
+				//	player->Damage(1);
+				//@}
 			}
 		}
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
@@ -182,12 +180,10 @@ void BatlleScene::Draw()
 	ground->Draw();
 	//ObjectFBX->Draw(dxCommon->GetCmdList());
 
-	int aliveNum = 0;
 
 	if (enemy1 != 0) {
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 			enemy->Draw();
-			aliveNum++;
 		}
 	}
 
@@ -197,9 +193,6 @@ void BatlleScene::Draw()
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();
-	if (aliveNum == 0) {
-		claerSprite->Draw();
-	}
 	canvas->Draw();
 	Sprite::PostDraw();
 }

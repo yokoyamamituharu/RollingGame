@@ -76,7 +76,7 @@ public:
 
 	void SetDead() { dead = true; }
 
-	bool IsDead() { return dead; }
+	bool GetDead() { return dead; }
 
 	bool GetAttack() { return attackFlag; }
 
@@ -90,7 +90,6 @@ public:	//静的メンバ変数
 	//ざこてきの地面となるの座標
 	static const float groundOutPos;
 	static const float groundInPos;
-	static Model* enemyModel;
 	//敵の行動させる/させないフラグ
 	static int isAction;
 

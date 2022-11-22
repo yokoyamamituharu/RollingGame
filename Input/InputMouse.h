@@ -14,13 +14,15 @@ enum MouseDIK
 class InputMouse
 {
 public:
-
-
 	private: // エイリアス
 		// Microsoft::WRL::を省略
 		template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	public: // メンバ関数
+
+		static InputMouse* GetInstance();
+
+
 		/// <summary>
 		/// 初期化
 		/// </summary>

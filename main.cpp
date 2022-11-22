@@ -44,6 +44,8 @@ using namespace DirectX;
 
 #include "safe_delete.h"
 
+#include "SpriteManager.h"
+
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
 
@@ -113,7 +115,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	input->Initialize(winApp->GetHInstance(), winApp->GetHwnd());
 	//マウス
 	InputMouse* mouse = nullptr;
-	mouse = new InputMouse();
+	mouse = InputMouse::GetInstance();
 	mouse->Initialize(winApp->GetHInstance(), winApp->GetHwnd());
 	//カメラ
 	Camera* camera = nullptr;
@@ -136,53 +138,56 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	postEffect = new PostEffect();
 	postEffect->Initialize();
 
+	SpriteManager spriteManager;
+	spriteManager.Initialize();
+
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager;
-	sceneManager->Initialize(dxCommon, input, mouse, camera);
+	sceneManager->Initialize(dxCommon,camera);
 
 	bool isSetMousePoint = true;	//マウスのポインタの位置を固定するかどうか
-
+	
 
 	FPSLock fpsLock;
 
-	ParticleManager* particleMan = ParticleManager::Create();
+	//ParticleManager* particleMan = ParticleManager::Create();
 
 
 	while (true)  // ゲームループ
 	{
-		if (input->TriggerKey(DIK_SPACE)) {
-			//パーティクルの追加
-			for (int i = 0; i < 8; i++)
-			{
-				//X,Y,Z全てで[-5.0f,-5.0f]でランダムに分布
-				const float rnd_pos = 10.0f;
-				XMFLOAT3 pos{};
-				//pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				//pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				//pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-				pos.x = 0;
-				pos.y = 0;
-				pos.z = 0;
-				//X,Y,Z全て[-0.0f,+0.05f]でランダムに分布
-				const float rnd_vel = 0.1f;
-				XMFLOAT3 vel{};
-				//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-				//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-				//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-				int rndVel = 3.0f;
-				vel.x = rand() % (rndVel * 2) - rndVel;
-				vel.y = rand() % (rndVel * 2) - rndVel;
-				vel.z = rand() % (rndVel * 2) - rndVel;
-				//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-				XMFLOAT3 acc{};
-				const float rnd_acc = 0.001f;
-				acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+		//if (input->TriggerKey(DIK_SPACE)) {
+		//	//パーティクルの追加
+		//	for (int i = 0; i < 8; i++)
+		//	{
+		//		//X,Y,Z全てで[-5.0f,-5.0f]でランダムに分布
+		//		const float rnd_pos = 10.0f;
+		//		XMFLOAT3 pos{};
+		//		//pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		//		//pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		//		//pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		//		pos.x = 0;
+		//		pos.y = 0;
+		//		pos.z = 0;
+		//		//X,Y,Z全て[-0.0f,+0.05f]でランダムに分布
+		//		const float rnd_vel = 0.1f;
+		//		XMFLOAT3 vel{};
+		//		//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+		//		//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+		//		//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
+		//		int rndVel = 3.0f;
+		//		vel.x = rand() % (rndVel * 2) - rndVel;
+		//		vel.y = rand() % (rndVel * 2) - rndVel;
+		//		vel.z = rand() % (rndVel * 2) - rndVel;
+		//		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
+		//		XMFLOAT3 acc{};
+		//		const float rnd_acc = 0.001f;
+		//		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
-				//追加
-				particleMan->Add(60, pos, vel, acc, 10.0f, 5.0f);
-			}
-		}
-		particleMan->Update();
+		//		//追加
+		//		particleMan->Add(60, pos, vel, acc, 10.0f, 5.0f);
+		//	}
+		//}
+		//particleMan->Update();
 
 		//fpsLock.Update();
 
@@ -210,7 +215,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 		//シーンの更新
-		sceneManager->Update(dxCommon, input, mouse, camera);
+		sceneManager->Update();
 
 		//-----描画処理-----//
 		//ポストエフェクトの準備
@@ -239,7 +244,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//DirectX解放
 	safe_delete(dxCommon);
 	//入力の解放
-	safe_delete(mouse);
+	//safe_delete(mouse);
 	//カメラの開放
 	safe_delete(camera);
 	//シーンの開放
@@ -247,7 +252,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//ポストエフェクトの開放
 	safe_delete(postEffect);
 	//パーティクルマネージャーの開放
-	safe_delete(particleMan);
+	//safe_delete(particleMan);
 	//FBXの解放処理
 	FbxLoader::GetInstance()->Finalize();
 

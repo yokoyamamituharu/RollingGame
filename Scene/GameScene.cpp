@@ -39,11 +39,11 @@ GameScene::~GameScene()
 	safe_delete(canvas);
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
-	//safe_delete(postEffect);
+	safe_delete(postEffect);
 
 	//3Dオブジェクト解放
-	safe_delete(objectFBX);
-	safe_delete(fbxmodel);
+	//safe_delete(objectFBX);
+	//safe_delete(fbxmodel);
 	safe_delete(kabe);
 	safe_delete(kabe2);
 	safe_delete(tenQ);
@@ -59,41 +59,15 @@ GameScene::~GameScene()
 	safe_delete(copyDefenseTower);
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera)
+void GameScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	this->input = input;
-	this->mouse = mouse;
 	this->camera = camera;
 
 	//カメラの初期位置、注視点
 	camera->SetTarget(initTarget);
 	camera->SetEye(initEye);
-
-	//スプライト共通テクスチャ読み込み
-	Sprite::LoadTexture(0, L"Resources/texture.png");
-	Sprite::LoadTexture(1, L"Resources/torisetu.png");
-	Sprite::LoadTexture(2, L"Resources/clear.png");
-	Sprite::LoadTexture(3, L"Resources/hp.png");
-	Sprite::LoadTexture(4, L"Resources/damageHp.png");
-	//背景
-	Sprite::LoadTexture(5, L"Resources/title.png");
-	Sprite::LoadTexture(6, L"Resources/end.png");
-	Sprite::LoadTexture(7, L"Resources/black.png");
-	Sprite::LoadTexture(8, L"Resources/kati.png");
-
-	Sprite::LoadTexture(9, L"Resources/num/slash.png");
-	Sprite::LoadTexture(10, L"Resources/num/0.png");
-	Sprite::LoadTexture(11, L"Resources/num/1.png");
-	Sprite::LoadTexture(12, L"Resources/num/2.png");
-	Sprite::LoadTexture(13, L"Resources/num/3.png");
-	Sprite::LoadTexture(14, L"Resources/num/4.png");
-	Sprite::LoadTexture(15, L"Resources/num/5.png");
-	Sprite::LoadTexture(16, L"Resources/num/6.png");
-	Sprite::LoadTexture(17, L"Resources/num/7.png");
-	Sprite::LoadTexture(18, L"Resources/num/8.png");
-	Sprite::LoadTexture(19, L"Resources/num/9.png");
 
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
@@ -101,15 +75,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 
 	//モデルの読み込み
-	fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
+	//fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 
 
 	//3Dオブジェクトの生成
-	objectFBX = new ObjectFBX;
-	objectFBX->Initialize();
-	objectFBX->SetModel(fbxmodel);
-	objectFBX->PlayAnimetion();
-	objectFBX->SetPos({ 0,0,+80 });
+	//objectFBX = new ObjectFBX;
+	//objectFBX->Initialize();
+	//objectFBX->SetModel(fbxmodel);
+	//objectFBX->PlayAnimetion();
+	//objectFBX->SetPos({ 0,0,+80 });
 
 	ground = ObjectObj::Create();
 	ground->SetModel(ModelManager::GetModel("ground"));
@@ -151,7 +125,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 	//プレイヤーの生成処理
 	player = new Player();
-	player->Initialize(input, mouse, camera);
+	player->Initialize(camera);
 	player->object->SetScale({ 1.0f,1.0f,1.0f });
 	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
@@ -207,7 +181,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mo
 
 	//postEffect->SetSize({ 100,100 });
 
-	postEffect->SetSize({1,1});
+	postEffect->SetSize({ 1,1 });
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -217,7 +191,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			Player::breakEnemy += 1;
 		}
 	}
-	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->IsDead(); });
+	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 	//player->Update();
 	//カメラ操作
 	//if (input->PushKey(DIK_RIGHT)) {
@@ -236,14 +210,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//}
 
 
-	if (input->PushKey(DIK_UP)) {
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		//spriteBG->SetSize({ 2, 2 });
 		XMFLOAT2 postSize = postEffect->GetSize();
 		postSize.x += 0.1;
 		postSize.y += 0.1;
 		postEffect->SetSize(postSize);
 	}
-	else if (input->PushKey(DIK_DOWN)) {
+	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
 		//spriteBG->SetSize({ 100, 100 });
 		//postEffect->SetSize({ 100,100 });
 		XMFLOAT2 postSize = postEffect->GetSize();
@@ -315,7 +289,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-			if (enemy->IsDead() == false) {
+			if (enemy->GetDead() == false) {
 				//バトルシーンに行く処理
 				batlleScene->SetEnemies(enemy);
 				enemiesG.remove(enemy);
@@ -345,16 +319,16 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//}
 
 	//3Dオブジェクト更新
-	objectFBX->Update();
+	//objectFBX->Update();
 	player->Update();
 	ground->Update();
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		//if (enemy->IsDead() == false) {
+		//if (enemy->GetDead() == false) {
 		enemy->Update();
 		//	}
 	}
-	defenseTower->Update(enemiesG);
+	//defenseTower->Update(enemiesG);
 	castle->Update();
 	suana->Update();
 	suana2->Update();
@@ -366,14 +340,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//カメラ操作
-	if (input->PushKey(DIK_RIGHT)) {
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		camera->matRot *= XMMatrixRotationY(0.02f);
 	}
-	else if (input->PushKey(DIK_LEFT)) {
+	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 		camera->matRot *= XMMatrixRotationY(-0.02f);
 	}
 	if (cameraToMouse == 1) {
-		camera->matRot *= XMMatrixRotationY(0.8f * mouse->MoveMouseVector('x') / 1000);
+		camera->matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
 	}
 	//XMFLOAT3 rote = player->object->GetRotation();
 	XMFLOAT3 pos = player->object->GetPosition();
@@ -407,11 +381,21 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	copyCastle->Update(castle, subCamera);
 	copyDefenseTower->Update(defenseTower->GetObjectOBJ(), subCamera);
 	PostReserve();	//ミニマップの描画前処理
+	subCamera->SetTarget(player->object->GetPosition());
+	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
+
 }
 
 void GameScene::Draw()
 {
-	//PostDraw();	//ミニマップの描画
+	if (Input::GetInstance()->TriggerKey(DIK_M)) {
+		if (mapFlag == true) { mapFlag = false; }
+		else { mapFlag = true; }
+	}
+
+	if (mapFlag == true) {
+		PostDraw();	//ミニマップの描画
+	}
 
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	//objectFBX->Draw(dxCommon->GetCmdList());
@@ -427,7 +411,7 @@ void GameScene::Draw()
 	kabe2->Draw();
 	tenQ->Draw();
 	player->Draw();
-	
+
 	ObjectObj::PostDraw();
 
 	//ObjectObj::PreDraw(dxCommon->GetCmdList());
@@ -466,12 +450,12 @@ void GameScene::PostReserve()
 	copyGround->Draw();
 	copyCastle->Draw();
 	copyDefenseTower->Draw();
-	
+
 	ObjectObj::PostDraw();
 
 	//ポストエフェクトさせたいスプライト
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	spriteBG->Draw();	
+	spriteBG->Draw();
 	Sprite::PostDraw();
 
 	postEffect->PosDrawScene(dxCommon->GetCmdList());

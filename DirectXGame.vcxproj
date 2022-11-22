@@ -292,6 +292,7 @@
     <ClInclude Include="Scene\BatlleScene.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\SceneManager.h" />
+    <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Sprite\PostEffect.h" />
     <ClInclude Include="Sprite\Sprite.h" />
     <ClInclude Include="TitleScene.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="Scene\BatlleScene.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="Sprite\PostEffect.cpp" />
     <ClCompile Include="Sprite\Sprite.cpp" />
     <ClCompile Include="TitleScene.cpp" />

@@ -32,7 +32,7 @@ class BatlleScene
         //デストラクタ
         ~BatlleScene();
         //初期化
-        void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera,GameScene* gameScene);
+        void Initialize(DirectXCommon* dxCommon, Camera* camera);
         //更新
         void Update(int& sceneNo, GameScene* gameScene);
         //描画
@@ -44,14 +44,11 @@ class BatlleScene
 
     private: // メンバ変数
         DirectXCommon* dxCommon = nullptr;
-        Input* input = nullptr;
-        InputMouse* mouse = nullptr;
         Camera* camera;
 
         // ゲームシーン用  
         //スプライト
         Sprite* spriteBG = nullptr;
-        Sprite* claerSprite = nullptr;
         //3Dオブジェクト
         //FbxModel* fbxmodel = nullptr;
         //ObjectFBX* ObjectFBX = nullptr;

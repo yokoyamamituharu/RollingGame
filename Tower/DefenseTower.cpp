@@ -40,7 +40,7 @@ DefenseTower::~DefenseTower()
 void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 {
 	//フラグが立った弾を消す
-	bullets.remove_if([](std::unique_ptr<Bullet>& bullet) {return bullet->IsDead(); });
+	bullets.remove_if([](std::unique_ptr<Bullet>& bullet) {return bullet->GetDead(); });
 
 
 	//検知範囲に敵が入ったら攻撃開始

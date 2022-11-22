@@ -256,6 +256,9 @@
     <ClInclude Include="CopyObject.h">
       <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -356,6 +359,9 @@
     </ClCompile>
     <ClCompile Include="CopyObject.cpp">
       <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

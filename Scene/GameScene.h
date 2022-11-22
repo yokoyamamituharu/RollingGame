@@ -37,7 +37,7 @@ public:
 	//デストラクタ
 	~GameScene();
 	//初期化
-	void Initialize(DirectXCommon* dxCommon, Input* input, InputMouse* mouse, Camera* camera);
+	void Initialize(DirectXCommon* dxCommon, Camera* camera);
 	//更新
 	void Update(int& sceneNo, BatlleScene* batlleScene);
 	//描画
@@ -58,8 +58,6 @@ public:
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
-	Input* input = nullptr;
-	InputMouse* mouse = nullptr;
 	Camera* camera = nullptr;
 
 	// ゲームシーン用  
@@ -77,7 +75,6 @@ private: // メンバ変数
 	//敵
 	//タワー
 	DefenseTower* defenseTower = nullptr;
-	Bullet* bullet = nullptr;
 	//EnemyZako* enemy1 = nullptr;
 	//お城
 	ObjectObj* castle = nullptr;
@@ -116,5 +113,7 @@ private: // メンバ変数
 	int timer[maxEnemy];
 
 	int dasuteki[maxEnemy];
+
+	bool mapFlag = false;
 };
 
