@@ -205,9 +205,6 @@
     <ClInclude Include="Particle\ParticleManager.h">
       <Filter>ソース ファイル\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="safe_delete.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectFBX\ObjectFBX.h">
       <Filter>ソース ファイル\ObjectFBX</Filter>
     </ClInclude>
@@ -256,8 +253,14 @@
     <ClInclude Include="CopyObject.h">
       <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClInclude>
+    <ClInclude Include="GameCamera.h">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="safe_delete.h">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClInclude>
     <ClInclude Include="SpriteManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,8 +363,11 @@
     <ClCompile Include="CopyObject.cpp">
       <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
     <ClCompile Include="SpriteManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

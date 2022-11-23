@@ -110,7 +110,7 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static ObjectObj* Create();
+	static ObjectObj* Create(Model* model = nullptr);
 
 	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
 
@@ -139,7 +139,7 @@ protected:// 静的メンバ関数
 	
 
 public: // メンバ関数
-	bool Initialize();
+	bool Initialize(Model* model = nullptr);
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>

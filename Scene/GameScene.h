@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "InputMouse.h"
 #include "PostEffect.h"
-#include "Camera.h"
+#include "GameCamera.h"
 #include "Sprite.h"
 #include "ObjectOBJ.h"
 #include "ObjectFBX.h"
@@ -37,7 +37,7 @@ public:
 	//デストラクタ
 	~GameScene();
 	//初期化
-	void Initialize(DirectXCommon* dxCommon, Camera* camera);
+	void Initialize(DirectXCommon* dxCommon);
 	//更新
 	void Update(int& sceneNo, BatlleScene* batlleScene);
 	//描画
@@ -58,7 +58,7 @@ public:
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
-	Camera* camera = nullptr;
+	GameCamera* mainCamera = nullptr;
 
 	// ゲームシーン用  
 	//スプライト
@@ -98,7 +98,6 @@ private: // メンバ変数
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;
-	int cameraToMouse = 1;
 
 	Camera* subCamera = nullptr;
 

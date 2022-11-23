@@ -95,8 +95,8 @@ private:
 
 	float gravity = 0.0f;
 
-	int maxHp = 5;
-	int hp = maxHp;
+	static int maxHp;
+	static int hp;
 
 	XMFLOAT3 backVec = { 0,0,0 };
 

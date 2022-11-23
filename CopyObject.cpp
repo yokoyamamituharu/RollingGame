@@ -23,10 +23,10 @@ void CopyObject::Update(ObjectObj* obj, Camera* cameraC)
 	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	//constMap->color = color;
 	if (cameraC == nullptr) {
-		constMap->mat = obj->GetWorldMatrix() * camera->GetViewMatrix() * camera->GetProjectionMatrix();	// 行列の合成
+		constMap->mat = obj->GetWorldMatrix() * camera->GetMatView() * camera->GetMatProjection();	// 行列の合成
 	}
 	else {
-		constMap->mat = obj->GetWorldMatrix() * cameraC->GetViewMatrix() * cameraC->GetProjectionMatrix();	// 行列の合成
+		constMap->mat = obj->GetWorldMatrix() * cameraC->GetMatView() * cameraC->GetMatProjection();	// 行列の合成
 	}
 	constBuffB0->Unmap(0, nullptr);
 

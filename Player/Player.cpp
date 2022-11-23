@@ -6,6 +6,8 @@
 using namespace DirectX;
 
 int Player::breakEnemy = 0;
+int Player::maxHp = 5;
+int Player::hp = Player::maxHp;
 
 Player::Player()
 {

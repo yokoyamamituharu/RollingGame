@@ -103,7 +103,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//-----初期化処理-----//
 	WinApp* winApp = nullptr;
-	winApp = new WinApp();
+	winApp = WinApp::GetInstance();
 	winApp->Initialize();
 	DirectXCommon* dxCommon = nullptr;
 	//DirectXの初期化
@@ -116,10 +116,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//マウス
 	InputMouse* mouse = nullptr;
 	mouse = InputMouse::GetInstance();
-	mouse->Initialize(winApp->GetHInstance(), winApp->GetHwnd());
+	mouse->Initialize(winApp);
 	//カメラ
-	Camera* camera = nullptr;
-	camera = new Camera(winApp->window_width, winApp->window_height);
+	Camera* camera = Camera::Create();
 	//スプライトの静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 	//モデルの静的初期化
@@ -144,8 +143,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon,camera);
-
-	bool isSetMousePoint = true;	//マウスのポインタの位置を固定するかどうか
 	
 
 	FPSLock fpsLock;
@@ -203,15 +200,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 		mouse->Update();
 
-		if (input->TriggerKey(DIK_ESCAPE)) {	//Mキーを押されたらマウスポインターの移動を停止
-			if (isSetMousePoint) { isSetMousePoint = false; }
-			else { isSetMousePoint = true; }
-		}
-		//ウィンドウがアクティブ状態なら処理
-		if (winApp->GetHwnd() == GetActiveWindow() && isSetMousePoint == true)
-		{
-			SetCenterCoursolPos(winApp);
-		}
+		////ウィンドウがアクティブ状態なら処理
+		//if (winApp->GetHwnd() == GetActiveWindow() && isSetMousePoint == true)
+		//{
+		//	SetCenterCoursolPos(winApp);
+		//}
 
 
 		//シーンの更新
@@ -240,7 +233,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//winAppの解放
 	winApp->Finalize();
-	safe_delete(winApp);
+	//safe_delete(winApp);
 	//DirectX解放
 	safe_delete(dxCommon);
 	//入力の解放

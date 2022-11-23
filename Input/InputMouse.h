@@ -1,9 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <wrl.h>
-
-#define DIRECTINPUT_VERSION     0x0800          // DirectInputのバージョン指定
 #include <dinput.h>
+#define DIRECTINPUT_VERSION     0x0800          // DirectInputのバージョン指定
+#include "WinApp.h"
 
 enum MouseDIK
 {
@@ -27,7 +27,7 @@ public:
 		/// 初期化
 		/// </summary>
 		/// <returns>成否</returns>
-		bool Initialize(HINSTANCE hInstance, HWND hwnd);
+		bool Initialize(WinApp* winApp);
 
 		/// <summary>
 		/// 毎フレーム処理
@@ -39,12 +39,17 @@ public:
 		bool IsMoveMouse(char h);
 
 		float MoveMouseVector(char h);
+		
+		/// <summary>
+		/// カーソルをウィンドウの中心に固定
+		/// </summary>
+		void SetCenterCoursolPos();
 
 	private: // メンバ変数
 		ComPtr<IDirectInput8> dinput;
-
 		ComPtr<IDirectInputDevice8> devmouse;
 		DIMOUSESTATE2 mouse;
 		DIMOUSESTATE2 oldmouse;
 
+		static WinApp* winApp;
 	};

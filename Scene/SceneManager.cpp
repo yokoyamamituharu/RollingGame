@@ -23,7 +23,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon, Camera* camera)
 
 	ModelManager::GetIns()->Initialize();
 	gameScene = new GameScene;
-	gameScene->Initialize(dxCommon, camera);
+	gameScene->Initialize(dxCommon);
 	batlleScene = new BatlleScene;
 	batlleScene->Initialize(dxCommon, camera);
 	titleScene = new TitleScene;
@@ -66,7 +66,7 @@ void SceneManager::Update()
 		gameScene->Update(sceneNo, batlleScene);
 	}
 	else if (sceneNo == SCENE_BATTLE) {
-		//batlleScene->Update(sceneNo, gameScene);
+		batlleScene->Update(sceneNo, gameScene);
 	}
 }
 
@@ -82,7 +82,7 @@ void SceneManager::Draw()
 		gameScene->Draw();
 	}
 	if (sceneNo == SCENE_BATTLE) {
-		//batlleScene->Draw();
+		batlleScene->Draw();
 	}
 
 }
@@ -93,7 +93,7 @@ void SceneManager::GameSceneReset()
 	safe_delete(batlleScene);
 	gameScene = new GameScene();
 	batlleScene = new BatlleScene();
-	gameScene->Initialize(dxCommon, camera);
+	gameScene->Initialize(dxCommon);
 	batlleScene->Initialize(dxCommon, camera);
 	initFlag = false;
 }

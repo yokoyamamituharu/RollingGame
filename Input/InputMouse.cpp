@@ -1,6 +1,9 @@
 #include "InputMouse.h"
 #include <cassert>
 #pragma comment(lib, "dinput8.lib")
+#include <cmath>
+
+WinApp* InputMouse::winApp;
 
 // デバイス発見時に実行される
 BOOL CALLBACK DeviceFindCallBack(LPCDIDEVICEINSTANCE ipddi, LPVOID pvRef)
@@ -14,12 +17,12 @@ InputMouse* InputMouse::GetInstance()
 	return &instance;
 }
 
-bool InputMouse::Initialize(HINSTANCE hInstance, HWND hwnd)
+bool InputMouse::Initialize(WinApp* winApp)
 {
 	HRESULT result = S_FALSE;
 
 	// DirectInputオブジェクトの生成	
-	result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, nullptr);
+	result = DirectInput8Create(winApp->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, nullptr);
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -41,7 +44,7 @@ bool InputMouse::Initialize(HINSTANCE hInstance, HWND hwnd)
 		return result;
 	}
 	// 排他制御レベルのセット
-	result = devmouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	result = devmouse->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	if (FAILED(result)) {
 		assert(0);
 		return result;
@@ -122,5 +125,53 @@ float InputMouse::MoveMouseVector(char h)
 		return mouse.lY;
 	}
 	return 0;
+}
+
+void InputMouse::SetCenterCoursolPos()
+{
+	RECT rect;
+	GetWindowRect(WinApp::GetInstance()->GetHwnd(), &rect);
+	//ウィンドウの各座標を取得
+	float left = rect.left;
+	float right = rect.right;
+	float top = rect.top;
+	float bottom = rect.bottom;
+	float x, y;
+
+	//横の中心点を計算
+	if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
+		float high, min;
+		if (abs(left) > abs(right)) {
+			high = left;
+			min = right;
+		}
+		else {
+			high = right;
+			min = left;
+		}
+		x = abs(high) - abs(min);
+	}
+	else {
+		x = abs(left) + abs(right);
+	}
+	//縦の中心点を計算
+	if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
+		float high, min;
+		if (abs(top) > abs(bottom)) {
+			high = top;
+			min = bottom;
+		}
+		else {
+			high = bottom;
+			min = top;
+		}
+		y = abs(high) - abs(min);
+	}
+	else {
+		y = abs(top) + abs(bottom);
+	}
+
+	//カーソルを固定
+	SetCursorPos(left + (x / 2), bottom - (y / 2));
 }
 

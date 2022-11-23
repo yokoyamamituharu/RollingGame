@@ -59,34 +59,23 @@ GameScene::~GameScene()
 	safe_delete(copyDefenseTower);
 }
 
-void GameScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
+void GameScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
-	this->dxCommon = dxCommon;
-	this->camera = camera;
+	this->dxCommon = dxCommon;	
 
 	//カメラの初期位置、注視点
-	camera->SetTarget(initTarget);
-	camera->SetEye(initEye);
+	mainCamera = GameCamera::Create();
+	mainCamera->SetTarget(initTarget);
+	mainCamera->SetEye(initEye);
+	ObjectObj::SetCamera(mainCamera);
 
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
 
-
-	//モデルの読み込み
-	//fbxmodel = FbxLoader::GetInstance()->LoadModelFromFile("cube");
-
-
-	//3Dオブジェクトの生成
-	//objectFBX = new ObjectFBX;
-	//objectFBX->Initialize();
-	//objectFBX->SetModel(fbxmodel);
-	//objectFBX->PlayAnimetion();
-	//objectFBX->SetPos({ 0,0,+80 });
-
-	ground = ObjectObj::Create();
-	ground->SetModel(ModelManager::GetModel("ground"));
+	ground = ObjectObj::Create(ModelManager::GetModel("ground"));
+	//ground->SetModel();
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
@@ -125,7 +114,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
 
 	//プレイヤーの生成処理
 	player = new Player();
-	player->Initialize(camera);
+	player->Initialize(mainCamera);
 	player->object->SetScale({ 1.0f,1.0f,1.0f });
 	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
 	player->object->SetRotation({ 0.0f,90.0f,0.0f });
@@ -165,10 +154,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
 
 	Player::breakEnemy = 0;
 
-	subCamera = new Camera(1280, 700);
+	subCamera = Camera::Create();
 	subCamera->SetEye({ 0, 100, -1 });
 	subCamera->SetTarget({ 0, 0, 0 });
-	//ObjectObj::SetCamera(subCamera);
 	copyPlayer = new CopyObject;
 	copyPlayer->InitializeC(player->object);
 	copyGround = new CopyObject;
@@ -182,6 +170,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
 	//postEffect->SetSize({ 100,100 });
 
 	postEffect->SetSize({ 1,1 });
+	mainCamera->SetPlayer(player->object);
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -192,23 +181,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 	}
 	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
-	//player->Update();
-	//カメラ操作
-	//if (input->PushKey(DIK_RIGHT)) {
-	//	subCamera->matRot *= XMMatrixRotationY(0.1f);
-	//}
-	//else if (input->PushKey(DIK_LEFT)) {
-	//	subCamera->matRot *= XMMatrixRotationY(-0.1f);
-	//}	
-
-	////カメラ操作
-	//if (input->TriggerKey(DIK_UP)) {
-	//	subCamera->MoveEyeVector(XMFLOAT3{ 0,0,1 });
-	//}
-	//else if (input->TriggerKey(DIK_DOWN)) {
-	//	subCamera->MoveEyeVector(XMFLOAT3{ 0,0,-1 });
-	//}
-
 
 	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		//spriteBG->SetSize({ 2, 2 });
@@ -227,9 +199,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 
-
-
-
 	//敵生成処理
 	timer[index]--;
 
@@ -237,23 +206,16 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		if (dasuteki[index] == 1) {
 			//タワーがある方
 			std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+			newEnemy->Initialize(EnemyZako::FIELD_OUT, mainCamera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
 			enemiesG.push_back(std::move(newEnemy));
 		}
 		if (dasuteki[index] == 2) {
 			std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-			newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+			newEnemy->Initialize(EnemyZako::FIELD_OUT, mainCamera, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
 			enemiesG.push_back(std::move(newEnemy));
 		}
 
 		index++;
-	}
-
-	//if (Input::GetInstance()->PushKey(DIK_H)) {
-	//	int num = 0;
-	//}
-	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
-		cameraToMouse *= -1;
 	}
 
 	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
@@ -311,24 +273,15 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
-	//if (Input::GetInstance()->TriggerKey(DIK_PGUP)) {
-	//	player->Cure(1);
-	//}
-	//if (Input::GetInstance()->TriggerKey(DIK_PGDN)) {
-	//	player->Damage(1);
-	//}
-
 	//3Dオブジェクト更新
 	//objectFBX->Update();
 	player->Update();
 	ground->Update();
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		//if (enemy->GetDead() == false) {
 		enemy->Update();
-		//	}
 	}
-	//defenseTower->Update(enemiesG);
+	defenseTower->Update(enemiesG);
 	castle->Update();
 	suana->Update();
 	suana2->Update();
@@ -339,39 +292,9 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		sceneNo = SceneManager::SCENE_KATI;
 	}
 
-	//カメラ操作
-	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-		camera->matRot *= XMMatrixRotationY(0.02f);
-	}
-	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-		camera->matRot *= XMMatrixRotationY(-0.02f);
-	}
-	if (cameraToMouse == 1) {
-		camera->matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
-	}
-	//XMFLOAT3 rote = player->object->GetRotation();
-	XMFLOAT3 pos = player->object->GetPosition();
-	XMVECTOR movement = { 0, 0, 1.0f, 0 };
-	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
-	movement = XMVector3TransformNormal(movement, camera->matRot);
-	movement *= XMVECTOR{ -1, -1, -1 };
-	//matRot = XMMatrixRotationY((XMConvertToRadians(rote.y)));
-	camera->SetEye({ player->object->GetPosition().x + movement.m128_f32[0] * 80, player->object->GetPosition().y + movement.m128_f32[1] * 80,
-		 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
-	camera->eye.y = 20;
-	camera->target = player->object->GetPosition();
-	//プレイヤーがジャンプした時視点だけ上に向くのを防止するための処理敵
-	//camera->target.y = player->graundheight;
 
-
-
-	//カメラの更新
-	//camera->SetEye({ player->object->GetPosition().x + initEye.x,player->object->GetPosition().y + initEye.y,
-	//	player->object->GetPosition().z + initEye.z });
-	//camera->SetTarget({ player->object->GetPosition().x + initTarget.x,player->object->GetPosition().y + initTarget.y,
-	//	player->object->GetPosition().z + initTarget.z });
-	camera->SetWorldMatrix(player->object->GetWorldMatrix());
-	camera->Update();
+	//カメラのアップデート
+	mainCamera->Update();
 	subCamera->Update();
 
 

@@ -17,9 +17,9 @@ using namespace Microsoft::WRL;
 /// </summary>
 const float ObjectObj::radius = 5.0f;				// 底面の半径
 const float ObjectObj::prizmHeight = 8.0f;			// 柱の高さ
-ID3D12Device *ObjectObj::device = nullptr;
+ID3D12Device* ObjectObj::device = nullptr;
 UINT ObjectObj::descriptorHandleIncrementSize = 0;
-ID3D12GraphicsCommandList *ObjectObj::commandList = nullptr;
+ID3D12GraphicsCommandList* ObjectObj::commandList = nullptr;
 ComPtr<ID3D12RootSignature> ObjectObj::rootsignature;
 ComPtr<ID3D12PipelineState> ObjectObj::pipelinestate;
 Camera* ObjectObj::camera = nullptr;
@@ -102,7 +102,7 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::X
 	XMFLOAT3 result;
 	result.x = lhs.x - rhs.m128_f32[0];
 	result.y = lhs.y - rhs.m128_f32[1];
-	result.z = lhs.z - rhs.m128_f32[2];	
+	result.z = lhs.z - rhs.m128_f32[2];
 	return result;
 }
 
@@ -117,7 +117,7 @@ const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::X
 
 
 
-bool ObjectObj::StaticInitialize(ID3D12Device *device,Camera* camera)
+bool ObjectObj::StaticInitialize(ID3D12Device* device, Camera* camera)
 {
 	// nullptrチェック
 	assert(device);
@@ -134,7 +134,7 @@ bool ObjectObj::StaticInitialize(ID3D12Device *device,Camera* camera)
 	return true;
 }
 
-void ObjectObj::PreDraw(ID3D12GraphicsCommandList *commandList)
+void ObjectObj::PreDraw(ID3D12GraphicsCommandList* commandList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
 	assert(ObjectObj::commandList == nullptr);
@@ -156,24 +156,20 @@ void ObjectObj::PostDraw()
 	ObjectObj::commandList = nullptr;
 }
 
-ObjectObj *ObjectObj::Create()
+ObjectObj* ObjectObj::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
-	ObjectObj *object3d = new ObjectObj();
+	ObjectObj* object3d = new ObjectObj();
 	if (object3d == nullptr) {
 		return nullptr;
 	}
 
 	// 初期化
-	if (!object3d->Initialize()) {
+	if (!object3d->Initialize(model)) {
 		delete object3d;
 		assert(0);
 		return nullptr;
-	}
-
-	//スケールをセット
-	float scale_val = 1.0f;
-	object3d->scale = { scale_val ,scale_val ,scale_val };
+	}	
 
 	return object3d;
 }
@@ -201,7 +197,7 @@ bool ObjectObj::InitializeGraphicsPipeline()
 		std::string errstr;
 		errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char *)errorBlob->GetBufferPointer(),
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
@@ -224,7 +220,7 @@ bool ObjectObj::InitializeGraphicsPipeline()
 		std::string errstr;
 		errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char *)errorBlob->GetBufferPointer(),
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
@@ -300,7 +296,7 @@ bool ObjectObj::InitializeGraphicsPipeline()
 	descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0); // t0 レジスタ
 
 	// ルートパラメータ
-	CD3DX12_ROOT_PARAMETER rootparams[3];	
+	CD3DX12_ROOT_PARAMETER rootparams[3];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
@@ -334,7 +330,7 @@ bool ObjectObj::InitializeGraphicsPipeline()
 }
 
 
-bool ObjectObj::Initialize()
+bool ObjectObj::Initialize(Model* model)
 {
 	// nullptrチェック
 	assert(device);
@@ -359,6 +355,15 @@ bool ObjectObj::Initialize()
 
 	//オブジェクトの初期位置
 	position = { 0,0,0 };
+	//オブジェクトの初期サイズ
+	scale = { 1.0f,1.0f,1.0f };
+	//オブジェクトの初期回転角度
+	rotation = { 0.0f,0.0f,0.0f };
+
+	//モデルデータを渡されていたらモデルをセット
+	if (model != nullptr) {
+		modelData = model;
+	}
 
 	return true;
 }
@@ -391,14 +396,14 @@ void ObjectObj::Update()
 	}
 
 	// 定数バッファへデータ転送
-	ConstBufferDataB0 *constMap = nullptr;
-	result = constBuffB0->Map(0, nullptr, (void **)&constMap);
+	ConstBufferDataB0* constMap = nullptr;
+	result = constBuffB0->Map(0, nullptr, (void**)&constMap);
 	//constMap->color = color;
-	constMap->mat = matWorld * camera->GetViewMatrix() * camera->GetProjectionMatrix();	// 行列の合成
+	constMap->mat = matWorld * camera->GetMatView() * camera->GetMatProjection();	// 行列の合成
 	constBuffB0->Unmap(0, nullptr);
 
 	//constBuffB1の定数バッファデータ転送処理
-	ConstBufferDataB1 *constMap1 = nullptr;
+	ConstBufferDataB1* constMap1 = nullptr;
 	result = constBuffB1->Map(0, nullptr, (void**)&constMap1);
 	constMap1->ambient = modelData->material.ambient;
 	constMap1->diffuse = modelData->material.diffuse;
@@ -419,7 +424,7 @@ void ObjectObj::Draw()
 	commandList->IASetIndexBuffer(&modelData->ibView);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap *ppHeaps[] = { modelData->descHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { modelData->descHeap.Get() };
 	commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
@@ -447,7 +452,7 @@ XMMATRIX ObjectObj::GetWorldMatrix()
 	return matWorld;
 }
 
-void ObjectObj::SetModel(Model *model)
+void ObjectObj::SetModel(Model* model)
 {
 	modelData = model;
 }
