@@ -19,6 +19,7 @@ public:
 	Player();
 	~Player();
 
+	static Player* Create(Camera* camera);
 	void Initialize(Camera* camera);
 	void Update();
 	void Move();
@@ -59,7 +60,7 @@ public:
 
 	bool attackFlag = false;
 
-	float grundHeight = -6.0f;
+	const float grundHeight = -6.0f;
 
 	static int breakEnemy;
 
@@ -76,9 +77,6 @@ private:
 	float rollingSpeed = 0.0f;
 
 	Camera* camera;
-	bool isCamera = false;
-
-	int sceneType = 1;
 
 	int rollingTime = 0;
 
@@ -99,8 +97,6 @@ private:
 	static int hp;
 
 	XMFLOAT3 backVec = { 0,0,0 };
-
 	XMFLOAT3 move = { 0,0,0 };
-
 };
 

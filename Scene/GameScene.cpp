@@ -72,52 +72,35 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
-	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
+	clearsprite = Sprite::Create(2, { 100.0f,100.0f });	
 
+	//3Dオブジェクトの生成
 	ground = ObjectObj::Create(ModelManager::GetModel("ground"));
-	//ground->SetModel();
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
-	ground->SetRotation({ 0.0f,0.0f,0.0f });
-
-	castle = ObjectObj::Create();
-	castle->SetModel(ModelManager::GetModel("castle"));
+	castle = ObjectObj::Create(ModelManager::GetModel("castle"));
 	castle->SetScale({ 10.0f,10.0f,10.0f });
-
-	suana = ObjectObj::Create();
-	suana->SetModel(ModelManager::GetModel("suana"));
+	suana = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
 	suana->SetRotation({ 0,90,0 });
-
-	suana2 = ObjectObj::Create();
-	suana2->SetModel(ModelManager::GetModel("suana"));
+	suana2 = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
-
-	kabe = ObjectObj::Create();
-	kabe->SetModel(ModelManager::GetModel("kabe"));
+	kabe = ObjectObj::Create(ModelManager::GetModel("kabe"));
 	kabe->SetPosition({ 70.0f,-5.0f,50.0f });
 	kabe->SetScale({ 5.0f,5.0f,5.0f });
-	kabe->SetRotation({ 0,0,0 });
-
-	kabe2 = ObjectObj::Create();
-	kabe2->SetModel(ModelManager::GetModel("kabe"));
+	kabe2 = ObjectObj::Create(ModelManager::GetModel("kabe"));
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
 	kabe2->SetRotation({ 0,180,0 });
-
-	tenQ = ObjectObj::Create();
-	tenQ->SetModel(ModelManager::GetModel("tenQ"));
+	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
 	tenQ->SetScale({ 5,5,5 });
 
 	//プレイヤーの生成処理
-	player = new Player();
-	player->Initialize(mainCamera);
-	player->object->SetScale({ 1.0f,1.0f,1.0f });
+	player = Player::Create(mainCamera);	
 	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
-	player->object->SetRotation({ 0.0f,90.0f,0.0f });
 
 	//敵の生成処理
 	//std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();
@@ -131,9 +114,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetObjectOBJ()->SetPosition({ 20,0,20 });
 
+	//ポストエフェクトの生成処理
 	postEffect = new PostEffect();
 	postEffect->Initialize();
 
+	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
 
@@ -218,9 +203,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		index++;
 	}
 
-	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
-	//	sceneNo = 2;
-	//}
 
 	//敵を行動させるかさせないかのトルグスイッチ
 	//EnemyZako::Action();
@@ -231,22 +213,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana->GetPosition() + XMFLOAT3{ 0, 0, -50 });
 	//	enemiesG.push_back(std::move(newEnemy));
 	//}
-
 	////巣穴２から敵を生成
 	//if (Input::GetInstance()->TriggerKey(DIK_2)) {
 	//	std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
 	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
 	//	enemiesG.push_back(std::move(newEnemy));
 	//}
-
 	//if (Input::GetInstance()->TriggerKey(DIK_3)) {
 	//	std::shared_ptr<StrongZakoEnemy> newEnemy = std::make_shared<StrongZakoEnemy>();
 	//	newEnemy->Initialize(EnemyZako::FIELD_OUT, camera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, suana2->GetPosition() + XMFLOAT3{ 0, 0, 50 });
 	//	enemiesG.push_back(std::move(newEnemy));
 	//}
-
-
-	//std::list<std::unique_ptr<EnemyZako>>enemies1 = std::move(enemy1->GetEnemies());
 
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
@@ -263,7 +240,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				break;
 			}
 		}
-
 		//敵と城の当たり判定
 		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
 			//当たったら負け
@@ -274,13 +250,8 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	//3Dオブジェクト更新
-	//objectFBX->Update();
 	player->Update();
 	ground->Update();
-
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		enemy->Update();
-	}
 	defenseTower->Update(enemiesG);
 	castle->Update();
 	suana->Update();
@@ -288,10 +259,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	kabe->Update();
 	kabe2->Update();
 	tenQ->Update();
+	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+		enemy->Update();
+	}
 	if (enemiesG.size() <= 0 && index >= 5) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-
 
 	//カメラのアップデート
 	mainCamera->Update();
@@ -300,7 +273,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	copyPlayer->Update(player->object, subCamera);
 	copyGround->Update(ground, subCamera);
-
 	copyCastle->Update(castle, subCamera);
 	copyDefenseTower->Update(defenseTower->GetObjectOBJ(), subCamera);
 	PostReserve();	//ミニマップの描画前処理
@@ -315,7 +287,6 @@ void GameScene::Draw()
 		if (mapFlag == true) { mapFlag = false; }
 		else { mapFlag = true; }
 	}
-
 	if (mapFlag == true) {
 		PostDraw();	//ミニマップの描画
 	}
@@ -334,16 +305,7 @@ void GameScene::Draw()
 	kabe2->Draw();
 	tenQ->Draw();
 	player->Draw();
-
 	ObjectObj::PostDraw();
-
-	//ObjectObj::PreDraw(dxCommon->GetCmdList());
-	//player->object->VecSetPosition({ 0,20,0 });
-	//player->object->Update();
-	//player->Draw();	
-	//ObjectObj::PostDraw();
-	//player->object->VecSetPosition({ 0,-20,0 });
-	//player->object->Update();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	//spriteBG->Draw();
@@ -357,23 +319,10 @@ void GameScene::PostReserve()
 
 	//ポストエフェクトさせたいオブジェクト
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		//enemy->Draw();
-	}
-	//ground->Draw();
-	//defenseTower->Draw();
-	//castle->Draw();
-	//suana->Draw();
-	//suana2->Draw();
-	//kabe->Draw();
-	//kabe2->Draw();
-	//tenQ->Draw();
-	//player->object->Draw();
 	copyPlayer->Draw();
 	copyGround->Draw();
 	copyCastle->Draw();
 	copyDefenseTower->Draw();
-
 	ObjectObj::PostDraw();
 
 	//ポストエフェクトさせたいスプライト

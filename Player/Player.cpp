@@ -18,8 +18,16 @@ Player::~Player()
 	safe_delete(object);
 }
 
+Player* Player::Create(Camera* camera)
+{
+	Player* ins = new Player;
+	ins->Initialize(camera);
+	return ins;
+}
+
 void Player::Initialize( Camera* camera)
 {
+	assert(camera);
 	this->camera = camera;
 	//プレイヤー用モデルを読み込み
 	playermodel = ModelManager::GetModel("player");
@@ -28,6 +36,8 @@ void Player::Initialize( Camera* camera)
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(playermodel);
+	object->SetRotation({ 0.0f,90.0f,0.0f });
+
 	breakEnemy = 0;
 }
 
@@ -39,10 +49,6 @@ void Player::Update()
 	//		object->GetRotation().y ,
 	//		object->GetRotation().z + 1.0f });
 	//}
-
-	if (Input::GetInstance()->TriggerKey(DIK_9)) {
-		sceneType *= -1;
-	}
 
 	if (muteki == true) {
 		mutekiTime++;

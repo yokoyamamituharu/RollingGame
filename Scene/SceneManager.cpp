@@ -53,6 +53,9 @@ void SceneManager::Update()
 	//ゲームリセット
 	if (Input::GetInstance()->TriggerKey(DIK_R) || initFlag == true) {
 		GameSceneReset();
+		if (Input::GetInstance()->TriggerKey(DIK_R)) {
+			sceneNo = SCENE_TITLE;
+		}
 	}
 
 	//シーンの更新
@@ -95,5 +98,5 @@ void SceneManager::GameSceneReset()
 	batlleScene = new BatlleScene();
 	gameScene->Initialize(dxCommon);
 	batlleScene->Initialize(dxCommon, camera);
-	initFlag = false;
+	initFlag = false;	
 }

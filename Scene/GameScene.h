@@ -78,16 +78,16 @@ private: // ƒƒ“ƒo•Ï”
 	//EnemyZako* enemy1 = nullptr;
 	//‚¨é
 	ObjectObj* castle = nullptr;
-
 	//‘ƒŒŠ
 	ObjectObj* suana = nullptr;
 	ObjectObj* suana2 = nullptr;
 	//•Ç
 	ObjectObj* kabe = nullptr;
 	ObjectObj* kabe2 = nullptr;
-
 	//“V‹…
 	ObjectObj* tenQ = nullptr;
+
+	//std::map<std::string, ObjectObj*> objects;
 
 	CopyObject* copyPlayer = nullptr;
 	CopyObject* copyGround = nullptr;
