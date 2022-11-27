@@ -3,8 +3,9 @@
 
 void Canvas::Initialize()
 {
+	float hpWidth = 100;
 	for (int i = 0; i < sizeof(playerHp) / sizeof(playerHp[0]); i++) {
-		playerHp[i] = Sprite::Create(3, { float(i * 35),500 });
+		playerHp[i] = Sprite::Create(3, { hpWidth+ float(i * 35),500 });
 		damagePlayerHp[i] = Sprite::Create(4, { float(i * 35),500 });
 	}
 

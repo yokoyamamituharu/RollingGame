@@ -156,10 +156,35 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	postEffect->SetSize({ 1,1 });
 	mainCamera->SetPlayer(player->object);
+
+	//postEffect->SetColor({ 0.5,0.5,0.5});
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
+	if (Input::GetInstance()->TriggerKey(DIK_B))
+	{
+		blackFlag = true;
+	}
+
+	if (blackFlag == true) {
+		blackTime -= 0.05;
+		if (blackTime > 0) {
+			postEffect->SetColor({ blackTime,blackTime,blackTime });
+		}
+		else {
+			blackTime2 += 0.05f;
+			postEffect->SetColor({ blackTime2,blackTime2,blackTime2 });
+		}
+		if (blackTime2 >= 1) {
+			blackFlag = false;
+			blackTime = 1.0f;
+			blackTime2 = 0.0f;
+		}
+	}
+	
+	
+
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		if (enemy->GetHp() <= 0) {
 			Player::breakEnemy += 1;

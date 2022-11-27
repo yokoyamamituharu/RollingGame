@@ -95,6 +95,11 @@ private: // ƒƒ“ƒo•Ï”
 	CopyObject* copyDefenseTower = nullptr;
 	//CopyObject* copyGround = nullptr;
 
+	float blackTime = 1;
+	float blackTime2 = 0;
+	bool blackFlag = false;
+	bool blackFlag1 = false;
+
 	bool flag1 = false;
 	bool clear = false;
 	int time = 0;

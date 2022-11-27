@@ -99,6 +99,13 @@ public://メンバ関数
 	//スプライト単体描画
 	void Draw();
 
+	//色を設定
+	void SetColor(XMFLOAT3 color) { 
+		this->color.x = color.x; 
+		this->color.y = color.y;
+		this->color.z = color.z;
+	}
+
 	//アルファ値を設定
 	void SetAlpha(float blackOutAlpha) { color.w = blackOutAlpha; }
 

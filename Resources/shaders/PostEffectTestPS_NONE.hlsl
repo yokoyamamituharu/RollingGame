@@ -8,7 +8,7 @@ SamplerState smp : register(s0);
 
 float4 main(VSOutput input) : SV_TARGET
 {
-    float4 texUnti = tex0.Sample(smp, input.uv);
+    float4 texUnti = tex0.Sample(smp, input.uv) * color;
     //texUnti.r *= 0.5;
     texUnti.a =1;
     return texUnti;
