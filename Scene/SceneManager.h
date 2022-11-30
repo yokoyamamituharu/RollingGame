@@ -22,7 +22,7 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void Initialize(DirectXCommon* dxCommon, Camera* camera);
+	void Initialize(DirectXCommon* dxCommon);
 	void Update();
 	void Draw();
 

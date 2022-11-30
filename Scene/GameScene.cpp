@@ -5,29 +5,11 @@
 #include "tuyoEnemy.h"
 #include "safe_delete.h"
 #include "ModelManager.h"
+#include "Collision.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
 using namespace DirectX;
-
-//立方体の当たり判定
-bool CubeCollision(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
-	float disX1 = object1.x + radius1.x;
-	float disX2 = object2.x - radius2.x;
-	float disX3 = object1.x - radius1.x;
-	float disX4 = object2.x + radius2.x;
-	float disY1 = object1.y + radius1.y;
-	float disY2 = object2.y - radius2.y;
-	float disY3 = object1.y - radius1.y;
-	float disY4 = object2.y + radius2.y;
-	float disZ1 = object1.z + radius1.z;
-	float disZ2 = object2.z - radius2.z;
-	float disZ3 = object1.z - radius1.z;
-	float disZ4 = object2.z + radius2.z;
-
-	//xとyはそれぞれ中心座標として計算する
-	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
-}
 
 GameScene::GameScene()
 {
@@ -39,7 +21,7 @@ GameScene::~GameScene()
 	safe_delete(canvas);
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
-	safe_delete(postEffect);
+	//safe_delete(postEffect);
 
 	//3Dオブジェクト解放
 	//safe_delete(objectFBX);
@@ -53,10 +35,10 @@ GameScene::~GameScene()
 	safe_delete(suana2);
 	safe_delete(defenseTower);
 	safe_delete(player);
-	safe_delete(copyPlayer);
-	safe_delete(copyCastle);
-	safe_delete(copyGround);
-	safe_delete(copyDefenseTower);
+	//safe_delete(copyPlayer);
+	//safe_delete(copyCastle);
+	//safe_delete(copyGround);
+	//safe_delete(copyDefenseTower);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -252,7 +234,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 			if (enemy->GetDead() == false) {
 				//バトルシーンに行く処理
 				batlleScene->SetEnemies(enemy);
@@ -266,7 +248,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		if (CubeCollision(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
 			//当たったら負け
 			//sceneNo = SceneManager::SCENE_END;
 		}

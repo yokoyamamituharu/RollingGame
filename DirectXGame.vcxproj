@@ -46,13 +46,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)DirectXTex\include;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)DirectXTex\lib\$(Configuration);$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)DirectXTex\lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)lib\DirectXTex\include;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\DirectXTex\lib\$(Configuration);$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)DirectXTex\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)DirectXTex\include;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)DirectXTex\lib\$(Configuration);$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)DirectXTex\lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)lib\DirectXTex\include;$(ProjectDir)lib\fbx_sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\DirectXTex\lib\$(Configuration);$(ProjectDir)lib\fbx_sdk\lib;$(ProjectDir)DirectXTex\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -200,6 +200,7 @@
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Canvas.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="CopyObject.h" />
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy\Enemy.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CopyObject.cpp" />
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy\Enemy.cpp" />

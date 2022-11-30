@@ -15,7 +15,7 @@ SceneManager::~SceneManager()
 }
 
 
-void SceneManager::Initialize(DirectXCommon* dxCommon, Camera* camera)
+void SceneManager::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
@@ -31,7 +31,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon, Camera* camera)
 	endScene = new EndScene;
 	endScene->Initialize(dxCommon);
 
-	sceneNo = SCENE_TITLE;
+	sceneNo = SCENE_GAME;
 	//sceneNo = SCENE_GAME;
 }
 

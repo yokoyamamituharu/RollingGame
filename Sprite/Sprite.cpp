@@ -423,6 +423,12 @@ void Sprite::SetSize(XMFLOAT2 size)
 	TransferVertices();
 }
 
+void Sprite::SetScale(XMFLOAT2 scale)
+{
+	this->scale = scale;
+	TransferVertices();
+}
+
 void Sprite::TransferVertices()
 {
 	HRESULT result = S_FALSE;
@@ -438,10 +444,10 @@ void Sprite::TransferVertices()
 	//左下、左上、右下、右上
 	enum { LB, LT, RB, RT };
 
-	vertices[LB].pos = { 0.0f,size.y,0.0f };//左下
+	vertices[LB].pos = { 0.0f,size.y * scale.y,0.0f };//左下
 	vertices[LT].pos = { 0.0f,0.0f,0.0f };//左上
-	vertices[RB].pos = { size.x,size.y,0.0f };//右下
-	vertices[RT].pos = { size.x,0.0f,0.0f };//右上
+	vertices[RB].pos = { size.x * scale.x,size.y * scale.y,0.0f };//右下
+	vertices[RT].pos = { size.x * scale.x,0.0f,0.0f };//右上
 
 	//頂点バッファへのデータ転送
 	VertexPosUv* vertMap = nullptr;

@@ -4,28 +4,43 @@
 void Canvas::Initialize()
 {
 	float hpWidth = 100;
+	float hpHegiht = 650;
+
 	for (int i = 0; i < sizeof(playerHp) / sizeof(playerHp[0]); i++) {
-		playerHp[i] = Sprite::Create(3, { hpWidth+ float(i * 35),500 });
+		playerHp[i] = Sprite::Create(3, { hpWidth + float(i * 35),hpHegiht });
 		damagePlayerHp[i] = Sprite::Create(4, { float(i * 35),500 });
 	}
 
-	int intervalWidth = 15;
+	int intervalWidth = 30;
 	float fintervalWidth = float(intervalWidth);
-	float height = 500;
+	float intervalWidth2 = 25;
 
-	float width = 200;
+	float height = 600;
+	float width = 500;
 
 	for (int i = 0; i < 10; i++) {
-		enemyNum3[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 0),height });
-		enemyNum2[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 1),height });
-		enemyNum1[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth * 2),height });
+		enemyNum3[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth2 * 0),height });
+		enemyNum2[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth2 * 1),height });
+		enemyNum1[i] = Sprite::Create(10 + i, { width + fintervalWidth * 3 + float(intervalWidth2 * 2),height });
+		enemyNum3[i]->SetScale({ 1.6,1.6 });
+		enemyNum2[i]->SetScale({ 1.6,1.6 });
+		enemyNum1[i]->SetScale({ 1.6,1.6 });
+
+		enemyNum3[i]->SetColor({ 0.9,0.9,0.9 });
+		enemyNum2[i]->SetColor({ 0.9,0.9,0.9 });
+		enemyNum1[i]->SetColor({ 0.9,0.9,0.9 });
 
 		breakEnemyNum3[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 0),height });
 		breakEnemyNum2[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 1),height });
 		breakEnemyNum1[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 2),height });
+		breakEnemyNum3[i]->SetScale({ 2,2 });
+		breakEnemyNum2[i]->SetScale({ 2,2 });
+		breakEnemyNum1[i]->SetScale({ 2,2 });
 	}
 
-	slash = Sprite::Create(9, { width + fintervalWidth * 3,height });
+	slash = Sprite::Create(9, { width + 30 * 3,height });
+	slash->SetScale({ 1.6,1.6 });
+	slash->SetColor({ 0.9,0.9,0.9 });
 }
 
 void Canvas::Update()

@@ -2,28 +2,13 @@
 #include "BatlleScene.h"
 #include "SceneManager.h"
 #include <DirectXMath.h>
-#include "../Useful.h"
+#include "Useful.h"
 #include "safe_delete.h"
+#include "Collision.h"
 
 using namespace DirectX;
 
-bool CubeCollision1(XMFLOAT3 object1, XMFLOAT3 radius1, XMFLOAT3 object2, XMFLOAT3 radius2) {
-	float disX1 = object1.x + radius1.x;
-	float disX2 = object2.x - radius2.x;
-	float disX3 = object1.x - radius1.x;
-	float disX4 = object2.x + radius2.x;
-	float disY1 = object1.y + radius1.y;
-	float disY2 = object2.y - radius2.y;
-	float disY3 = object1.y - radius1.y;
-	float disY4 = object2.y + radius2.y;
-	float disZ1 = object1.z + radius1.z;
-	float disZ2 = object2.z - radius2.z;
-	float disZ3 = object1.z - radius1.z;
-	float disZ4 = object2.z + radius2.z;
 
-	//xとyはそれぞれ中心座標として計算する
-	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
-}
 BatlleScene::BatlleScene()
 {
 }
@@ -110,7 +95,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 		//敵とプレイヤーのローリング攻撃の当たり判定
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-			if (CubeCollision1(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
+			if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
 				) {
 				//if (player->attackFlag == true) {
 					enemy->SetDead();

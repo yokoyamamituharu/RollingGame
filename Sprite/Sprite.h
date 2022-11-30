@@ -65,6 +65,8 @@ protected://メンバ変数
 	XMFLOAT2 position = { 0,0 };
 	//大きさ
 	XMFLOAT2 size = { 100,100 };
+	//大きさの倍率
+	XMFLOAT2 scale = { 1.0f,1.0f };
 	//ワールド行列
 	XMMATRIX matWorld;
 	//色(RGBA)
@@ -94,14 +96,14 @@ public://メンバ関数
 	Sprite(UINT texNumber, XMFLOAT2 position, XMFLOAT2 size, XMFLOAT4 color);
 
 	//初期化	
-	bool Initialize();	
+	bool Initialize();
 
 	//スプライト単体描画
 	void Draw();
 
 	//色を設定
-	void SetColor(XMFLOAT3 color) { 
-		this->color.x = color.x; 
+	void SetColor(XMFLOAT3 color) {
+		this->color.x = color.x;
 		this->color.y = color.y;
 		this->color.z = color.z;
 	}
@@ -111,6 +113,9 @@ public://メンバ関数
 
 	//サイズを変更
 	void SetSize(XMFLOAT2 size);
+
+	//スケールを変更
+	void SetScale(XMFLOAT2 scale);
 
 	//場所を変更
 	void SetPos(XMFLOAT2 pos) { position = pos; }

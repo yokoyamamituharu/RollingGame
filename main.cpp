@@ -133,17 +133,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//-----変数宣言-----//
 	//ポストエフェクトの初期化
-	PostEffect* postEffect = nullptr;
-	postEffect = new PostEffect();
-	postEffect->Initialize();
+	//PostEffect* postEffect = nullptr;
+	//postEffect = new PostEffect();
+	//postEffect->Initialize();
 
 	SpriteManager spriteManager;
 	spriteManager.Initialize();
 
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager;
-	sceneManager->Initialize(dxCommon,camera);
-	
+	sceneManager->Initialize(dxCommon);
+
 
 	FPSLock fpsLock;
 
@@ -218,10 +218,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//ParticleManager::PostDraw();
 		//sceneManager->Draw();
 		//postEffect->PosDrawScene(dxCommon->GetCmdList());
-		
 
-		dxCommon->PreDraw();		
-		sceneManager->Draw();		
+
+		dxCommon->PreDraw();
+		sceneManager->Draw();
 		dxCommon->PostDraw();
 
 		//dxCommon->PreDraw();
@@ -231,23 +231,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	}
 
+
+
+	//シーンの開放
+	safe_delete(sceneManager);
+	//ポストエフェクトの開放
+	//safe_delete(postEffect);
+	//パーティクルマネージャーの開放
+	//safe_delete(particleMan);
+	//入力の解放
+	//safe_delete(mouse);
+	//カメラの開放
+	safe_delete(camera);
+	//FBXの解放処理
+	FbxLoader::GetInstance()->Finalize();
 	//winAppの解放
 	winApp->Finalize();
 	//safe_delete(winApp);
 	//DirectX解放
 	safe_delete(dxCommon);
-	//入力の解放
-	//safe_delete(mouse);
-	//カメラの開放
-	safe_delete(camera);
-	//シーンの開放
-	safe_delete(sceneManager);
-	//ポストエフェクトの開放
-	safe_delete(postEffect);
-	//パーティクルマネージャーの開放
-	//safe_delete(particleMan);
-	//FBXの解放処理
-	FbxLoader::GetInstance()->Finalize();
 
 	//input->Finalize();
 	//safe_delete(input);
