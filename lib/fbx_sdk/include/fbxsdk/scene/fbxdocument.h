@@ -157,7 +157,7 @@ public:
           */
         int UnloadContent(FbxStatus* pStatus = NULL);
 
-        /** Load all the objects contained in the document with the data from the currently set peripheral.
+        /** Initialize all the objects contained in the document with the data from the currently set peripheral.
           * \param pStatus The FbxStatus object to hold error codes.
           * \return The number of loaded objects.
           */

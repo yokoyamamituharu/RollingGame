@@ -16,4 +16,5 @@ private:
 	bool isSetMousePoint = true;
 	//プレイヤーのポインター
 	ObjectObj* playerObj = nullptr;
+	bool showCorsl = false;
 };

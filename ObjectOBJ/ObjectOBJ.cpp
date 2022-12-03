@@ -371,6 +371,7 @@ bool ObjectObj::Initialize(Model* model)
 void ObjectObj::Update()
 {
 	assert(camera);
+	assert(modelData);
 
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
@@ -378,7 +379,7 @@ void ObjectObj::Update()
 	// スケール、回転、平行移動行列の計算
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.x));
 	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
 	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	matTrans = XMMatrixTranslation(position.x, position.y, position.z);

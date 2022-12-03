@@ -55,7 +55,7 @@ public:
 	  */
 	virtual bool UnloadContentOf(FbxObject* pObject) = 0;
 
-	/** Load the content of pObject.
+	/** Initialize the content of pObject.
 	  * \param pObject                 Object whose content is to be loaded from
 	  * the peripheral storage area.
 	  * \return                        \c true if the object content has been successfully transferred.

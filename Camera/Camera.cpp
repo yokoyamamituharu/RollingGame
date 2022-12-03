@@ -27,6 +27,10 @@ void Camera::Initialize()
 	this->window_width = WinApp::GetWindowSize().x;
 	this->window_height = WinApp::GetWindowSize().y;
 
+	eye = { 0,0,-50 };
+	target = { 0,0,0 };
+	up = { 0,1,0 };
+
 	// ƒrƒ…[s—ñ‚Ì¶¬
 	matView = XMMatrixLookAtLH(
 		XMLoadFloat3(&eye),

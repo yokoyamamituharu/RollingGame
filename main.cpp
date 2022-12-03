@@ -49,51 +49,7 @@ using namespace DirectX;
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
 
-//マウスカーソルをウィンドウの真ん中に固定する関数
-void SetCenterCoursolPos(WinApp* winApp)
-{
-	//マウスの座標固定処理
-	RECT rect;
-	GetWindowRect(winApp->GetHwnd(), &rect);
-	float left = rect.left;
-	float right = rect.right;
-	float top = rect.top;
-	float bottom = rect.bottom;
-
-	float x, y;
-	if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
-		float high, min;
-		if (abs(left) > abs(right)) {
-			high = left;
-			min = right;
-		}
-		else {
-			high = right;
-			min = left;
-		}
-		x = abs(high) - abs(min);
-	}
-	else {
-		x = abs(left) + abs(right);
-	}
-
-	if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
-		float high, min;
-		if (abs(top) > abs(bottom)) {
-			high = top;
-			min = bottom;
-		}
-		else {
-			high = bottom;
-			min = top;
-		}
-		y = abs(high) - abs(min);
-	}
-	else {
-		y = abs(top) + abs(bottom);
-	}
-	SetCursorPos(left + (x / 2), bottom - (y / 2));
-}
+#include "SceneLoader.h"
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -144,11 +100,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon);
 
+	ModelManager* m = ModelManager::GetIns();
+	m->Initialize();
 
 	FPSLock fpsLock;
 
 	//ParticleManager* particleMan = ParticleManager::Create();
 
+	SceneLoader scene;
+	scene.Initialize();
 
 	while (true)  // ゲームループ
 	{
@@ -199,13 +159,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//入力の更新処理
 		input->Update();
 		mouse->Update();
-
-		////ウィンドウがアクティブ状態なら処理
-		//if (winApp->GetHwnd() == GetActiveWindow() && isSetMousePoint == true)
-		//{
-		//	SetCenterCoursolPos(winApp);
-		//}
-
+		
+		scene.Update();
 
 		//シーンの更新
 		sceneManager->Update();
@@ -221,6 +176,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 		dxCommon->PreDraw();
+		ObjectObj::PreDraw(dxCommon->GetCmdList());
+		//scene.Draw();
+		ObjectObj::PostDraw();
 		sceneManager->Draw();
 		dxCommon->PostDraw();
 

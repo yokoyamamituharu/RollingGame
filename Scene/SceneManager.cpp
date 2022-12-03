@@ -31,7 +31,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	endScene = new EndScene;
 	endScene->Initialize(dxCommon);
 
-	sceneNo = SCENE_GAME;
+	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
 }
 

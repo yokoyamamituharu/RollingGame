@@ -453,7 +453,7 @@ public:
     /** \name XML Serialization Functions */
     //@{
      
-		/** Load the settings values from an XML file.
+		/** Initialize the settings values from an XML file.
 		  * \param path The path of the XML file.
 		  * \return \c True on success, \c false otherwise.
 		  */

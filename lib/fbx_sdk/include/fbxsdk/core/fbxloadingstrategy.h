@@ -49,7 +49,7 @@ public:
 		* \param pData  Plug in data that can be access inside the plug-ins.
 		* \return The state of the loading action.
 		*/
-		EState Load(FbxPluginData& pData);
+		EState Initialize(FbxPluginData& pData);
 
 		/** Execute the operation of unloading the plug-in(s). The way it is executed is determined by the specific implementations.
 		*/
@@ -61,7 +61,7 @@ protected:
     *\name User implementation
     */
     //@{
-		/** Called by the Load method, it contains the specific user implementation strategy to load the desired plug-in(s).
+		/** Called by the Initialize method, it contains the specific user implementation strategy to load the desired plug-in(s).
 		* \param pData  Plug in data that can be access inside the plug-ins.
 		* \return If the plugin loading is successful return \c true, otherwise return \c false
 		*/

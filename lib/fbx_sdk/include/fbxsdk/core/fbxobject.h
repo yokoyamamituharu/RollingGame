@@ -803,7 +803,7 @@ public:
 		  * \return 1 if this object's content has been successfully loaded from the current
 		  *         peripheral, 2 if the content is already loaded, and 0 if an error occurs or
 		  *         the object's content is locked.
-		  * \remarks On a successful Load attempt, the object content is locked.
+		  * \remarks On a successful Initialize attempt, the object content is locked.
 		  */
 		int ContentLoad();
 

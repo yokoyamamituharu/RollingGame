@@ -8,11 +8,14 @@ public:
 	ModelManager();
 	~ModelManager();
 
-	static ModelManager* GetIns();
-	static void SetModelName();
+	static ModelManager* GetIns();	
 	static void Initialize();
 	static void Finalize();
+
 	static Model* GetModel(std::string name) { return models[name]; }
+
+private:
+	static void SetModelName();
 
 private:
 	static std::map<std::string, Model*> models;

@@ -32,6 +32,16 @@ void GameCamera::Update()
 		matRot *= XMMatrixRotationY(-0.02f);
 	}
 
+	if (Input::GetInstance()->TriggerKey(DIK_C)) {
+		if (showCorsl == true) {
+			showCorsl = false;
+		}
+		else {
+			showCorsl = true;
+		}		
+	}
+	ShowCursor(showCorsl);
+
 	//カメラの向き、位置を計算
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };
 	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));

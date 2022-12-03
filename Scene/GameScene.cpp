@@ -39,6 +39,7 @@ GameScene::~GameScene()
 	//safe_delete(copyCastle);
 	//safe_delete(copyGround);
 	//safe_delete(copyDefenseTower);
+	enemiesG.clear();
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -106,11 +107,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	index = 0;
 	timer[0] = 0;
-	timer[1] = 160;
-	timer[2] = 100;
-	timer[3] = 100;
-	timer[4] = 210;
-	timer[5] = 200;
+	timer[1] = 0;
+	timer[2] = 0;
+	timer[3] = 0;
+	timer[4] = 0;
+	timer[5] = 0;
 
 	dasuteki[0] = 2;
 	dasuteki[1] = 1;
@@ -233,33 +234,33 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//}
 
 	//敵とプレイヤーの当たり判定
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-			if (enemy->GetDead() == false) {
-				//バトルシーンに行く処理
-				batlleScene->SetEnemies(enemy);
-				enemiesG.remove(enemy);
-				player->outPos = player->object->GetPosition();
-				player->Stop();
-				//プレイヤーを原点に発生させる
-				player->object->SetPosition({ 0,-6,0 });
-				sceneNo = SceneManager::SCENE_BATTLE;
-				break;
-			}
-		}
-		//敵と城の当たり判定
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
-			//当たったら負け
-			//sceneNo = SceneManager::SCENE_END;
-		}
-	}
+	//for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+	//		if (enemy->GetDead() == false) {
+	//			//バトルシーンに行く処理
+	//			batlleScene->SetEnemies(enemy);
+	//			enemiesG.remove(enemy);
+	//			player->outPos = player->object->GetPosition();
+	//			player->Stop();
+	//			//プレイヤーを原点に発生させる
+	//			player->object->SetPosition({ 0,-6,0 });
+	//			sceneNo = SceneManager::SCENE_BATTLE;
+	//			break;
+	//		}
+	//	}
+	//	//敵と城の当たり判定
+	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+	//		//当たったら負け
+	//		//sceneNo = SceneManager::SCENE_END;
+	//	}
+	//}
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	//3Dオブジェクト更新
 	player->Update();
 	ground->Update();
-	defenseTower->Update(enemiesG);
+	//defenseTower->Update(enemiesG);
 	castle->Update();
 	suana->Update();
 	suana2->Update();

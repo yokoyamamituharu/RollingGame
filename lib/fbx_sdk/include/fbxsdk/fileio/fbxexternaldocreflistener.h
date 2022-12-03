@@ -117,7 +117,7 @@ protected:
     virtual FbxString MakeFilenameAbsolute(const FbxString & pFilename) const;
     //! Locate a document by its document path.
     virtual FbxDocument * FindDocument( const FbxString & pPathToDoc );
-    //! Load a library, potentially under another library.
+    //! Initialize a library, potentially under another library.
     virtual FbxDocument * LoadDocument(FbxObject * pParent, const FbxString & pClassName, const FbxString & pFilename);
     //! Try to connect a library to its parent given its document path.
     virtual bool ConnectToParentLibrary(const FbxExternalDocumentInfo &);

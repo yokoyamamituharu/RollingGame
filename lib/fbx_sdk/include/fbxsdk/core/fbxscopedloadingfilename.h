@@ -33,7 +33,7 @@ public:
      */
     //@{
 		/** Constructor.
-		  * Load plug-in.
+		  * Initialize plug-in.
 		  * \param pPath The file path.
 		  */
 		explicit FbxScopedLoadingFileName(const char* pPath);

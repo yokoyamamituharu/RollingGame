@@ -324,14 +324,14 @@ public:
 	  */
 	//@{
 	#ifndef FBXSDK_ENV_WINSTORE
-		/** Load plug-ins directory
+		/** Initialize plug-ins directory
 		  * \param pFilename The directory path.
 		  * \param pExtensions The plug in extension.
 		  * \return \c True
 		  */
 		bool LoadPluginsDirectory(const char* pFilename, const char* pExtensions=NULL);
 
-		/** Load plug-in
+		/** Initialize plug-in
 		  * \param pFilename The file name
 		  * \return \c True
 		  */
