@@ -49,7 +49,6 @@ using namespace DirectX;
 //#include "SafeDelete.h"
 //#include "Otamesi.h"
 
-#include "SceneLoader.h"
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -107,8 +106,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	//ParticleManager* particleMan = ParticleManager::Create();
 
-	SceneLoader scene;
-	scene.Initialize();
 
 	while (true)  // ゲームループ
 	{
@@ -160,7 +157,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input->Update();
 		mouse->Update();
 		
-		scene.Update();
 
 		//シーンの更新
 		sceneManager->Update();

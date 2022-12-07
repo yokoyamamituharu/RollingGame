@@ -32,7 +32,7 @@ public:
 	//デストラクタ
 	~BatlleScene();
 	//初期化
-	void Initialize(DirectXCommon* dxCommon, Camera* camera);
+	void Initialize(DirectXCommon* dxCommon);
 	//更新
 	void Update(int& sceneNo, GameScene* gameScene);
 	//描画
@@ -44,8 +44,7 @@ public:
 
 private: // メンバ変数        
 	//ポインター
-	DirectXCommon* dxCommon = nullptr;
-	Camera* camera;
+	DirectXCommon* dxCommon = nullptr;	
 
 	/*----オブジェクト----*/
 	//3Dオブジェクト
@@ -56,6 +55,9 @@ private: // メンバ変数
 	//スプライト
 	Sprite* spriteBG = nullptr;	
 	Canvas* canvas = nullptr;
+
+	//カメラ
+	GameCamera* gameCamera = nullptr;
 	
 	int cameraToMouse = 1;
 };

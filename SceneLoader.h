@@ -25,6 +25,11 @@ public:	//サブクラス
 		std::vector<ObjectData> objects;
 	};
 
+	struct ColliderData {
+		DirectX::XMFLOAT3 translation;
+		DirectX::XMFLOAT3 scaling;
+	};
+
 public:
 	void Initialize();
 
@@ -33,11 +38,15 @@ public:
 	void Update();
 
 	void Draw();
+
+	bool Collision(XMFLOAT3 playerpos, XMFLOAT3 radius);
 private:
 
 	LevelData* levelData;
 
 	//オブジェクトデータ
 	std::vector<ObjectObj*>objects;
+
+	std::vector<ColliderData*>colliders;
 };
 

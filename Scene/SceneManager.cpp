@@ -25,7 +25,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	gameScene = new GameScene;
 	gameScene->Initialize(dxCommon);
 	batlleScene = new BatlleScene;
-	batlleScene->Initialize(dxCommon, camera);
+	batlleScene->Initialize(dxCommon);
 	titleScene = new TitleScene;
 	titleScene->Initialize(dxCommon);
 	endScene = new EndScene;
@@ -97,6 +97,6 @@ void SceneManager::GameSceneReset()
 	gameScene = new GameScene();
 	batlleScene = new BatlleScene();
 	gameScene->Initialize(dxCommon);
-	batlleScene->Initialize(dxCommon, camera);
+	batlleScene->Initialize(dxCommon);
 	initFlag = false;	
 }

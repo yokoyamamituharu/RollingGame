@@ -25,16 +25,16 @@ BatlleScene::~BatlleScene()
 	enemy1.reset();
 }
 
-void BatlleScene::Initialize(DirectXCommon* dxCommon, Camera* camera)
+void BatlleScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	this->camera = camera;
 
-	//this->player = gameScene->GetPlayer();
+	gameCamera = GameCamera::Create();
 
+	player = Player::Create(gameCamera);
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
-
+	gameCamera->SetPlayer(player->object);
 
 	ground = ObjectObj::Create();
 	ground->SetModel(ModelManager::GetModel("battlegrund"));
@@ -125,7 +125,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		//player->Res(true);
 	}
 
-	camera->Update();
+	gameCamera->Update();
 	ground->Update();
 	//player->Res();
 	player->Update();
@@ -148,12 +148,6 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		player->Cure(5);
 		sceneNo = SceneManager::SCENE_END;
 	}
-	//if (Input::GetInstance()->TriggerKey(DIK_B)) {
-	//	gameScene->SetEnemy(enemy1);
-	//	player->object->SetPosition(player->outPos);
-	//	sceneNo = SceneManager::SCENE_GAME;
-	//}
-
 }
 
 void BatlleScene::Draw()

@@ -14,6 +14,7 @@ GameCamera* GameCamera::Create()
 
 void GameCamera::Update()
 {
+	assert(playerObj);
 	//マウスでカメラ操作するかの切り替え操作
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
 		if (isSetMousePoint == true)  isSetMousePoint = false;
@@ -40,7 +41,7 @@ void GameCamera::Update()
 			showCorsl = true;
 		}		
 	}
-	ShowCursor(showCorsl);
+	//ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };

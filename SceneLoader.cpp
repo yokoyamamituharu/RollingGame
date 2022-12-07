@@ -1,13 +1,13 @@
 #include "SceneLoader.h"
 #include "ModelManager.h"
-
-
+#include "Collision.h"
+#include "Useful.h"
 
 
 void SceneLoader::Initialize()
 {
 	//パス
-	const std::string fullpath = std::string("Resources/levels/")+"scene.json";
+	const std::string fullpath = std::string("Resources/levels/") + "scene.json";
 
 	//ファイルストリーム
 	std::ifstream file;
@@ -25,7 +25,7 @@ void SceneLoader::Initialize()
 
 	//解凍
 	file >> deserialized;
-	
+
 	//正しいレベルデータファイルかチェック
 	assert(deserialized.is_object());
 	assert(deserialized.contains("name"));
@@ -65,6 +65,19 @@ void SceneLoader::Initialize()
 		newObject->SetScale(scale);
 		//配列に登録
 		objects.push_back(newObject);
+
+
+		//モデルを指定して3Dオブジェクトを生成
+		ColliderData* newCollider = new ColliderData;
+		//座標
+		DirectX::XMFLOAT3 cpos = { 0,0,0 };
+		DirectX::XMStoreFloat3(&pos, objectData.colliderTransla);
+		newCollider->translation = cpos;
+		//回転角
+		DirectX::XMFLOAT3 cscale = { 0,0,0 };
+		DirectX::XMStoreFloat3(&cscale, objectData.colliderScaling);
+		newCollider->scaling = cscale;
+		colliders.push_back(newCollider);
 	}
 
 }
@@ -108,8 +121,18 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 			objectData.scaling.m128_f32[2] = (float)transform["scaling"][0];
 			objectData.scaling.m128_f32[3] = 0.0f;
 
-			if (type.compare("Collider") == 0) {
-
+			if (object.contains("collider") == 0) {
+				nlohmann::json& colliderTransform = object["collider"];
+				//平行移動
+				objectData.colliderTransla.m128_f32[0] = (float)transform["translation"][1];
+				objectData.colliderTransla.m128_f32[1] = (float)transform["translation"][2];
+				objectData.colliderTransla.m128_f32[2] = (float)-transform["translation"][0];
+				objectData.colliderTransla.m128_f32[3] = 1.0f;
+				//スケーリング
+				objectData.colliderScaling.m128_f32[0] = (float)transform["scaling"][1];
+				objectData.colliderScaling.m128_f32[1] = (float)transform["scaling"][2];
+				objectData.colliderScaling.m128_f32[2] = (float)transform["scaling"][0];
+				objectData.colliderScaling.m128_f32[3] = 0.0f;
 			}
 		}
 
@@ -162,4 +185,14 @@ void SceneLoader::Draw()
 	for (auto& object : objects) {
 		object->Draw();
 	}
+}
+
+bool SceneLoader::Collision(XMFLOAT3 playerpos, XMFLOAT3 radius)
+{
+	for (auto& collider : colliders) {
+		if (CollisitonBoxToBox(collider->translation, collider->scaling, playerpos, radius)) {
+			return true;
+		}
+	}
+	return false;
 }

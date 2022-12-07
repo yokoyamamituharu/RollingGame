@@ -97,6 +97,8 @@ private:
 	static int hp;
 
 	XMFLOAT3 backVec = { 0,0,0 };
-	XMFLOAT3 move = { 0,0,0 };
+
+public:
+	XMFLOAT3 move = { 0,0,0 };	
 };
 

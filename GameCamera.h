@@ -13,7 +13,7 @@ public:
 	void SetPlayer(ObjectObj* obj) { playerObj = obj; }
 private:
 	//カーソルの固定
-	bool isSetMousePoint = true;
+	bool isSetMousePoint = false;
 	//プレイヤーのポインター
 	ObjectObj* playerObj = nullptr;
 	bool showCorsl = false;

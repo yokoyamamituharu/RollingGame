@@ -20,6 +20,7 @@ class SceneManeger;
 #include "PostEffect.h"
 #include "Canvas.h"
 #include "CopyObject.h"
+#include "SceneLoader.h"
 
 class GameScene
 {
@@ -112,12 +113,21 @@ private: // ƒƒ“ƒo•Ï”
 
 	Canvas* canvas = nullptr;
 
-	static const int maxEnemy = 6;
-	int index = 0;
-	int timer[maxEnemy];
+	static const int maxEnemy = 8;
+	int index = 0;	
 
+	struct Dasu {
+		int timer;
+		int basyo;
+	};
+	
+	std::map<int,Dasu>dasu;
+
+	int timer[maxEnemy];
 	int dasuteki[maxEnemy];
 
 	bool mapFlag = false;
+
+	SceneLoader scene;
 };
 

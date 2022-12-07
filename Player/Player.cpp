@@ -58,7 +58,12 @@ void Player::Update()
 		}
 	}
 
-	Move();
+
+	object->SetPosition({
+		object->GetPosition().x + move.x,
+		object->GetPosition().y + move.y,
+		object->GetPosition().z + move.z });
+	//Move();
 	Res();
 	//オブジェクトのアップデート
 	object->Update();
@@ -193,10 +198,10 @@ void Player::Move()
 	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
 	float speed = 1.2f;
 	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
-	object->SetPosition({
-		object->GetPosition().x + move.x,
-		object->GetPosition().y + move.y,
-		object->GetPosition().z + move.z });
+	//object->SetPosition({
+	//	object->GetPosition().x + move.x,
+	//	object->GetPosition().y + move.y,
+	//	object->GetPosition().z + move.z });
 
 	//プレイヤーを真正面に向かせる
 	//float buff = atan2f(playermatrot.m128_f32[0], playermatrot.m128_f32[2]);
