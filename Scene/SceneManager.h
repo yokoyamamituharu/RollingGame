@@ -4,6 +4,7 @@
 #include "TitleScene.h"
 #include "EndScene.h"
 #include "ModelManager.h"
+#include "PostEffect.h"
 
 class SceneManager
 {
@@ -39,5 +40,13 @@ public:
 
 	DirectXCommon* dxCommon = nullptr;
 	Camera* camera = nullptr;
+	PostEffect* post;
+
+	static bool blackStartFlag;//ブラックアウト開始
+	bool blackFlag = false;		//画面が暗転しているか
+	bool loadEndFlag = false;		//ロード処理が終わったか
+	int waitTimer = 10;
+	float blackTime = 1.0f;
+	float blackTime2 = 0.0f;
 };
 

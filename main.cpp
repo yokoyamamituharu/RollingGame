@@ -73,16 +73,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	mouse = InputMouse::GetInstance();
 	mouse->Initialize(winApp);
 	//カメラ
-	Camera* camera = Camera::Create();
+	Camera* gameCamera = Camera::Create();
 	//スプライトの静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 	//モデルの静的初期化
 	Model::StaticInitialize(dxCommon->GetDev());
 	//3Dオブジェクト静的初期化
-	ObjectObj::StaticInitialize(dxCommon->GetDev(), camera);
+	ObjectObj::StaticInitialize(dxCommon->GetDev(), gameCamera);
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
-	ObjectFBX::StaticInitialize(dxCommon->GetDev(), camera);
+	ObjectFBX::StaticInitialize(dxCommon->GetDev(), gameCamera);
 
 	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 
@@ -92,15 +92,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//postEffect = new PostEffect();
 	//postEffect->Initialize();
 
-	SpriteManager spriteManager;
-	spriteManager.Initialize();
+	SpriteManager* spriteManager;
+	spriteManager->Initialize();
 
 	SceneManager* sceneManager = nullptr;
 	sceneManager = new SceneManager;
 	sceneManager->Initialize(dxCommon);
-
-	ModelManager* m = ModelManager::GetIns();
-	m->Initialize();
 
 	FPSLock fpsLock;
 
@@ -172,9 +169,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 		dxCommon->PreDraw();
-		ObjectObj::PreDraw(dxCommon->GetCmdList());
+		//ObjectObj::PreDraw(dxCommon->GetCmdList());
 		//scene.Draw();
-		ObjectObj::PostDraw();
+		//ObjectObj::PostDraw();
 		sceneManager->Draw();
 		dxCommon->PostDraw();
 
@@ -196,7 +193,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//入力の解放
 	//safe_delete(mouse);
 	//カメラの開放
-	safe_delete(camera);
+	safe_delete(gameCamera);
 	//FBXの解放処理
 	FbxLoader::GetInstance()->Finalize();
 	//winAppの解放

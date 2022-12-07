@@ -17,34 +17,32 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	////スプライト解放
-	//safe_delete(canvas);
-	//safe_delete(spriteBG);
-	//safe_delete(clearsprite);
-	//safe_delete(postEffect);
+	//スプライト解放
+	safe_delete(canvas);
+	safe_delete(spriteBG);
+	safe_delete(clearsprite);
+	safe_delete(postEffect);
 
-	////3Dオブジェクト解放
-	//safe_delete(objectFBX);
-	//safe_delete(fbxmodel);
-	//safe_delete(kabe);
-	//safe_delete(kabe2);
-	//safe_delete(tenQ);
-	//safe_delete(ground);
-	//safe_delete(castle);
-	//safe_delete(suana);
-	//safe_delete(suana2);
-	//safe_delete(defenseTower);
-	//safe_delete(player);
-	//safe_delete(copyPlayer);
-	//safe_delete(copyCastle);
-	//safe_delete(copyGround);
-	//safe_delete(copyDefenseTower);
-	//enemiesG.clear();
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		//safe_delete(enemy.);
-		//enemy.
-	}
-	//enemiesG.clear();
+	//3Dオブジェクト解放
+	safe_delete(objectFBX);
+	safe_delete(fbxmodel);
+	safe_delete(kabe);
+	safe_delete(kabe2);
+	safe_delete(tenQ);
+	safe_delete(ground);
+	safe_delete(castle);
+	safe_delete(suana);
+	safe_delete(suana2);
+	safe_delete(defenseTower);
+	safe_delete(player);
+	safe_delete(copyPlayer);
+	safe_delete(copyCastle);
+	safe_delete(copyGround);
+	safe_delete(copyDefenseTower);		
+	enemiesG.clear();
+	dasu.clear();
+	safe_delete(gameCamera);
+	safe_delete(scene);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -53,10 +51,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	this->dxCommon = dxCommon;
 
 	//カメラの初期位置、注視点
-	mainCamera = GameCamera::Create();
-	mainCamera->SetTarget(initTarget);
-	mainCamera->SetEye(initEye);
-	ObjectObj::SetCamera(mainCamera);
+	gameCamera = GameCamera::Create();
+	gameCamera->SetTarget(initTarget);
+	gameCamera->SetEye(initEye);
+	ObjectObj::SetCamera(gameCamera);
 
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
@@ -87,7 +85,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	tenQ->SetScale({ 5,5,5 });
 
 	//プレイヤーの生成処理
-	player = Player::Create(mainCamera);
+	player = Player::Create(gameCamera);
 	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
 
 	//敵の生成処理
@@ -141,20 +139,23 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//postEffect->SetSize({ 100,100 });
 
 	postEffect->SetSize({ 1,1 });
-	mainCamera->SetPlayer(player->object);
+	gameCamera->SetPlayer(player->object);
 
 	//postEffect->SetColor({ 0.5,0.5,0.5});	
-	scene.Initialize();
+	scene = new SceneLoader;
+	scene->Initialize();
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
+	ObjectObj::SetCamera(gameCamera);
+
 	if (Input::GetInstance()->TriggerKey(DIK_B))
 	{
-		blackFlag = true;
+		blackStartFlag = true;
 	}
 
-	if (blackFlag == true) {
+	if (blackStartFlag == true) {
 		blackTime -= 0.05;
 		if (blackTime > 0) {
 			postEffect->SetColor({ blackTime,blackTime,blackTime });
@@ -164,7 +165,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			postEffect->SetColor({ blackTime2,blackTime2,blackTime2 });
 		}
 		if (blackTime2 >= 1) {
-			blackFlag = false;
+			blackStartFlag = false;
 			blackTime = 1.0f;
 			blackTime2 = 0.0f;
 		}
@@ -204,12 +205,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				if (dasu[index].basyo == 1) {
 					//タワーがある方
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->Initialize(EnemyZako::FIELD_OUT, mainCamera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+					newEnemy->Initialize(EnemyZako::FIELD_OUT, gameCamera, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->Initialize(EnemyZako::FIELD_OUT, mainCamera, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+					newEnemy->Initialize(EnemyZako::FIELD_OUT, gameCamera, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;
@@ -235,7 +236,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				player->outPos = player->object->GetPosition();
 				player->Stop();
 				//プレイヤーを原点に発生させる
-				player->object->SetPosition({ 0,-6,0 });
+				//player->object->SetPosition({ 0,-6,0 });
 				sceneNo = SceneManager::SCENE_BATTLE;
 				break;
 			}
@@ -250,8 +251,8 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 	player->Move();
-	scene.Update();
-	if (scene.Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
+	scene->Update();
+	if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
 		player->move = { 0,0,0 };
 	}
 
@@ -265,7 +266,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	kabe->Update();
 	kabe2->Update();
 	tenQ->Update();
-	scene.Update();
+	scene->Update();
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Update();
 	}
@@ -274,7 +275,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//カメラのアップデート
-	mainCamera->Update();
+	gameCamera->Update();
 	subCamera->Update();
 
 
@@ -312,7 +313,7 @@ void GameScene::Draw()
 	//kabe2->Draw();
 	//tenQ->Draw();
 	player->Draw();
-	scene.Draw();
+	scene->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

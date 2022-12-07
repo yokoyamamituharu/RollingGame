@@ -59,7 +59,7 @@ public:
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
-	GameCamera* mainCamera = nullptr;
+	GameCamera* gameCamera = nullptr;
 
 	// ゲームシーン用  
 	//スプライト
@@ -76,7 +76,6 @@ private: // メンバ変数
 	//敵
 	//タワー
 	DefenseTower* defenseTower = nullptr;
-	//EnemyZako* enemy1 = nullptr;
 	//お城
 	ObjectObj* castle = nullptr;
 	//巣穴
@@ -98,7 +97,7 @@ private: // メンバ変数
 
 	float blackTime = 1;
 	float blackTime2 = 0;
-	bool blackFlag = false;
+	bool blackStartFlag = false;
 	bool blackFlag1 = false;
 
 	bool flag1 = false;
@@ -128,6 +127,6 @@ private: // メンバ変数
 
 	bool mapFlag = false;
 
-	SceneLoader scene;
+	SceneLoader* scene =nullptr;
 };
 

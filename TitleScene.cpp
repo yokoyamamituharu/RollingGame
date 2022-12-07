@@ -28,7 +28,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)||InputMouse::GetInstance()->PushMouse(M_LEFT)) {
-		blackOutFlag = true;
+		SceneManager::blackStartFlag = true;
 	}
 	if (Input::GetInstance()->TriggerKey(DIK_0)) {
 		blackInFlag = true;

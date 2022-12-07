@@ -1,6 +1,8 @@
 #include "SceneManager.h"
 #include "safe_delete.h"
 
+bool SceneManager::blackStartFlag = false;
+
 SceneManager::SceneManager()
 {
 }
@@ -33,6 +35,8 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 
 	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
+	post = new PostEffect;
+	post->Initialize();
 }
 
 void SceneManager::Update()
@@ -50,6 +54,33 @@ void SceneManager::Update()
 	//	sceneNo = SCENE_BATTLE;
 	//}
 
+	if (Input::GetInstance()->TriggerKey(DIK_B))
+	{
+		blackStartFlag = true;
+	}
+
+	if (blackStartFlag == true) {
+		blackTime -= 0.05;
+		if (blackTime > 0) {
+			post->SetColor({ blackTime,blackTime,blackTime });
+		}
+		else if (loadEndFlag == false) {
+			blackFlag = true;
+		}
+
+		if (loadEndFlag == true) {
+			blackTime2 += 0.05f;
+			post->SetColor({ blackTime2,blackTime2,blackTime2 });
+		}
+		if (blackTime2 >= 1) {
+			blackStartFlag = false;
+			blackFlag = false;
+			loadEndFlag = false;
+			blackTime = 1.0f;
+			blackTime2 = 0.0f;
+		}
+	}
+
 	//ゲームリセット
 	if (Input::GetInstance()->TriggerKey(DIK_R) || initFlag == true) {
 		GameSceneReset();
@@ -57,6 +88,7 @@ void SceneManager::Update()
 			sceneNo = SCENE_TITLE;
 		}
 	}
+	GameSceneReset();
 
 	//シーンの更新
 	if (sceneNo == SCENE_TITLE) {
@@ -71,10 +103,10 @@ void SceneManager::Update()
 	else if (sceneNo == SCENE_BATTLE) {
 		batlleScene->Update(sceneNo, gameScene);
 	}
-}
 
-void SceneManager::Draw()
-{
+
+	//ポストエフェクト描画前処理
+	post->PreDrawScene(dxCommon->GetCmdList());
 	if (sceneNo == SCENE_TITLE) {
 		titleScene->Draw();
 	}
@@ -87,16 +119,39 @@ void SceneManager::Draw()
 	if (sceneNo == SCENE_BATTLE) {
 		batlleScene->Draw();
 	}
+	post->PosDrawScene(dxCommon->GetCmdList());
+}
 
+void SceneManager::Draw()
+{
+	//if (sceneNo == SCENE_TITLE) {
+	//	titleScene->Draw();
+	//}
+	//if (sceneNo == SCENE_END || sceneNo == SCENE_KATI) {
+	//	endScene->Draw(sceneNo);
+	//}
+	//if (sceneNo == SCENE_GAME) {
+	//	gameScene->Draw();
+	//}
+	//if (sceneNo == SCENE_BATTLE) {
+	//	batlleScene->Draw();
+	//}
+
+	post->Draw(dxCommon->GetCmdList());
 }
 
 void SceneManager::GameSceneReset()
 {
-	safe_delete(gameScene);
-	safe_delete(batlleScene);
-	gameScene = new GameScene();
-	batlleScene = new BatlleScene();
-	gameScene->Initialize(dxCommon);
-	batlleScene->Initialize(dxCommon);
-	initFlag = false;	
+	if (blackFlag == true) {
+		safe_delete(gameScene);
+		safe_delete(batlleScene);
+		gameScene = new GameScene();
+		batlleScene = new BatlleScene();
+		gameScene->Initialize(dxCommon);
+		batlleScene->Initialize(dxCommon);
+		initFlag = false;
+		loadEndFlag = true;
+		blackFlag = false;
+		sceneNo = SCENE_GAME;
+	}
 }

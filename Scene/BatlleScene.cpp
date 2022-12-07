@@ -22,6 +22,8 @@ BatlleScene::~BatlleScene()
 	//3Dオブジェクト解放
 	safe_delete(ground);
 	safe_delete(tenQ);
+	safe_delete(player);
+	safe_delete(gameCamera);
 	enemy1.reset();
 }
 
@@ -55,38 +57,11 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 {
-	////カメラ操作
-	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-	//	camera->matRot *= XMMatrixRotationY(0.1f);
-	//}
-	//else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-	//	camera->matRot *= XMMatrixRotationY(-0.1f);
-	//}
-	//if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
-	//	cameraToMouse *= -1;
-	//}
-	//if (cameraToMouse > 0) {
-	//	camera->matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
-	//}
-
-
 	EnemyZako::isAction = 1;
 	//EnemyZako::Action();
 
-	//XMFLOAT3 rote = player->object->GetRotation();
-	//XMFLOAT3 pos = player->object->GetPosition();
-	//XMVECTOR movement = { 0, 0, 1.0f, 0 };
-	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
-	//movement = XMVector3TransformNormal(movement, camera->matRot);
-	//movement *= XMVECTOR{ -1, -1, -1 };
-
-	//matRot = XMMatrixRotationY((XMConvertToRadians(rote.y)));
-	//camera->SetEye({ player->object->GetPosition().x + movement.m128_f32[0] * 80, player->object->GetPosition().y + movement.m128_f32[1] * 80,
-	//	 player->object->GetPosition().z + movement.m128_f32[2] * 80 });
-	//camera->eye.y = 20;
-	//camera->target = player->object->GetPosition();
-	//camera->target.y = -6;
-
+	
+	ObjectObj::SetCamera(gameCamera);
 
 
 	//敵の情報を外シーンから取得できていたら処理
