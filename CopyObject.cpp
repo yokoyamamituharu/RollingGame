@@ -1,5 +1,12 @@
 #include "CopyObject.h"
 
+CopyObject* CopyObject::Create(ObjectObj* obj)
+{
+	CopyObject* ins = new CopyObject;
+	ins->InitializeC(obj);
+	return ins;
+}
+
 void CopyObject::InitializeC(ObjectObj* obj)
 {
 	assert(obj);

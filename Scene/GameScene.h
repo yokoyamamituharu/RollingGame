@@ -58,24 +58,21 @@ public:
 	Player* GetPlayer() { return player; }
 
 private: // メンバ変数
-	DirectXCommon* dxCommon = nullptr;
-	GameCamera* gameCamera = nullptr;
+	/*ポインタ*/
+	DirectXCommon* dxCommon = nullptr;	
 
-	// ゲームシーン用  
+	/*----オブジェクト----*/
 	//スプライト
 	Sprite* spriteBG = nullptr;
 	Sprite* clearsprite = nullptr;
+	Canvas* canvas = nullptr;
 	//3Dオブジェクト
-	FbxModel* fbxmodel = nullptr;
-	ObjectFBX* objectFBX = nullptr;
-
-	//プレイヤー
-	Player* player = nullptr;
+	//ゲームシーン用オブジェクト
+	SceneLoader* scene = nullptr;
+	//天球
+	ObjectObj* tenQ = nullptr;
 	//地面
-	ObjectObj* ground = nullptr;
-	//敵
-	//タワー
-	DefenseTower* defenseTower = nullptr;
+	ObjectObj* ground = nullptr;	
 	//お城
 	ObjectObj* castle = nullptr;
 	//巣穴
@@ -84,49 +81,37 @@ private: // メンバ変数
 	//壁
 	ObjectObj* kabe = nullptr;
 	ObjectObj* kabe2 = nullptr;
-	//天球
-	ObjectObj* tenQ = nullptr;
-
+	//タワー
+	DefenseTower* defenseTower = nullptr;
+	//プレイヤー
+	Player* player = nullptr;	
+	//カメラ
+	GameCamera* gameCamera = nullptr;
 	//std::map<std::string, ObjectObj*> objects;
+	//敵
+	std::list<std::shared_ptr<EnemyZako>>enemiesG;
 
-	CopyObject* copyPlayer = nullptr;
+	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;
 	CopyObject* copyCastle = nullptr;
 	CopyObject* copyDefenseTower = nullptr;
-	//CopyObject* copyGround = nullptr;
-
-	float blackTime = 1;
-	float blackTime2 = 0;
-	bool blackStartFlag = false;
-	bool blackFlag1 = false;
-
-	bool flag1 = false;
-	bool clear = false;
-	int time = 0;
-
+	CopyObject* copyPlayer = nullptr;
+	//ミニマップ用カメラ
 	Camera* subCamera = nullptr;
+	//ミニマップ用ポストエフェクト
+	PostEffect* miniMapPost = nullptr;
+	bool mapFlag = false;	
 
-	std::list<std::shared_ptr<EnemyZako>>enemiesG;
-
-	PostEffect* postEffect = nullptr;
-
-	Canvas* canvas = nullptr;
-
-	static const int maxEnemy = 8;
-	int index = 0;	
-
+	//敵を出す時間と場所
 	struct Dasu {
 		int timer;
 		int basyo;
 	};
-	
+	static const int maxEnemy = 8;	
 	std::map<int,Dasu>dasu;
+	int index = 0;
 
-	int timer[maxEnemy];
-	int dasuteki[maxEnemy];
-
-	bool mapFlag = false;
-
-	SceneLoader* scene =nullptr;
+	//クリアフラグ
+	bool clear = false;
 };
 

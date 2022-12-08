@@ -43,21 +43,19 @@ public:
 	}
 
 private: // メンバ変数        
-	//ポインター
-	DirectXCommon* dxCommon = nullptr;	
+	/*----ポインタ----*/
+	DirectXCommon* dxCommon = nullptr;
 
 	/*----オブジェクト----*/
+	//スプライト
+	Sprite* spriteBG = nullptr;
+	Canvas* canvas = nullptr;
 	//3Dオブジェクト
+	ObjectObj* tenQ = nullptr;
+	ObjectObj* ground = nullptr;	
 	Player* player = nullptr;
 	std::shared_ptr<EnemyZako>enemy1;
-	ObjectObj* ground = nullptr;
-	ObjectObj* tenQ = nullptr;
-	//スプライト
-	Sprite* spriteBG = nullptr;	
-	Canvas* canvas = nullptr;
 
 	//カメラ
 	GameCamera* gameCamera = nullptr;
-	
-	int cameraToMouse = 1;
 };

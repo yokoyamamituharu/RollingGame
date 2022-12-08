@@ -20,11 +20,11 @@ BatlleScene::~BatlleScene()
 	safe_delete(spriteBG);
 
 	//3Dオブジェクト解放
-	safe_delete(ground);
 	safe_delete(tenQ);
+	safe_delete(ground);		
 	safe_delete(player);
-	safe_delete(gameCamera);
 	enemy1.reset();
+	safe_delete(gameCamera);	
 }
 
 void BatlleScene::Initialize(DirectXCommon* dxCommon)
@@ -132,17 +132,11 @@ void BatlleScene::Draw()
 
 	player->object->Draw();
 	ground->Draw();
-	//ObjectFBX->Draw(dxCommon->GetCmdList());
-
-
 	if (enemy1 != 0) {
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 			enemy->Draw();
 		}
 	}
-
-
-
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

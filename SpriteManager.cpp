@@ -13,10 +13,6 @@ SpriteManager* SpriteManager::GetIns()
 	return nullptr;
 }
 
-void SpriteManager::SetModelName()
-{
-}
-
 void SpriteManager::Initialize()
 {
 	//スプライト共通テクスチャ読み込み
@@ -43,8 +39,4 @@ void SpriteManager::Initialize()
 	Sprite::LoadTexture(18, L"Resources/num/8.png");
 	Sprite::LoadTexture(19, L"Resources/num/9.png");
 
-}
-
-void SpriteManager::Finalize()
-{
 }

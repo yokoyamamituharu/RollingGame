@@ -2,7 +2,17 @@
 #include "ModelManager.h"
 #include "Collision.h"
 #include "Useful.h"
+#include "safe_delete.h"
 
+SceneLoader::SceneLoader()
+{
+}
+
+SceneLoader::~SceneLoader()
+{
+	objects.clear();
+	colliders.clear();
+}
 
 void SceneLoader::Initialize()
 {

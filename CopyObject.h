@@ -4,6 +4,8 @@ class CopyObject :
 	public ObjectObj
 {
 public:
+	static CopyObject* Create(ObjectObj* obj);
+
 	void InitializeC(ObjectObj* obj);
 
 	void Update(ObjectObj* obj, Camera* cameraC = nullptr);

@@ -56,15 +56,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	HRESULT result;
 	FbxManager* fbxManager = FbxManager::Create();
 
-	//-----初期化処理-----//
+	/*----ゲームベース初期化処理----*/
+	//ウィンドウの初期化
 	WinApp* winApp = nullptr;
 	winApp = WinApp::GetInstance();
 	winApp->Initialize();
-	DirectXCommon* dxCommon = nullptr;
 	//DirectXの初期化
+	DirectXCommon* dxCommon = nullptr;	
 	dxCommon = new DirectXCommon();
 	dxCommon->Initialize(winApp);
-	//入力
+	//キーボード
 	Input* input = nullptr;
 	input = Input::GetInstance();
 	input->Initialize(winApp->GetHInstance(), winApp->GetHwnd());
@@ -74,6 +75,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	mouse->Initialize(winApp);
 	//カメラ
 	Camera* gameCamera = Camera::Create();
+
+	/*----静的初期化処理----*/
 	//スプライトの静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 	//モデルの静的初期化
@@ -83,27 +86,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
 	ObjectFBX::StaticInitialize(dxCommon->GetDev(), gameCamera);
-
 	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
 
 	//-----変数宣言-----//
-	//ポストエフェクトの初期化
-	//PostEffect* postEffect = nullptr;
-	//postEffect = new PostEffect();
-	//postEffect->Initialize();
-
-	SpriteManager* spriteManager;
-	spriteManager->Initialize();
-
-	SceneManager* sceneManager = nullptr;
-	sceneManager = new SceneManager;
+	SceneManager* sceneManager = new SceneManager;	
 	sceneManager->Initialize(dxCommon);
-
-	FPSLock fpsLock;
-
+	
 	//ParticleManager* particleMan = ParticleManager::Create();
-
-
+	//FPSロック
+	FPSLock fpsLock;	
 	while (true)  // ゲームループ
 	{
 		//if (input->TriggerKey(DIK_SPACE)) {

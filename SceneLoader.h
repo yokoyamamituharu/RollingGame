@@ -31,6 +31,9 @@ public:	//サブクラス
 	};
 
 public:
+	SceneLoader();
+	~SceneLoader();
+
 	void Initialize();
 
 	void ScanningObjects(nlohmann::json& transform);

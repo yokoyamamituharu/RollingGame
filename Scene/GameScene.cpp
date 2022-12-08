@@ -21,28 +21,27 @@ GameScene::~GameScene()
 	safe_delete(canvas);
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
-	safe_delete(postEffect);
+	safe_delete(miniMapPost);
 
 	//3Dオブジェクト解放
-	safe_delete(objectFBX);
-	safe_delete(fbxmodel);
-	safe_delete(kabe);
-	safe_delete(kabe2);
+	safe_delete(scene);
 	safe_delete(tenQ);
-	safe_delete(ground);
-	safe_delete(castle);
+	safe_delete(ground);	
+	safe_delete(castle);	
 	safe_delete(suana);
 	safe_delete(suana2);
+	safe_delete(kabe);
+	safe_delete(kabe2);
 	safe_delete(defenseTower);
 	safe_delete(player);
-	safe_delete(copyPlayer);
-	safe_delete(copyCastle);
 	safe_delete(copyGround);
+	safe_delete(copyCastle);
 	safe_delete(copyDefenseTower);		
+	safe_delete(copyPlayer);
 	enemiesG.clear();
-	dasu.clear();
+	dasu.clear();	
 	safe_delete(gameCamera);
-	safe_delete(scene);
+	safe_delete(subCamera);	
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -59,8 +58,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
+	//キャンバスの生成処理
+	canvas = new Canvas();
+	canvas->Initialize();
 
 	//3Dオブジェクトの生成
+	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
+	tenQ->SetScale({ 5,5,5 });
 	ground = ObjectObj::Create(ModelManager::GetModel("ground"));
 	ground->SetScale({ 10.0f,1.0f,10.0f });
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
@@ -80,36 +84,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	kabe2 = ObjectObj::Create(ModelManager::GetModel("kabe"));
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
-	kabe2->SetRotation({ 0,180,0 });
-	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
-	tenQ->SetScale({ 5,5,5 });
-
-	//プレイヤーの生成処理
-	player = Player::Create(gameCamera);
-	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
-
-	//敵の生成処理
-	//std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();
-	//enemy1->Initialize(EnemyZako::FIELD_OUT, camera, { -50, EnemyZako::groundOutPos,0 });
-	//enemy1->SetPlayer(player);
-	//enemy1->object->SetRotation({ 0,90,0 });
-	//enemiesG.push_back(std::move(enemy1));
-	enemiesG.clear();
+	kabe2->SetRotation({ 0,180,0 });		
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetObjectOBJ()->SetPosition({ 20,0,20 });
 
-	//ポストエフェクトの生成処理
-	postEffect = new PostEffect();
-	postEffect->Initialize();
-
-	//キャンバスの生成処理
-	canvas = new Canvas();
-	canvas->Initialize();
+	//プレイヤーの生成処理
+	player = Player::Create(gameCamera);
+	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
+	Player::breakEnemy = 0;
+	//ゲームカメラにプレイヤーをセット
+	gameCamera->SetPlayer(player->object);
 
 	index = 0;
-
 	dasu[0] = { 0,1 };
 	dasu[1] = { 0,1 };
 	dasu[2] = { 0,1 };
@@ -121,27 +109,21 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	dasu[8] = { 0,1 };
 	dasu[9] = { 0,1 };
 
-	Player::breakEnemy = 0;
-
+	
+	//ミニマップ用カメラの生成
 	subCamera = Camera::Create();
 	subCamera->SetEye({ 0, 100, -1 });
 	subCamera->SetTarget({ 0, 0, 0 });
-	copyPlayer = new CopyObject;
-	copyPlayer->InitializeC(player->object);
-	copyGround = new CopyObject;
-	copyGround->InitializeC(ground);
+	//ミニマップ用オブジェクトの初期化	
+	copyGround = CopyObject::Create(ground);
+	copyCastle = CopyObject::Create(castle);
+	copyDefenseTower = CopyObject::Create(defenseTower->GetObjectOBJ());
+	copyPlayer = CopyObject::Create(player->object);
+	//ミニマップ用ポストエフェクト生成処理
+	miniMapPost = new PostEffect();
+	miniMapPost->Initialize();
+	miniMapPost->SetSize({ 1,1 });
 
-	copyCastle = new CopyObject;
-	copyCastle->InitializeC(castle);
-	copyDefenseTower = new CopyObject;
-	copyDefenseTower->InitializeC(defenseTower->GetObjectOBJ());
-
-	//postEffect->SetSize({ 100,100 });
-
-	postEffect->SetSize({ 1,1 });
-	gameCamera->SetPlayer(player->object);
-
-	//postEffect->SetColor({ 0.5,0.5,0.5});	
 	scene = new SceneLoader;
 	scene->Initialize();
 }
@@ -149,28 +131,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
 	ObjectObj::SetCamera(gameCamera);
-
-	if (Input::GetInstance()->TriggerKey(DIK_B))
-	{
-		blackStartFlag = true;
-	}
-
-	if (blackStartFlag == true) {
-		blackTime -= 0.05;
-		if (blackTime > 0) {
-			postEffect->SetColor({ blackTime,blackTime,blackTime });
-		}
-		else {
-			blackTime2 += 0.05f;
-			postEffect->SetColor({ blackTime2,blackTime2,blackTime2 });
-		}
-		if (blackTime2 >= 1) {
-			blackStartFlag = false;
-			blackTime = 1.0f;
-			blackTime2 = 0.0f;
-		}
-	}
-
 
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
@@ -182,21 +142,23 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		//spriteBG->SetSize({ 2, 2 });
-		XMFLOAT2 postSize = postEffect->GetSize();
+		XMFLOAT2 postSize = miniMapPost->GetSize();
 		postSize.x += 0.1;
 		postSize.y += 0.1;
-		postEffect->SetSize(postSize);
+		miniMapPost->SetSize(postSize);
 	}
 	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
 		//spriteBG->SetSize({ 100, 100 });
-		//postEffect->SetSize({ 100,100 });
-		XMFLOAT2 postSize = postEffect->GetSize();
+		//miniMapPost->SetSize({ 100,100 });
+		XMFLOAT2 postSize = miniMapPost->GetSize();
 		postSize.x -= 0.1;
 		postSize.y -= 0.1;
-		postEffect->SetSize(postSize);
+		miniMapPost->SetSize(postSize);
 	}
 
-
+	//敵を行動させるかさせないかのトルグスイッチ
+	//EnemyZako::Action();
+	
 	//敵生成処理
 	if (index <= 6) {
 		dasu[index].timer--;
@@ -221,11 +183,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 	}
 
-
-
-	//敵を行動させるかさせないかのトルグスイッチ
-	//EnemyZako::Action();
-
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
@@ -247,9 +204,8 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			//sceneNo = SceneManager::SCENE_END;
 		}
 	}
-	canvas->SetEnemy(maxEnemy, player->breakEnemy);
-	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
+	//プレイヤーとシーンオブジェクトの当たり判定
 	player->Move();
 	scene->Update();
 	if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
@@ -273,20 +229,22 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	if (enemiesG.size() <= 0 && index >= 5) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-
 	//カメラのアップデート
 	gameCamera->Update();
 	subCamera->Update();
 
+	//キャンバスにプレイヤーの情報をセット
+	canvas->SetEnemy(maxEnemy, player->breakEnemy);
+	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
+	//ミニマップ用オブジェクトの更新
 	copyPlayer->Update(player->object, subCamera);
 	copyGround->Update(ground, subCamera);
 	copyCastle->Update(castle, subCamera);
 	copyDefenseTower->Update(defenseTower->GetObjectOBJ(), subCamera);
-	PostReserve();	//ミニマップの描画前処理
 	subCamera->SetTarget(player->object->GetPosition());
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
-
+	PostReserve();	//ミニマップの描画前処理
 }
 
 void GameScene::Draw()
@@ -300,20 +258,19 @@ void GameScene::Draw()
 	}
 
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	//objectFBX->Draw(dxCommon->GetCmdList());
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Draw();
-	}
-	defenseTower->Draw();
+	}	
+	scene->Draw();
+	//tenQ->Draw();
 	//ground->Draw();	
 	//castle->Draw();
 	//suana->Draw();
 	//suana2->Draw();
 	//kabe->Draw();
-	//kabe2->Draw();
-	//tenQ->Draw();
-	player->Draw();
-	scene->Draw();
+	//kabe2->Draw();	
+	defenseTower->Draw();
+	player->Draw();	
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
@@ -324,7 +281,7 @@ void GameScene::Draw()
 
 void GameScene::PostReserve()
 {
-	postEffect->PreDrawScene(dxCommon->GetCmdList());
+	miniMapPost->PreDrawScene(dxCommon->GetCmdList());
 
 	//ポストエフェクトさせたいオブジェクト
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
@@ -339,10 +296,10 @@ void GameScene::PostReserve()
 	spriteBG->Draw();
 	Sprite::PostDraw();
 
-	postEffect->PosDrawScene(dxCommon->GetCmdList());
+	miniMapPost->PosDrawScene(dxCommon->GetCmdList());
 }
 
 void GameScene::PostDraw()
 {
-	postEffect->Draw(dxCommon->GetCmdList());
+	miniMapPost->Draw(dxCommon->GetCmdList());
 }
