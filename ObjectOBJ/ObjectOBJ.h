@@ -9,28 +9,8 @@
 #include "Camera.h"
 
 using namespace DirectX;
-using DirectX::operator+;
+//using DirectX::operator+;
 
-//XMFLOAT3のオーバーロード
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
-
-const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
-
-const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
-
-const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);
-
-const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const float& scalar);
-
-const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const float& scalar);
-
-const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs);
-
-const DirectX::XMFLOAT3 operator+(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs);
-
-const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMVECTOR& rhs);
-
-const DirectX::XMFLOAT3 operator-(const DirectX::XMVECTOR& lhs, const DirectX::XMFLOAT3& rhs);
 
 
 

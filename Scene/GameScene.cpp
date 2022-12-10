@@ -6,6 +6,7 @@
 #include "safe_delete.h"
 #include "ModelManager.h"
 #include "Collision.h"
+#include "Useful.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -22,7 +23,6 @@ GameScene::~GameScene()
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
 	safe_delete(miniMapPost);
-
 	//3Dオブジェクト解放
 	safe_delete(scene);
 	safe_delete(tenQ);

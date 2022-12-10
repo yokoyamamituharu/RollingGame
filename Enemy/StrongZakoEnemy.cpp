@@ -1,7 +1,7 @@
 #include "StrongZakoEnemy.h"
 #include "ModelManager.h"
 #include "safe_delete.h"
-
+#include "Useful.h"
 
 StrongZakoEnemy::StrongZakoEnemy()
 {

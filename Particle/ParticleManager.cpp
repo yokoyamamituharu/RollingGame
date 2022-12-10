@@ -2,6 +2,7 @@
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 #include "ObjectOBJ.h"
+#include "Useful.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 

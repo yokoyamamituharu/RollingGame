@@ -1,6 +1,7 @@
 #include "GameCamera.h"
 #include "Input.h"
 #include "InputMouse.h"
+#include "Useful.h"
 
 GameCamera* GameCamera::Create()
 {
