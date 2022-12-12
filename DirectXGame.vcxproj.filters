@@ -85,6 +85,9 @@
     <Filter Include="ソース ファイル\ObjectOBJ\OBJ">
       <UniqueIdentifier>{8fd19b98-2738-4b34-81ca-c164ae4108c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Collider">
+      <UniqueIdentifier>{5bcb01cf-d7d6-4a84-8482-cf157c8ea59f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -250,7 +253,7 @@
     <ClInclude Include="ObjectOBJ\Model.h">
       <Filter>ソース ファイル\ObjectOBJ\Model</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectOBJ\ObjectOBJ.h">
+    <ClInclude Include="ObjectOBJ\ObjectObj.h">
       <Filter>ソース ファイル\ObjectOBJ\OBJ</Filter>
     </ClInclude>
     <ClInclude Include="CopyObject.h">
@@ -270,6 +273,42 @@
     </ClInclude>
     <ClInclude Include="SceneLoader.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\CollisionInfo.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\CollisionManager.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\CollisionPrimitive.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\CollisionTypes.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\MeshCollider.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\QueryCallback.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\RaycastHit.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\SphereCollider.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\TouchableObject.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\BaseCollider.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\Collision.h">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider\CollisionAttribute.h">
+      <Filter>ソース ファイル\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -383,6 +422,24 @@
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\CollisionManager.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\CollisionPrimitive.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\MeshCollider.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\SphereCollider.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\TouchableObject.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider\Collision.cpp">
+      <Filter>ソース ファイル\Collider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

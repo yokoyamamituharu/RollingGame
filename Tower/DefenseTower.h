@@ -1,5 +1,5 @@
 #pragma once
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include "Bullet.h"
 #include "Player.h"
 #include "EnemyZako.h"
@@ -21,7 +21,7 @@ public:
 
 	void Update(std::list<std::shared_ptr<EnemyZako>>& enemies);
 	void Draw();
-	ObjectObj* GetObjectOBJ() { return object; }
+	ObjectObj* GetObjectObj() { return object; }
 
 private:
 	bool Initialize();

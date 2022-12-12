@@ -65,32 +65,32 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 
 	//敵の情報を外シーンから取得できていたら処理
-	if (enemy1 != 0) {
-		//死亡判定があったらエネミーを消す
-		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
-		//敵とプレイヤーのローリング攻撃の当たり判定
-		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-			if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-				) {
-				//if (player->attackFlag == true) {
-					enemy->SetDead();
-					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
-					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
-					XMVECTOR vec = pos1 - pos2;
-					vec = XMVector3Normalize(vec);
-					vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
-					player->Res(true, Use::LoadXMVECTOR(vec));
-				//}
-				//else if (enemy->GetAttack()) {
-				//	player->Damage(1);
-				//@}
-			}
-		}
-		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-			enemy->SetPlayer(player);
-			enemy->Update();
-		}
-	}
+	//if (enemy1 != 0) {
+	//	//死亡判定があったらエネミーを消す
+	//	enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
+	//	//敵とプレイヤーのローリング攻撃の当たり判定
+	//	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+	//		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
+	//			) {
+	//			//if (player->attackFlag == true) {
+	//				enemy->SetDead();
+	//				XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
+	//				XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
+	//				XMVECTOR vec = pos1 - pos2;
+	//				vec = XMVector3Normalize(vec);
+	//				vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+	//				player->Res(true, Use::LoadXMVECTOR(vec));
+	//			//}
+	//			//else if (enemy->GetAttack()) {
+	//			//	player->Damage(1);
+	//			//@}
+	//		}
+	//	}
+	//	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+	//		enemy->SetPlayer(player);
+	//		enemy->Update();
+	//	}
+	//}
 
 	const int maxEnemy = 12;
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);

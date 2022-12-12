@@ -6,12 +6,12 @@
 #include "PostEffect.h"
 #include "Camera.h"
 #include "Sprite.h"
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include "ObjectFBX.h"
 #include "FbxLoader.h"
 #include "Player.h"
 #include "EnemyZako.h"
-#include "../Canvas.h"
+#include "Canvas.h"
 
 #include <vector>
 class GameScene;

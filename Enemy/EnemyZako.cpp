@@ -1,6 +1,6 @@
 #include "EnemyZako.h"
 using namespace DirectX;
-#include "../Useful.h"
+#include "Useful.h"
 #include "ModelManager.h"
 #include "safe_delete.h"
 

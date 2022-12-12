@@ -19,7 +19,7 @@
 #include "PostEffect.h"
 #include "Camera.h"
 #include "Sprite.h"
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include "ObjectFBX.h"
 #include "GameScene.h"
 

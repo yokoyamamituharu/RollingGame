@@ -1,5 +1,5 @@
 #pragma once
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>

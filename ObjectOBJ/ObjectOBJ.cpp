@@ -1,10 +1,13 @@
-﻿#include "ObjectOBJ.h"
+﻿#include "ObjectObj.h"
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 #include<fstream>
 #include<sstream>
 #include<string>
 #include<vector>
+#include "CollisionManager.h"
+#include "BaseCollider.h"
+
 using namespace std;
 
 #pragma comment(lib, "d3dcompiler.lib")
@@ -67,19 +70,19 @@ void ObjectObj::PostDraw()
 ObjectObj* ObjectObj::Create(Model* model)
 {
 	// 3Dオブジェクトのインスタンスを生成
-	ObjectObj* object3d = new ObjectObj();
-	if (object3d == nullptr) {
+	ObjectObj* objectObj = new ObjectObj;
+	if (objectObj == nullptr) {
 		return nullptr;
 	}
 
 	// 初期化
-	if (!object3d->Initialize(model)) {
-		delete object3d;
+	if (!objectObj->Initialize(model)) {
+		delete objectObj;
 		assert(0);
 		return nullptr;
 	}	
 
-	return object3d;
+	return objectObj;
 }
 
 
@@ -238,6 +241,18 @@ bool ObjectObj::InitializeGraphicsPipeline()
 }
 
 
+ObjectObj::ObjectObj()
+{
+}
+
+ObjectObj::~ObjectObj()
+{
+	if (collider) {
+		CollisionManager::GetInstance()->RemoveCollider(collider);
+		delete collider;
+	}
+}
+
 bool ObjectObj::Initialize(Model* model)
 {
 	// nullptrチェック
@@ -346,6 +361,32 @@ void ObjectObj::Draw()
 	commandList->DrawIndexedInstanced((UINT)modelData->indices.size(), 1, 0, 0, 0);
 }
 
+void ObjectObj::UpdateWorldMatrix()
+{
+	assert(camera);
+
+	XMMATRIX matScale, matRot, matTrans;
+
+	// スケール、回転、平行移動行列の計算
+	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+
+	matWorld = XMMatrixIdentity(); // 変形をリセット
+	matWorld *= matScale; // ワールド行列にスケーリングを反映
+	matWorld *= matRot; // ワールド行列に回転を反映
+	matWorld *= matTrans; // ワールド行列に平行移動を反映
+
+	// 親オブジェクトがあれば
+	if (parent != nullptr) {
+		// 親オブジェクトのワールド行列を掛ける
+		matWorld *= parent->matWorld;
+	}
+}
+
 XMMATRIX ObjectObj::GetMatRot()
 {
 	XMMATRIX matRot;
@@ -359,6 +400,17 @@ XMMATRIX ObjectObj::GetMatRot()
 XMMATRIX ObjectObj::GetWorldMatrix()
 {
 	return matWorld;
+}
+
+void ObjectObj::SetCollider(BaseCollider* collider)
+{
+	collider->SetObject(this);
+	this->collider = collider;
+	// コリジョンマネージャに追加
+	CollisionManager::GetInstance()->AddCollider(collider);
+
+	UpdateWorldMatrix();
+	collider->Update();
 }
 
 void ObjectObj::SetModel(Model* model)

@@ -99,6 +99,11 @@ public:
 	/// <returns>成否</returns>
 	bool LoadTexture(const std::string& directoryPath, const std::string& filename);
 
+	//頂点配列を取得
+	inline const std::vector<VertexPosNormalUv>& GetVertices() { return vertices; }
+	//インデックス配列を取得
+	inline const std::vector<unsigned short>& GetIndices() { return indices; }
+
 	//変数
 public:
 	// デバイス

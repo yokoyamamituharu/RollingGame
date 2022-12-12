@@ -2,7 +2,7 @@
 #include<string>
 #include <DirectXMath.h>
 #include <vector>
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include <fstream>
 #include <json.hpp>
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera.h"
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 
 class GameCamera :
 	public Camera

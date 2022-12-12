@@ -60,7 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Particle;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(SolutionDir)Camera;$(SolutionDir)Enemy;$(SolutionDir)Input;$(SolutionDir)ObjectFBX;$(SolutionDir)ObjectOBJ;$(SolutionDir)Player;$(SolutionDir)Scene;$(SolutionDir)Sprite;$(SolutionDir)Tower;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Collider;$(SolutionDir);$(SolutionDir)Particle;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(SolutionDir)Camera;$(SolutionDir)Enemy;$(SolutionDir)Input;$(SolutionDir)ObjectFBX;$(SolutionDir)ObjectOBJ;$(SolutionDir)Player;$(SolutionDir)Scene;$(SolutionDir)Sprite;$(SolutionDir)Tower;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Particle;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(SolutionDir)Camera;$(SolutionDir)Enemy;$(SolutionDir)Input;$(SolutionDir)ObjectFBX;$(SolutionDir)ObjectOBJ;$(SolutionDir)Player;$(SolutionDir)Scene;$(SolutionDir)Sprite;$(SolutionDir)Tower;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Collider;$(SolutionDir);$(SolutionDir)Particle;$(SolutionDir)DirectXTex;$(SolutionDir)Base;$(SolutionDir)Camera;$(SolutionDir)Enemy;$(SolutionDir)Input;$(SolutionDir)ObjectFBX;$(SolutionDir)ObjectOBJ;$(SolutionDir)Player;$(SolutionDir)Scene;$(SolutionDir)Sprite;$(SolutionDir)Tower;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -208,6 +208,18 @@
     <ClInclude Include="Base\WinApp.h" />
     <ClInclude Include="Camera\Camera.h" />
     <ClInclude Include="Canvas.h" />
+    <ClInclude Include="Collider\BaseCollider.h" />
+    <ClInclude Include="Collider\Collision.h" />
+    <ClInclude Include="Collider\CollisionAttribute.h" />
+    <ClInclude Include="Collider\CollisionInfo.h" />
+    <ClInclude Include="Collider\CollisionManager.h" />
+    <ClInclude Include="Collider\CollisionPrimitive.h" />
+    <ClInclude Include="Collider\CollisionTypes.h" />
+    <ClInclude Include="Collider\MeshCollider.h" />
+    <ClInclude Include="Collider\QueryCallback.h" />
+    <ClInclude Include="Collider\RaycastHit.h" />
+    <ClInclude Include="Collider\SphereCollider.h" />
+    <ClInclude Include="Collider\TouchableObject.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CopyObject.h" />
     <ClInclude Include="EndScene.h" />
@@ -224,7 +236,7 @@
     <ClInclude Include="ObjectFBX\ObjectFBX.h" />
     <ClInclude Include="ObjectOBJ\Model.h" />
     <ClInclude Include="ObjectOBJ\ModelManager.h" />
-    <ClInclude Include="ObjectOBJ\ObjectOBJ.h" />
+    <ClInclude Include="ObjectOBJ\ObjectObj.h" />
     <ClInclude Include="Particle\ParticleManager.h" />
     <ClInclude Include="Player\Player.h" />
     <ClInclude Include="safe_delete.h" />
@@ -247,6 +259,12 @@
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="Collider\Collision.cpp" />
+    <ClCompile Include="Collider\CollisionManager.cpp" />
+    <ClCompile Include="Collider\CollisionPrimitive.cpp" />
+    <ClCompile Include="Collider\MeshCollider.cpp" />
+    <ClCompile Include="Collider\SphereCollider.cpp" />
+    <ClCompile Include="Collider\TouchableObject.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CopyObject.cpp" />
     <ClCompile Include="EndScene.cpp" />

@@ -6,7 +6,7 @@
 #include "PostEffect.h"
 #include "GameCamera.h"
 #include "Sprite.h"
-#include "ObjectOBJ.h"
+#include "ObjectObj.h"
 #include "ObjectFBX.h"
 #include "FbxLoader.h"
 #include "Player.h"
@@ -21,6 +21,7 @@ class SceneManeger;
 #include "Canvas.h"
 #include "CopyObject.h"
 #include "SceneLoader.h"
+#include "CollisionManager.h"
 
 class GameScene
 {
@@ -60,6 +61,8 @@ public:
 private: // メンバ変数
 	/*ポインタ*/
 	DirectXCommon* dxCommon = nullptr;	
+
+	CollisionManager* collisionManager = nullptr;
 
 	/*----オブジェクト----*/
 	//スプライト

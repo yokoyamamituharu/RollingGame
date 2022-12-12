@@ -7,6 +7,8 @@
 #include <d3dx12.h>
 #include "Model.h"
 #include "Camera.h"
+#include "CollisionInfo.h"
+class BaseCollider;
 
 using namespace DirectX;
 //using DirectX::operator+;
@@ -119,6 +121,9 @@ protected:// 静的メンバ関数
 	
 
 public: // メンバ関数
+	ObjectObj();
+	~ObjectObj();
+
 	bool Initialize(Model* model = nullptr);
 	/// <summary>
 	/// 毎フレーム処理
@@ -129,6 +134,11 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	virtual void Draw();
+
+	/// <summary>
+	/// 行列の更新
+	/// </summary>
+	void UpdateWorldMatrix();
 
 	/// <summary>
 	/// 座標の取得
@@ -204,6 +214,18 @@ public: // メンバ関数
 	//オブジェクトの行列を取得
 	XMMATRIX GetWorldMatrix();
 
+	/// <summary>
+	/// コライダーのセット
+	/// </summary>
+	/// <param name="collider">コライダー</param>
+	void SetCollider(BaseCollider* collider);
+
+	/// <summary>
+	/// 衝突時コールバック関数
+	/// </summary>
+	/// <param name="info">衝突情報</param>
+	virtual void OnCollision(const CollisionInfo& info) {}
+
 protected: // メンバ変数
 	//ComPtr<ID3D12Resource> constBuff; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
@@ -222,6 +244,9 @@ protected: // メンバ変数
 	ObjectObj* parent = nullptr;
 	//モデルデータ
 	Model* modelData;
+
+	// コライダー
+	BaseCollider* collider = nullptr;
 
 public:
 	void SetModel(Model* model);

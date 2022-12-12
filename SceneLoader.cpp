@@ -199,10 +199,10 @@ void SceneLoader::Draw()
 
 bool SceneLoader::Collision(XMFLOAT3 playerpos, XMFLOAT3 radius)
 {
-	for (auto& collider : colliders) {
+	/*for (auto& collider : colliders) {
 		if (CollisitonBoxToBox(collider->translation, collider->scaling, playerpos, radius)) {
 			return true;
 		}
-	}
+	}*/
 	return false;
 }

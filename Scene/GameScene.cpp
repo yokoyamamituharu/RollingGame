@@ -62,6 +62,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	canvas = new Canvas();
 	canvas->Initialize();
 
+	collisionManager = CollisionManager::GetInstance();
+
 	//3Dオブジェクトの生成
 	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
 	tenQ->SetScale({ 5,5,5 });
@@ -88,7 +90,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
-	defenseTower->GetObjectOBJ()->SetPosition({ 20,0,20 });
+	defenseTower->GetObjectObj()->SetPosition({ 20,0,20 });
 
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera);
@@ -117,7 +119,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//ミニマップ用オブジェクトの初期化	
 	copyGround = CopyObject::Create(ground);
 	copyCastle = CopyObject::Create(castle);
-	copyDefenseTower = CopyObject::Create(defenseTower->GetObjectOBJ());
+	copyDefenseTower = CopyObject::Create(defenseTower->GetObjectObj());
 	copyPlayer = CopyObject::Create(player->object);
 	//ミニマップ用ポストエフェクト生成処理
 	miniMapPost = new PostEffect();
@@ -184,26 +186,26 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//敵とプレイヤーの当たり判定
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-			if (enemy->GetDead() == false) {
-				//バトルシーンに行く処理
-				batlleScene->SetEnemies(enemy);
-				enemiesG.remove(enemy);
-				player->outPos = player->object->GetPosition();
-				player->Stop();
-				//プレイヤーを原点に発生させる
-				//player->object->SetPosition({ 0,-6,0 });
-				sceneNo = SceneManager::SCENE_BATTLE;
-				break;
-			}
-		}
-		//敵と城の当たり判定
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
-			//当たったら負け
-			//sceneNo = SceneManager::SCENE_END;
-		}
-	}
+	//for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+	//		if (enemy->GetDead() == false) {
+	//			//バトルシーンに行く処理
+	//			batlleScene->SetEnemies(enemy);
+	//			enemiesG.remove(enemy);
+	//			player->outPos = player->object->GetPosition();
+	//			player->Stop();
+	//			//プレイヤーを原点に発生させる
+	//			//player->object->SetPosition({ 0,-6,0 });
+	//			sceneNo = SceneManager::SCENE_BATTLE;
+	//			break;
+	//		}
+	//	}
+	//	//敵と城の当たり判定
+	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+	//		//当たったら負け
+	//		//sceneNo = SceneManager::SCENE_END;
+	//	}
+	//}
 
 	//プレイヤーとシーンオブジェクトの当たり判定
 	player->Move();
@@ -241,10 +243,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	copyPlayer->Update(player->object, subCamera);
 	copyGround->Update(ground, subCamera);
 	copyCastle->Update(castle, subCamera);
-	copyDefenseTower->Update(defenseTower->GetObjectOBJ(), subCamera);
+	copyDefenseTower->Update(defenseTower->GetObjectObj(), subCamera);
 	subCamera->SetTarget(player->object->GetPosition());
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
 	PostReserve();	//ミニマップの描画前処理
+
+	collisionManager->CheckAllCollisions();
 }
 
 void GameScene::Draw()

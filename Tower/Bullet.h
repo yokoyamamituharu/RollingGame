@@ -1,5 +1,5 @@
 #pragma once
-#include "ObjectOBJ.h"	
+#include "ObjectObj.h"	
 class Bullet
 {
 	using XMFLOAT3 = DirectX::XMFLOAT3;

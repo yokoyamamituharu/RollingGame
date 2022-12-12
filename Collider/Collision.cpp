@@ -115,7 +115,7 @@ bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Dire
 	if (inter)
 	{
 		// 平面上の再接近点を、疑似交点とする
-		*inter = -dist * plane.normal + sphere.center;                                                                                              + sphere.center;
+		*inter = -dist * plane.normal + sphere.center;
 	}
 
 	return true;
