@@ -263,6 +263,9 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	else if (Input::GetInstance()->TriggerKey(DIK_3)) {
 		pipelineNum = 2;	//モザイク
 	}
+	else if (Input::GetInstance()->TriggerKey(DIK_4)) {
+		pipelineNum = 3;	//放射ブラー
+	}
 
 	// 定数バッファにデータ転送
 	ConstBufferData* constMap = nullptr;
@@ -270,6 +273,7 @@ void PostEffect::Draw(ID3D12GraphicsCommandList* cmdList)
 	if (SUCCEEDED(result)) {
 		constMap->color = this->color;
 		constMap->mat = XMMatrixIdentity();
+		constMap->value = this->value;
 		this->constBuff->Unmap(0, nullptr);
 	}
 
@@ -322,6 +326,12 @@ void PostEffect::CreateGraphicsPipeLineState()
 	LoadPsShader(L"Resources/shaders/PostEffectTestPS_MOZAIKU.hlsl", psBlob[2]);
 
 #pragma endregion
+
+#pragma region 放射ブラー
+	vsBlob[3] = vsBlob[0];
+	LoadPsShader(L"Resources/shaders/PostEffectTestPS_RadiationBlur.hlsl", psBlob[3]);
+#pragma endregion
+
 
 	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {

@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "safe_delete.h"
 #include "SpriteManager.h"
+#include "Useful.h"
 
 bool SceneManager::blackStartFlag = false;
 
@@ -37,12 +38,18 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	gameScene = new GameScene;
 	gameScene->Initialize(dxCommon);
 	batlleScene = new BatlleScene;
-	batlleScene->Initialize(dxCommon);	
+	batlleScene->Initialize(dxCommon);
 
 	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
 	post = new PostEffect;
 	post->Initialize();
+
+	//sceneEffect[0] = Sprite::Create(21, { 0,0 });
+	//sceneEffect[1] = Sprite::Create(22, { 0,0 });
+	//sceneEffect[2] = Sprite::Create(23, { 0,0 });
+	//sceneEffect[3] = Sprite::Create(24, { 0,0 });
+	//sceneEffect[4] = Sprite::Create(25, { 0,0 });
 }
 
 void SceneManager::Update()
@@ -60,9 +67,36 @@ void SceneManager::Update()
 	//	sceneNo = SCENE_BATTLE;
 	//}
 
+	if (Input::GetInstance()->TriggerKey(DIK_E)) {
+		effectFlag = true;
+	}
+	if (effectFlag == true) {
+		effectTime++;
+		if (effectTime > 10) {
+			effectIndex++;
+			effectTime = 0;
+		}
+		if (effectIndex > 5) {
+			effectIndex = 0;
+			effectTime = 0;
+			effectFlag = 0;
+		}
+	}
+
 	if (Input::GetInstance()->TriggerKey(DIK_B))
 	{
 		blackStartFlag = true;
+	}
+	static XMFLOAT3 color = { 0, 0, 0 };
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
+		post->value += 0.001;
+		color = color - XMFLOAT3{ 0.05, 0.05, 0.05 };
+		post->SetColor(color);
+	}
+	if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+		post->value -= 0.001;
+		color = color + XMFLOAT3{ 0.05, 0.05, 0.05 };
+		post->SetColor(color);
 	}
 
 	if (blackStartFlag == true) {
@@ -126,6 +160,9 @@ void SceneManager::Update()
 		batlleScene->Draw();
 	}
 	post->PosDrawScene(dxCommon->GetCmdList());
+
+
+
 }
 
 void SceneManager::Draw()

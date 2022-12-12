@@ -135,6 +135,9 @@
     <FxCompile Include="Resources\shaders\ParticleGS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\PostEffectTestPS_RadiationBlur.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic.hlsli">

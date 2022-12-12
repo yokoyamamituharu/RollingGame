@@ -39,4 +39,11 @@ void SpriteManager::Initialize()
 	Sprite::LoadTexture(18, L"Resources/num/8.png");
 	Sprite::LoadTexture(19, L"Resources/num/9.png");
 
+	//シーン遷移エフェクト
+	Sprite::LoadTexture(21, L"Resources/efect_1.png");
+	Sprite::LoadTexture(22, L"Resources/efect_2.png");
+	Sprite::LoadTexture(23, L"Resources/efect_3.png");
+	Sprite::LoadTexture(24, L"Resources/efect_4.png");
+	Sprite::LoadTexture(25, L"Resources/efect_5.png");
+
 }

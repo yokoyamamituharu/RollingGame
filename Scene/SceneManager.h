@@ -48,5 +48,11 @@ public:
 	int waitTimer = 10;
 	float blackTime = 1.0f;
 	float blackTime2 = 0.0f;
+
+private:
+	Sprite* sceneEffect[5];
+	int effectIndex = 0;
+	int effectTime = 0;
+	bool effectFlag = false;
 };
 

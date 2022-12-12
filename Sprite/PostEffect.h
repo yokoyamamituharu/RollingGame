@@ -36,7 +36,7 @@ private://静的メンバ変数
 
 private://メンバ変数
 	//ポストエフェクトの数
-	static const int postNum = 3;
+	static const int postNum = 4;
 	ComPtr<ID3D12Resource>texBuff[2];
 	//SRV用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap>descHeapSRV;
@@ -55,5 +55,7 @@ private://メンバ変数
 	//グラフィックパイラプライン選択用変数
 	int pipelineNum = 0;
 
+public:
+	float value = 0.005f;
 };
 

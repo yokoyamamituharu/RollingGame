@@ -23,6 +23,12 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	blackOutAlpha = 0.0f;
 	blackInAlpha = 1.0f;
 	black->SetAlpha(blackOutAlpha);
+
+	sceneEffect[0] = Sprite::Create(21, { 0,0 });
+	sceneEffect[1] = Sprite::Create(22, { 0,0 });
+	sceneEffect[2] = Sprite::Create(23, { 0,0 });
+	sceneEffect[3] = Sprite::Create(24, { 0,0 });
+	sceneEffect[4] = Sprite::Create(25, { 0,0 });
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
@@ -39,13 +45,32 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 		initFlag = true;
 	}
 	BlackIn();
+
+	if (Input::GetInstance()->TriggerKey(DIK_E)) {
+		effectFlag = true;
+	}
+	if (effectFlag == true) {
+		effectTime++;
+		if (effectTime > 10) {
+			effectIndex++;
+			effectTime = 0;
+		}
+		if (effectIndex >= 5) {
+			effectIndex = 0;
+			effectTime = 0;
+			effectFlag = false;
+		}
+	}
 }
 
 void TitleScene::Draw()
 {
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	sprite->Draw();
-	black->Draw();
+	black->Draw();	
+	if (effectFlag == true) {
+		sceneEffect[effectIndex]->Draw();
+	}	
 	Sprite::PostDraw();
 }
 

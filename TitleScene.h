@@ -44,5 +44,9 @@ private:
 	bool blackOutFlag;
 	bool blackInFlag;
 
+	Sprite* sceneEffect[5];
+	int effectIndex = 0;
+	int effectTime = 0;
+	bool effectFlag = false;
 };
 

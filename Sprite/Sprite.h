@@ -27,6 +27,7 @@ public://サブクラス
 	struct ConstBufferData {
 		XMFLOAT4 color;		//色(RGBA)
 		XMMATRIX mat;		//3D変換行列
+		float value;
 	};
 
 
