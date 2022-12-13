@@ -118,7 +118,7 @@ protected:// 静的メンバ関数
 	/// </summary>
 	/// <returns>成否</returns>
 	static bool InitializeGraphicsPipeline();
-	
+
 
 public: // メンバ関数
 	ObjectObj();
@@ -220,6 +220,8 @@ public: // メンバ関数
 	/// <param name="collider">コライダー</param>
 	void SetCollider(BaseCollider* collider);
 
+	//BaseCollider GetCollider() { return collider; }
+
 	/// <summary>
 	/// 衝突時コールバック関数
 	/// </summary>
@@ -245,11 +247,12 @@ protected: // メンバ変数
 	//モデルデータ
 	Model* modelData;
 
+public:
 	// コライダー
 	BaseCollider* collider = nullptr;
 
 public:
 	void SetModel(Model* model);
-	Model* GetModel(){ return modelData; }
+	Model* GetModel() { return modelData; }
 };
 

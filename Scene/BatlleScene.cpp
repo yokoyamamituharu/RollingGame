@@ -21,10 +21,10 @@ BatlleScene::~BatlleScene()
 
 	//3Dオブジェクト解放
 	safe_delete(tenQ);
-	safe_delete(ground);		
+	safe_delete(ground);
 	safe_delete(player);
 	enemy1.reset();
-	safe_delete(gameCamera);	
+	safe_delete(gameCamera);
 }
 
 void BatlleScene::Initialize(DirectXCommon* dxCommon)
@@ -34,7 +34,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 
 	gameCamera = GameCamera::Create();
 
-	player = Player::Create(gameCamera);
+	player = Player::Create(gameCamera, 2);
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	gameCamera->SetPlayer(player->object);
 
@@ -60,7 +60,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	EnemyZako::isAction = 1;
 	//EnemyZako::Action();
 
-	
+
 	ObjectObj::SetCamera(gameCamera);
 
 

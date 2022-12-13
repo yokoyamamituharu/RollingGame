@@ -2,6 +2,7 @@
 #include "BaseCollider.h"
 #include "Collision.h"
 #include "MeshCollider.h"
+#include "CollisionAttribute.h"
 
 using namespace DirectX;
 
@@ -13,6 +14,7 @@ CollisionManager * CollisionManager::GetInstance()
 
 void CollisionManager::CheckAllCollisions()
 {
+	playerTikei = false;
 	std::forward_list<BaseCollider*>::iterator itA;
 	std::forward_list<BaseCollider*>::iterator itB;
 
@@ -44,6 +46,9 @@ void CollisionManager::CheckAllCollisions()
 				if (meshCollider->CheckCollisionSphere(*sphere, &inter)) {
 					colA->OnCollision(CollisionInfo(colB->GetObjectObj(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjectObj(), colA, inter));
+					if (colA->attribute == COLLISION_ATTR_ALLIES || colB->attribute == COLLISION_ATTR_ALLIES) {
+						playerTikei = true;
+					}
 				}
 			}
 			else if (colA->GetShapeType() == COLLISIONSHAPE_SPHERE &&
@@ -54,6 +59,9 @@ void CollisionManager::CheckAllCollisions()
 				if (meshCollider->CheckCollisionSphere(*sphere, &inter)) {
 					colA->OnCollision(CollisionInfo(colB->GetObjectObj(), colB, inter));
 					colB->OnCollision(CollisionInfo(colA->GetObjectObj(), colA, inter));
+					if (colA->attribute == COLLISION_ATTR_ALLIES || colB->attribute == COLLISION_ATTR_ALLIES) {
+						playerTikei = true;
+					}
 				}
 			}
 		}

@@ -63,6 +63,8 @@ public:// メンバ関数
 	/// <param name="attribute">対象の衝突属性</param>
 	void QuerySphere(const Sphere& sphere, QueryCallback* callback, unsigned short attribute = (unsigned short)0xffffffff);
 
+	bool GetPlayerTikei() { return playerTikei; }
+
 private:
 	CollisionManager() = default;
 	CollisionManager(const CollisionManager&) = delete;
@@ -71,5 +73,7 @@ private:
 
 	// コライダーのリスト
 	std::forward_list<BaseCollider*> colliders;
+
+	bool playerTikei = false;
 };
 

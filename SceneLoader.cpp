@@ -11,7 +11,11 @@ SceneLoader::SceneLoader()
 SceneLoader::~SceneLoader()
 {
 	objects.clear();
-	colliders.clear();
+	for (auto& object : touchObjects) {
+		safe_delete(object);
+	}
+	touchObjects.clear();
+	//touchObjects.clear();
 }
 
 void SceneLoader::Initialize()
@@ -59,35 +63,56 @@ void SceneLoader::Initialize()
 		//decltype(models)::iterator it = models.find(objectData.fileName);
 		//if (it != models.end()) { model = it->second; }
 		model = ModelManager::GetModel(objectData.fileName);
-		//モデルを指定して3Dオブジェクトを生成
-		ObjectObj* newObject = ObjectObj::Create(model);
-		//座標
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMStoreFloat3(&pos, objectData.translation);
-		newObject->SetPosition(pos);
-		//回転角
-		DirectX::XMFLOAT3 rot;
-		DirectX::XMStoreFloat3(&rot, objectData.rotation);
-		newObject->SetRotation(rot);
-		//スケーリング
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMStoreFloat3(&scale, objectData.scaling);
-		newObject->SetScale(scale);
-		//配列に登録
-		objects.push_back(newObject);
+
+		if (objectData.fileName == "ground") {
+			//モデルを指定して3Dオブジェクトを生成
+			ObjectObj* newObject = ObjectObj::Create(model);
+			//座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
+			//回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
+			//スケーリング
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+			//配列に登録
+			objects.push_back(newObject);
+		}
+		else {
+			TouchableObject* newObject = TouchableObject::Create(model);
+			//座標
+			DirectX::XMFLOAT3 pos;
+			DirectX::XMStoreFloat3(&pos, objectData.translation);
+			newObject->SetPosition(pos);
+			//回転角
+			DirectX::XMFLOAT3 rot;
+			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			newObject->SetRotation(rot);
+			//スケーリング
+			DirectX::XMFLOAT3 scale;
+			DirectX::XMStoreFloat3(&scale, objectData.scaling);
+			newObject->SetScale(scale);
+			//配列に登録
+			touchObjects.push_back(newObject);
+		}
 
 
-		//モデルを指定して3Dオブジェクトを生成
-		ColliderData* newCollider = new ColliderData;
-		//座標
-		DirectX::XMFLOAT3 cpos = { 0,0,0 };
-		DirectX::XMStoreFloat3(&pos, objectData.colliderTransla);
-		newCollider->translation = cpos;
-		//回転角
-		DirectX::XMFLOAT3 cscale = { 0,0,0 };
-		DirectX::XMStoreFloat3(&cscale, objectData.colliderScaling);
-		newCollider->scaling = cscale;
-		colliders.push_back(newCollider);
+
+		//トランスフォームを参照してコライダーを生成する
+		//ColliderData* newCollider = new ColliderData;
+		////座標
+		//DirectX::XMFLOAT3 cpos = { 0,0,0 };
+		//DirectX::XMStoreFloat3(&pos, objectData.colliderTransla);
+		//newCollider->translation = cpos;
+		////回転角
+		//DirectX::XMFLOAT3 cscale = { 0,0,0 };
+		//DirectX::XMStoreFloat3(&cscale, objectData.colliderScaling);
+		//newCollider->scaling = cscale;
+		//colliders.push_back(newCollider);
 	}
 
 }
@@ -123,7 +148,8 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 			//回転角
 			objectData.rotation.m128_f32[0] = (float)-transform["rotation"][1];
 			objectData.rotation.m128_f32[1] = (float)-transform["rotation"][2];
-			objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];
+			//objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];
+			objectData.rotation.m128_f32[2] = 0.0f;
 			objectData.rotation.m128_f32[3] = 0.0f;
 			//スケーリング
 			objectData.scaling.m128_f32[0] = (float)transform["scaling"][1];
@@ -188,11 +214,17 @@ void SceneLoader::Update()
 	for (auto& object : objects) {
 		object->Update();
 	}
+	for (auto& object : touchObjects) {
+		object->Update();
+	}
 }
 
 void SceneLoader::Draw()
 {
 	for (auto& object : objects) {
+		object->Draw();
+	}
+	for (auto& object : touchObjects) {
 		object->Draw();
 	}
 }

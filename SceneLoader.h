@@ -5,6 +5,7 @@
 #include "ObjectObj.h"
 #include <fstream>
 #include <json.hpp>
+#include "TouchableObject.h"
 
 class SceneLoader
 {
@@ -49,6 +50,8 @@ private:
 
 	//オブジェクトデータ
 	std::vector<ObjectObj*>objects;
+	//オブジェクトデータ
+	std::list<TouchableObject*>touchObjects;
 
 	std::vector<ColliderData*>colliders;
 };

@@ -4,6 +4,7 @@
 #include "CollisionPrimitive.h"
 
 #include <DirectXMath.h>
+#include "CollisionAttribute.h"
 
 /// <summary>
 /// 球衝突判定オブジェクト
@@ -20,6 +21,8 @@ public:
 	{
 		// 球形状をセット
 		shapeType = COLLISIONSHAPE_SPHERE;
+		attribute = COLLISION_ATTR_LANDSHAPE;
+		
 	}
 
 	/// <summary>

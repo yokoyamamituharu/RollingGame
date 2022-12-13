@@ -19,8 +19,8 @@ public:
 	Player();
 	~Player();
 
-	static Player* Create(Camera* camera);
-	void Initialize(Camera* camera);
+	static Player* Create(Camera* camera,int InOrOut);
+	void Initialize(Camera* camera, int InOrOut);
 	void Update();
 	void Move();
 	void MoveVector(DirectX::XMFLOAT3 vec)
@@ -55,6 +55,8 @@ public:
 	void Damage(int damage);
 	void Cure(int amount) { hp += amount; }
 
+	void StopRolling();
+
 public:
 	ObjectObj* object = nullptr;
 
@@ -63,6 +65,9 @@ public:
 	const float grundHeight = -6.0f;
 
 	static int breakEnemy;
+
+	//丸影
+	ObjectObj* shadowObj = nullptr;
 
 	XMFLOAT3 outPos = { 0,0,0 };	//中シーンに行くときに今の座標を保存しておく
 private:
@@ -97,6 +102,12 @@ private:
 	static int hp;
 
 	XMFLOAT3 backVec = { 0,0,0 };
+
+private:
+	//接地フラグ
+	bool onGround = true;
+	//落下ベクトル
+	XMVECTOR fallV;
 
 public:
 	XMFLOAT3 move = { 0,0,0 };	

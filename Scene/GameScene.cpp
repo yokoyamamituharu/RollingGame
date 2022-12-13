@@ -7,6 +7,7 @@
 #include "ModelManager.h"
 #include "Collision.h"
 #include "Useful.h"
+#include "SphereCollider.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -26,8 +27,8 @@ GameScene::~GameScene()
 	//3Dオブジェクト解放
 	safe_delete(scene);
 	safe_delete(tenQ);
-	safe_delete(ground);	
-	safe_delete(castle);	
+	safe_delete(ground);
+	safe_delete(castle);
 	safe_delete(suana);
 	safe_delete(suana2);
 	safe_delete(kabe);
@@ -36,12 +37,15 @@ GameScene::~GameScene()
 	safe_delete(player);
 	safe_delete(copyGround);
 	safe_delete(copyCastle);
-	safe_delete(copyDefenseTower);		
+	safe_delete(copyDefenseTower);
 	safe_delete(copyPlayer);
 	enemiesG.clear();
-	dasu.clear();	
+	dasu.clear();
 	safe_delete(gameCamera);
-	safe_delete(subCamera);	
+	safe_delete(touchCastle);
+	safe_delete(touchGround);
+	safe_delete(subCamera);
+
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -72,6 +76,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	ground->SetPosition({ 0.0f,-10.0f,0.0f });
 	castle = ObjectObj::Create(ModelManager::GetModel("castle"));
 	castle->SetScale({ 10.0f,10.0f,10.0f });
+	//touchCastle = TouchableObject::Create(ModelManager::GetModel("castle"));
+	//touchCastle->SetScale({ 10.0f,10.0f,10.0f });
 	suana = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
@@ -86,14 +92,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	kabe2 = ObjectObj::Create(ModelManager::GetModel("kabe"));
 	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
 	kabe2->SetScale({ 5.0f,5.0f,5.0f });
-	kabe2->SetRotation({ 0,180,0 });		
+	kabe2->SetRotation({ 0,180,0 });
+	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
+	touchGround->SetScale({ 10.0f,1.0f,10.0f });
+	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
+	//touchGround->collider.
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetObjectObj()->SetPosition({ 20,0,20 });
 
 	//プレイヤーの生成処理
-	player = Player::Create(gameCamera);
+	player = Player::Create(gameCamera,1);
 	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
@@ -111,7 +121,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	dasu[8] = { 0,1 };
 	dasu[9] = { 0,1 };
 
-	
+
 	//ミニマップ用カメラの生成
 	subCamera = Camera::Create();
 	subCamera->SetEye({ 0, 100, -1 });
@@ -128,6 +138,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	scene = new SceneLoader;
 	scene->Initialize();
+
+	//castle->SetCollider(new SphereCollider);
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -160,7 +172,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//敵を行動させるかさせないかのトルグスイッチ
 	//EnemyZako::Action();
-	
+
 	//敵生成処理
 	if (index <= 6) {
 		dasu[index].timer--;
@@ -186,45 +198,47 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//敵とプレイヤーの当たり判定
-	//for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-	//		if (enemy->GetDead() == false) {
-	//			//バトルシーンに行く処理
-	//			batlleScene->SetEnemies(enemy);
-	//			enemiesG.remove(enemy);
-	//			player->outPos = player->object->GetPosition();
-	//			player->Stop();
-	//			//プレイヤーを原点に発生させる
-	//			//player->object->SetPosition({ 0,-6,0 });
-	//			sceneNo = SceneManager::SCENE_BATTLE;
-	//			break;
-	//		}
-	//	}
-	//	//敵と城の当たり判定
-	//	if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
-	//		//当たったら負け
-	//		//sceneNo = SceneManager::SCENE_END;
-	//	}
-	//}
+	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+			if (enemy->GetDead() == false) {
+				//バトルシーンに行く処理
+				batlleScene->SetEnemies(enemy);
+				enemiesG.remove(enemy);
+				player->outPos = player->object->GetPosition();
+				player->Stop();
+				//プレイヤーを原点に発生させる
+				//player->object->SetPosition({ 0,-6,0 });
+				sceneNo = SceneManager::SCENE_BATTLE;
+				break;
+			}
+		}
+		//敵と城の当たり判定
+		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+			//当たったら負け
+			//sceneNo = SceneManager::SCENE_END;
+		}
+	}
 
 	//プレイヤーとシーンオブジェクトの当たり判定
 	player->Move();
-	scene->Update();
-	if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
-		player->move = { 0,0,0 };
-	}
+	//scene->Update();
+	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
+	//	player->move = { 0,0,0 };
+	//}
 
 	//3Dオブジェクト更新
 	player->Update();
 	ground->Update();
 	//defenseTower->Update(enemiesG);
 	castle->Update();
+	//touchCastle->Update();
 	suana->Update();
 	suana2->Update();
 	kabe->Update();
 	kabe2->Update();
 	tenQ->Update();
 	scene->Update();
+	touchGround->Update();
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Update();
 	}
@@ -249,6 +263,9 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	PostReserve();	//ミニマップの描画前処理
 
 	collisionManager->CheckAllCollisions();
+	if (collisionManager->GetPlayerTikei()) {
+		player->StopRolling();
+	}
 }
 
 void GameScene::Draw()
@@ -264,17 +281,19 @@ void GameScene::Draw()
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Draw();
-	}	
+	}
 	scene->Draw();
 	//tenQ->Draw();
 	//ground->Draw();	
 	//castle->Draw();
+	//touchCastle->Draw();
 	//suana->Draw();
 	//suana2->Draw();
 	//kabe->Draw();
-	//kabe2->Draw();	
+	//kabe2->Draw();
 	defenseTower->Draw();
-	player->Draw();	
+	player->Draw();
+	//touchGround->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

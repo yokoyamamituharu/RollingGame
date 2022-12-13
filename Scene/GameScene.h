@@ -22,6 +22,7 @@ class SceneManeger;
 #include "CopyObject.h"
 #include "SceneLoader.h"
 #include "CollisionManager.h"
+#include "TouchableObject.h"
 
 class GameScene
 {
@@ -78,6 +79,7 @@ private: // メンバ変数
 	ObjectObj* ground = nullptr;	
 	//お城
 	ObjectObj* castle = nullptr;
+	TouchableObject* touchCastle = nullptr;
 	//巣穴
 	ObjectObj* suana = nullptr;
 	ObjectObj* suana2 = nullptr;
@@ -93,6 +95,7 @@ private: // メンバ変数
 	//std::map<std::string, ObjectObj*> objects;
 	//敵
 	std::list<std::shared_ptr<EnemyZako>>enemiesG;
+	TouchableObject* touchGround = nullptr;
 
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;
