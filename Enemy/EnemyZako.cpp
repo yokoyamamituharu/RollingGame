@@ -93,6 +93,8 @@ void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isT
 		maxHp = enemies.size();
 		hp = maxHp;
 	}
+	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
+	shadowObj->SetScale({ 10,1,10 });
 }
 
 void EnemyZako::Update()
@@ -244,11 +246,15 @@ void EnemyZako::Update()
 	}
 	//オブジェクトの更新
 	object->Update();
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(-6 - 4);
+	shadowObj->Update();
 }
 
 void EnemyZako::Draw()
 {
 	object->Draw();
+	shadowObj->Draw();
 }
 
 

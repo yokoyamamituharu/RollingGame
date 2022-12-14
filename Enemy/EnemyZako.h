@@ -98,7 +98,8 @@ protected:	//ƒƒ“ƒo•Ï”
 	Camera* camera;
 	Player* player;
 
-
+	//ŠÛ‰e
+	ObjectObj* shadowObj = nullptr;
 
 	//ƒtƒ‰ƒO
 	bool atattckFlag = false;

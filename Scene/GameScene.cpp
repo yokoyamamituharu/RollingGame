@@ -5,7 +5,7 @@
 #include "tuyoEnemy.h"
 #include "safe_delete.h"
 #include "ModelManager.h"
-#include "Collision.h"
+#include "../Collider/Collision.h"
 #include "Useful.h"
 #include "SphereCollider.h"
 
@@ -104,22 +104,21 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera,1);
-	player->object->SetPosition({ 0.0f,-6.0f,-50.0f });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
 
 	index = 0;
 	dasu[0] = { 0,1 };
-	dasu[1] = { 0,1 };
-	dasu[2] = { 0,1 };
-	dasu[3] = { 0,1 };
-	dasu[4] = { 0,1 };
-	dasu[5] = { 0,1 };
-	dasu[6] = { 0,1 };
-	dasu[7] = { 0,1 };
-	dasu[8] = { 0,1 };
-	dasu[9] = { 0,1 };
+	dasu[1] = { 0,2 };
+	dasu[2] = { 30,1 };
+	dasu[3] = { 10,1 };
+	dasu[4] = { 40,2 };
+	dasu[5] = { 50,2 };
+	dasu[6] = { 30,1 };
+	dasu[7] = { 80,2 };
+	dasu[8] = { 40,1 };
+	dasu[9] = { 10,1 };
 
 
 	//ミニマップ用カメラの生成
@@ -145,7 +144,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
 	ObjectObj::SetCamera(gameCamera);
-
+	if (SceneManager::hitEnemyToPlayer|| SceneManager::WinBattle) {
+		return;
+	}
 
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		if (enemy->GetHp() <= 0) {
@@ -199,7 +200,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//敵とプレイヤーの当たり判定
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 			if (enemy->GetDead() == false) {
 				//バトルシーンに行く処理
 				batlleScene->SetEnemies(enemy);
@@ -208,12 +209,13 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				player->Stop();
 				//プレイヤーを原点に発生させる
 				//player->object->SetPosition({ 0,-6,0 });
-				sceneNo = SceneManager::SCENE_BATTLE;
+				SceneManager::hitEnemyToPlayer = true;
+				//sceneNo = SceneManager::SCENE_BATTLE;
 				break;
 			}
 		}
 		//敵と城の当たり判定
-		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
 			//当たったら負け
 			//sceneNo = SceneManager::SCENE_END;
 		}
@@ -229,7 +231,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//3Dオブジェクト更新
 	player->Update();
 	ground->Update();
-	//defenseTower->Update(enemiesG);
+	defenseTower->Update(enemiesG);
 	castle->Update();
 	//touchCastle->Update();
 	suana->Update();
@@ -287,8 +289,8 @@ void GameScene::Draw()
 	//ground->Draw();	
 	//castle->Draw();
 	//touchCastle->Draw();
-	//suana->Draw();
-	//suana2->Draw();
+	suana->Draw();
+	suana2->Draw();
 	//kabe->Draw();
 	//kabe2->Draw();
 	defenseTower->Draw();

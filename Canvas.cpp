@@ -8,7 +8,7 @@ void Canvas::Initialize()
 
 	for (int i = 0; i < sizeof(playerHp) / sizeof(playerHp[0]); i++) {
 		playerHp[i] = Sprite::Create(3, { hpWidth + float(i * 35),hpHegiht });
-		damagePlayerHp[i] = Sprite::Create(4, { float(i * 35),500 });
+		damagePlayerHp[i] = Sprite::Create(4, { hpWidth + float(i * 35),hpHegiht });
 	}
 
 	int intervalWidth = 30;

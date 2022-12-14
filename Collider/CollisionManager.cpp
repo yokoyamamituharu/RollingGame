@@ -1,6 +1,6 @@
 ﻿#include "CollisionManager.h"
 #include "BaseCollider.h"
-#include "Collision.h"
+#include "../Collider/Collision.h"
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 

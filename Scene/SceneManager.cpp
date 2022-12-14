@@ -4,6 +4,8 @@
 #include "Useful.h"
 
 bool SceneManager::blackStartFlag = false;
+bool SceneManager::hitEnemyToPlayer = false;
+bool SceneManager::WinBattle = false;
 
 SceneManager::SceneManager()
 {
@@ -45,11 +47,11 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	post = new PostEffect;
 	post->Initialize();
 
-	//sceneEffect[0] = Sprite::Create(21, { 0,0 });
-	//sceneEffect[1] = Sprite::Create(22, { 0,0 });
-	//sceneEffect[2] = Sprite::Create(23, { 0,0 });
-	//sceneEffect[3] = Sprite::Create(24, { 0,0 });
-	//sceneEffect[4] = Sprite::Create(25, { 0,0 });
+	sceneEffect[0] = Sprite::Create(21, { 0,0 });
+	sceneEffect[1] = Sprite::Create(22, { 0,0 });
+	sceneEffect[2] = Sprite::Create(23, { 0,0 });
+	sceneEffect[3] = Sprite::Create(24, { 0,0 });
+	sceneEffect[4] = Sprite::Create(25, { 0,0 });
 }
 
 void SceneManager::Update()
@@ -70,16 +72,18 @@ void SceneManager::Update()
 	if (Input::GetInstance()->TriggerKey(DIK_E)) {
 		effectFlag = true;
 	}
-	if (effectFlag == true) {
+	if (hitEnemyToPlayer == true) {
 		effectTime++;
 		if (effectTime > 10) {
 			effectIndex++;
 			effectTime = 0;
 		}
-		if (effectIndex > 5) {
+		if (effectIndex >= 5) {
 			effectIndex = 0;
 			effectTime = 0;
 			effectFlag = 0;
+			hitEnemyToPlayer = false;
+			sceneNo = SCENE_BATTLE;
 		}
 	}
 
@@ -88,16 +92,16 @@ void SceneManager::Update()
 		blackStartFlag = true;
 	}
 	static XMFLOAT3 color = { 0, 0, 0 };
-	if (Input::GetInstance()->PushKey(DIK_UP)) {
-		post->value += 0.001;
-		color = color - XMFLOAT3{ 0.05, 0.05, 0.05 };
-		post->SetColor(color);
-	}
-	if (Input::GetInstance()->PushKey(DIK_DOWN)) {
-		post->value -= 0.001;
-		color = color + XMFLOAT3{ 0.05, 0.05, 0.05 };
-		post->SetColor(color);
-	}
+	//if (Input::GetInstance()->PushKey(DIK_UP)) {
+	//	post->value += 0.001;
+	//	color = color - XMFLOAT3{ 0.05, 0.05, 0.05 };
+	//	post->SetColor(color);
+	//}
+	//if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+	//	post->value -= 0.001;
+	//	color = color + XMFLOAT3{ 0.05, 0.05, 0.05 };
+	//	post->SetColor(color);
+	//}
 
 	if (blackStartFlag == true) {
 		blackTime -= 0.05;
@@ -119,6 +123,33 @@ void SceneManager::Update()
 			blackTime = 1.0f;
 			blackTime2 = 0.0f;
 		}
+	}
+
+	if (WinBattle == true) {
+		winblackTime -= 0.05;
+		if (winblackTime > 0) {
+			post->SetColor({ winblackTime,winblackTime,winblackTime });
+		}
+		else if (winloadEndFlag == false) {
+			winblackFlag = true;
+		}
+
+		if (winloadEndFlag == true) {
+			winblackTime2 += 0.05f;
+			post->SetColor({ winblackTime2,winblackTime2,winblackTime2 });
+		}
+		if (winblackTime2 >= 1) {
+			WinBattle = false;
+			winblackFlag = false;
+			winloadEndFlag = false;
+			winblackTime = 1.0f;
+			winblackTime2 = 0.0f;
+		}
+	}
+
+	if (winblackFlag) {
+		sceneNo = SCENE_GAME;
+		winloadEndFlag = true;
 	}
 
 	//ゲームリセット
@@ -161,8 +192,21 @@ void SceneManager::Update()
 	}
 	post->PosDrawScene(dxCommon->GetCmdList());
 
-
-
+	//if (Input::GetInstance()->TriggerKey(DIK_E)) {
+	//	effectFlag = true;
+	//}
+	//if (effectFlag == true) {
+	//	effectTime++;
+	//	if (effectTime > 10) {
+	//		effectIndex++;
+	//		effectTime = 0;
+	//	}
+	//	if (effectIndex >= 5) {
+	//		effectIndex = 0;
+	//		effectTime = 0;
+	//		effectFlag = false;
+	//	}
+	//}
 }
 
 void SceneManager::Draw()
@@ -181,6 +225,12 @@ void SceneManager::Draw()
 	//}
 
 	post->Draw(dxCommon->GetCmdList());
+
+	Sprite::PreDraw(dxCommon->GetCmdList());
+	if (SceneManager::hitEnemyToPlayer == true) {
+		sceneEffect[effectIndex]->Draw();
+	}
+	Sprite::PostDraw();
 }
 
 void SceneManager::GameSceneReset()
@@ -190,8 +240,8 @@ void SceneManager::GameSceneReset()
 		safe_delete(batlleScene);
 		gameScene = new GameScene();		
 		gameScene->Initialize(dxCommon);
-		//batlleScene = new BatlleScene();
-		//batlleScene->Initialize(dxCommon);
+		batlleScene = new BatlleScene();
+		batlleScene->Initialize(dxCommon);
 		initFlag = false;
 		loadEndFlag = true;
 		blackFlag = false;

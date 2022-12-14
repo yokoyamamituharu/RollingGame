@@ -23,7 +23,8 @@ void EndScene::Initialize(DirectXCommon* dxCommon)
 
 void EndScene::Update(int& sceneNo)
 {
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	ShowCursor(true);
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE)/* || InputMouse::GetInstance()->PushMouse(M_LEFT)*/) {
 		sceneNo = SceneManager::SCENE_TITLE;
 	}
 }

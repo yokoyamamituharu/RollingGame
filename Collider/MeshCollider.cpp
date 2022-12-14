@@ -1,5 +1,5 @@
 ﻿#include "MeshCollider.h"
-#include "Collision.h"
+#include "../Collider/Collision.h"
 
 using namespace DirectX;
 

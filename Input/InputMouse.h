@@ -36,6 +36,8 @@ public:
 
 		bool PushMouse(MouseDIK click);
 
+		//bool TorigerMouse(MouseDIK click);
+
 		bool IsMoveMouse(char h);
 
 		float MoveMouseVector(char h);

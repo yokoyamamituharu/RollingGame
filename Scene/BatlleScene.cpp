@@ -4,7 +4,7 @@
 #include <DirectXMath.h>
 #include "Useful.h"
 #include "safe_delete.h"
-#include "Collision.h"
+#include "../Collider/Collision.h"
 
 using namespace DirectX;
 
@@ -38,14 +38,12 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	gameCamera->SetPlayer(player->object);
 
-	ground = ObjectObj::Create();
-	ground->SetModel(ModelManager::GetModel("battlegrund"));
+	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));	
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
-	ground->SetPosition({ 0.0f,-10.0f,0.0f });
+	ground->SetPosition({ 0.0f,-10.1f,0.0f });
 	ground->SetRotation({ 0.0f,0.0f,0.0f });
 
-	tenQ = ObjectObj::Create();
-	tenQ->SetModel(ModelManager::GetModel("IntenQ"));
+	tenQ = ObjectObj::Create(ModelManager::GetModel("IntenQ"));	
 	tenQ->SetScale({ 10.0f,1.0f,10.0f });
 	tenQ->SetPosition({ 0.0f,-10.0f,0.0f });
 	tenQ->SetRotation({ 0.0f,0.0f,0.0f });
@@ -62,37 +60,39 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 
 	ObjectObj::SetCamera(gameCamera);
-
+	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
+		return;
+	}
 
 	//敵の情報を外シーンから取得できていたら処理
-	//if (enemy1 != 0) {
-	//	//死亡判定があったらエネミーを消す
-	//	enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
-	//	//敵とプレイヤーのローリング攻撃の当たり判定
-	//	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-	//		if (CollisitonBoxToBox(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })
-	//			) {
-	//			//if (player->attackFlag == true) {
-	//				enemy->SetDead();
-	//				XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
-	//				XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
-	//				XMVECTOR vec = pos1 - pos2;
-	//				vec = XMVector3Normalize(vec);
-	//				vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
-	//				player->Res(true, Use::LoadXMVECTOR(vec));
-	//			//}
-	//			//else if (enemy->GetAttack()) {
-	//			//	player->Damage(1);
-	//			//@}
-	//		}
-	//	}
-	//	for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-	//		enemy->SetPlayer(player);
-	//		enemy->Update();
-	//	}
-	//}
+	if (enemy1 != 0) {
+		//死亡判定があったらエネミーを消す
+		enemy1->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
+		//敵とプレイヤーのローリング攻撃の当たり判定
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
+				if (player->attackFlag == true) {
+					enemy->SetDead();
+					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
+					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
+					XMVECTOR vec = pos1 - pos2;
+					vec = XMVector3Normalize(vec);
+					vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+					player->Res(true, Use::LoadXMVECTOR(vec));
+				}
+				else if (enemy->GetAttack()) {
+					player->Damage(1);
+				}
+			}
+		}
 
-	const int maxEnemy = 12;
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			enemy->SetPlayer(player);
+			enemy->Update();
+		}
+	}
+
+	const int maxEnemy = 8;
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
@@ -102,9 +102,10 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 	gameCamera->Update();
 	ground->Update();
-	//player->Res();
+	player->Res();
+	player->Move();
 	player->Update();
-	//player->Res();
+	player->Res();
 	tenQ->Update();
 
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
@@ -116,7 +117,8 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		player->Stop();
 		player->breakEnemy++;	//敵の撃破数を増やす
 		enemy1.reset();
-		sceneNo = SceneManager::SCENE_GAME;
+		//sceneNo = SceneManager::SCENE_GAME;
+		SceneManager::WinBattle = true;
 	}
 	if (player->GetHp() <= 0) {
 		player->Stop();
@@ -130,7 +132,7 @@ void BatlleScene::Draw()
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	tenQ->Draw();
 
-	player->object->Draw();
+	player->Draw();
 	ground->Draw();
 	if (enemy1 != 0) {
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {

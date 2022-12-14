@@ -33,12 +33,13 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
+	ShowCursor(true);
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)||InputMouse::GetInstance()->PushMouse(M_LEFT)) {
 		SceneManager::blackStartFlag = true;
 	}
-	if (Input::GetInstance()->TriggerKey(DIK_0)) {
-		blackInFlag = true;
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
+	//	blackInFlag = true;
+	//}
 
 	if (BlackOut() == black_end) {
 		sceneNo = SceneManager::SCENE_GAME;
@@ -46,9 +47,9 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 	}
 	BlackIn();
 
-	if (Input::GetInstance()->TriggerKey(DIK_E)) {
-		effectFlag = true;
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_E)) {
+	//	effectFlag = true;
+	//}
 	if (effectFlag == true) {
 		effectTime++;
 		if (effectTime > 10) {

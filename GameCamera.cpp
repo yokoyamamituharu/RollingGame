@@ -42,16 +42,17 @@ void GameCamera::Update()
 			showCorsl = true;
 		}		
 	}
-	//ShowCursor(showCorsl);
+	ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };
 	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
 	movement = XMVector3TransformNormal(movement, matRot);
 	movement *= XMVECTOR{ -1, -1, -1 };
-	SetEye(playerObj->GetPosition() + (movement * 80));
+	SetEye(playerObj->GetPosition() + (movement * 50));
 	eye.y = 20;
 	target = playerObj->GetPosition();
+	target.y = 10;
 
 
 	//ビュー行列の更新

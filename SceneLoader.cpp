@@ -1,6 +1,6 @@
 #include "SceneLoader.h"
 #include "ModelManager.h"
-#include "Collision.h"
+#include "../Collider/Collision.h"
 #include "Useful.h"
 #include "safe_delete.h"
 

@@ -304,10 +304,10 @@
     <ClInclude Include="Collider\BaseCollider.h">
       <Filter>ソース ファイル\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Collider\Collision.h">
+    <ClInclude Include="Collider\CollisionAttribute.h">
       <Filter>ソース ファイル\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Collider\CollisionAttribute.h">
+    <ClInclude Include="Collider\Collision.h">
       <Filter>ソース ファイル\Collider</Filter>
     </ClInclude>
   </ItemGroup>
