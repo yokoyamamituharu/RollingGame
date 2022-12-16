@@ -46,4 +46,6 @@ void SpriteManager::Initialize()
 	Sprite::LoadTexture(24, L"Resources/efect_4.png");
 	Sprite::LoadTexture(25, L"Resources/efect_5.png");
 
+	//UI
+	Sprite::LoadTexture(26, L"Resources/pose.png");
 }

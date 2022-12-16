@@ -70,6 +70,7 @@ private: // メンバ変数
 	Sprite* spriteBG = nullptr;
 	Sprite* clearsprite = nullptr;
 	Canvas* canvas = nullptr;
+	Sprite* pose = nullptr;
 	//3Dオブジェクト
 	//ゲームシーン用オブジェクト
 	SceneLoader* scene = nullptr;
@@ -119,5 +120,7 @@ private: // メンバ変数
 
 	//クリアフラグ
 	bool clear = false;
+	//ポーズフラグ
+	bool poseFlag = false;
 };
 

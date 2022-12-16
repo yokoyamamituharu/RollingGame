@@ -51,6 +51,7 @@ public:
 
 	//外シーンから中シーンへ行くときのやつ
 	static bool hitEnemyToPlayer;
+	static bool BattleInit;
 
 	static bool WinBattle;
 	bool winblackFlag = false;		//画面が暗転しているか

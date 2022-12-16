@@ -20,6 +20,7 @@ void ModelManager::SetModelName()
 	modelname.push_back("ground");
 	modelname.push_back("suana");
 	modelname.push_back("shadow");
+	modelname.push_back("area");
 }
 
 void ModelManager::Initialize()

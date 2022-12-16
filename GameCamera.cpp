@@ -17,7 +17,7 @@ void GameCamera::Update()
 {
 	assert(playerObj);
 	//マウスでカメラ操作するかの切り替え操作
-	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+	if (Input::GetInstance()->TriggerKey(DIK_F2)) {
 		if (isSetMousePoint == true)  isSetMousePoint = false;
 		else  isSetMousePoint = true;
 	}

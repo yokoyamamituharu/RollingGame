@@ -55,6 +55,7 @@ private: // ƒƒ“ƒo•Ï”
 	ObjectObj* ground = nullptr;	
 	Player* player = nullptr;
 	std::shared_ptr<EnemyZako>enemy1;
+	ObjectObj* area = nullptr;
 
 	//ƒJƒƒ‰
 	GameCamera* gameCamera = nullptr;

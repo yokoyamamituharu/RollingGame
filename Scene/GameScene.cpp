@@ -62,6 +62,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//スプライトの生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
+	pose = Sprite::Create(26, { 0,0 });
 	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
@@ -103,7 +104,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	defenseTower->GetObjectObj()->SetPosition({ 20,0,20 });
 
 	//プレイヤーの生成処理
-	player = Player::Create(gameCamera,1);
+	player = Player::Create(gameCamera, 1);
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -144,7 +145,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 {
 	ObjectObj::SetCamera(gameCamera);
-	if (SceneManager::hitEnemyToPlayer|| SceneManager::WinBattle) {
+	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
 		return;
 	}
 
@@ -153,6 +154,16 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			Player::breakEnemy += 1;
 		}
 	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+		if (poseFlag == false) { poseFlag = true; }
+		else { poseFlag = false; }
+	}
+
+	if (poseFlag == true) {
+		return;
+	}
+
 	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 
 	if (Input::GetInstance()->PushKey(DIK_UP)) {
@@ -210,6 +221,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				//プレイヤーを原点に発生させる
 				//player->object->SetPosition({ 0,-6,0 });
 				SceneManager::hitEnemyToPlayer = true;
+				SceneManager::BattleInit = true;
 				//sceneNo = SceneManager::SCENE_BATTLE;
 				break;
 			}
@@ -264,10 +276,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
 	PostReserve();	//ミニマップの描画前処理
 
-	collisionManager->CheckAllCollisions();
-	if (collisionManager->GetPlayerTikei()) {
-		player->StopRolling();
-	}
+	//collisionManager->CheckAllCollisions();
+	//if (collisionManager->GetPlayerTikei()) {
+	//	player->StopRolling();
+	//}
 }
 
 void GameScene::Draw()
@@ -301,6 +313,9 @@ void GameScene::Draw()
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	//spriteBG->Draw();
 	canvas->Draw();
+	if (poseFlag == true) {
+		pose->Draw();
+	}
 	Sprite::PostDraw();
 }
 

@@ -76,6 +76,8 @@ public:
 
 	void SetDead() { dead = true; }
 
+	void NotDead() { dead = false; }
+
 	bool GetDead() { return dead; }
 
 	bool GetAttack() { return attackFlag; }

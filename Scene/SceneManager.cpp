@@ -5,6 +5,7 @@
 
 bool SceneManager::blackStartFlag = false;
 bool SceneManager::hitEnemyToPlayer = false;
+bool SceneManager::BattleInit = false;
 bool SceneManager::WinBattle = false;
 
 SceneManager::SceneManager()
@@ -39,11 +40,12 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	endScene->Initialize(dxCommon);
 	gameScene = new GameScene;
 	gameScene->Initialize(dxCommon);
-	//batlleScene = new BatlleScene;
-	//batlleScene->Initialize(dxCommon);
+	batlleScene = new BatlleScene;
+	batlleScene->Initialize(dxCommon);
 
-	sceneNo = SCENE_TITLE;
+	//sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
+	sceneNo = SCENE_BATTLE;
 	post = new PostEffect;
 	post->Initialize();
 

@@ -278,3 +278,11 @@ bool Collision::CheckBox2Box(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOA
 
 	return disX1 > disX2 && disX4 > disX3 && disY1 > disY2 && disY4 > disY3 && disZ1 > disZ2 && disZ4 > disZ3;
 }
+
+float Collision::CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2)
+{
+	float distance = sqrtf(((pos1.x - pos2.x) * (pos1.x - pos2.x)) +
+		((pos1.z - pos2.z) * (pos1.z - pos2.z)));
+
+	return distance;
+}

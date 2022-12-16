@@ -23,6 +23,7 @@ BatlleScene::~BatlleScene()
 	safe_delete(tenQ);
 	safe_delete(ground);
 	safe_delete(player);
+	safe_delete(area);
 	enemy1.reset();
 	safe_delete(gameCamera);
 }
@@ -49,6 +50,12 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	tenQ->SetRotation({ 0.0f,0.0f,0.0f });
 	tenQ->Update();
 
+	area = ObjectObj::Create(ModelManager::GetModel("area"));
+	area->SetScale({ 50.0f,1.0f,50.0f });
+	area->SetPosition({ 0.0f,-10.0f,0.0f });
+	//area->SetRotation({ 0.0f,0.0f,0.0f });
+	
+
 	canvas = new Canvas();
 	canvas->Initialize();
 }
@@ -62,6 +69,13 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	ObjectObj::SetCamera(gameCamera);
 	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
 		return;
+	}
+
+	if (SceneManager::BattleInit == true) {
+		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+			//enemy->NotDead();
+		}
+		SceneManager::BattleInit = false;
 	}
 
 	//敵の情報を外シーンから取得できていたら処理
@@ -84,11 +98,28 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 					player->Damage(1);
 				}
 			}
+			for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
+				enemy->SetPlayer(player);
+				enemy->Update();
+			}
 		}
 
-		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-			enemy->SetPlayer(player);
-			enemy->Update();
+
+
+
+		//バトルシーンから脱出するシーン
+		if (enemy1->GetEnemies().size() == 0) {
+			player->object->SetPosition(player->outPos);
+			player->Stop();
+			player->breakEnemy++;	//敵の撃破数を増やす
+			enemy1.reset();
+			//sceneNo = SceneManager::SCENE_GAME;
+			SceneManager::WinBattle = true;
+		}
+		if (player->GetHp() <= 0) {
+			player->Stop();
+			player->Cure(5);
+			sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
@@ -104,33 +135,26 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	ground->Update();
 	player->Res();
 	player->Move();
+	//プレイヤーをエリア内に収める
+	if (Collision::CheckDistance(player->object->GetPosition() + player->move, { 0,0,0 }) > 125.0f) {
+		player->move = { 0,0,0 };
+	}
 	player->Update();
 	player->Res();
 	tenQ->Update();
+	area->Update();
 
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 
 
-	//バトルシーンから脱出するシーン
-	if (enemy1->GetEnemies().size() == 0) {
-		player->object->SetPosition(player->outPos);
-		player->Stop();
-		player->breakEnemy++;	//敵の撃破数を増やす
-		enemy1.reset();
-		//sceneNo = SceneManager::SCENE_GAME;
-		SceneManager::WinBattle = true;
-	}
-	if (player->GetHp() <= 0) {
-		player->Stop();
-		player->Cure(5);
-		sceneNo = SceneManager::SCENE_END;
-	}
+
 }
 
 void BatlleScene::Draw()
 {
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	tenQ->Draw();
+	area->Draw();
 
 	player->Draw();
 	ground->Draw();

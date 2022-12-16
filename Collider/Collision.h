@@ -76,4 +76,6 @@ public:
 	static bool CheckRay2Sphere(const Ray& lay, const Sphere& sphere, float*distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 
 	static bool CheckBox2Box(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 radius1, const DirectX::XMFLOAT3 pos2, const DirectX::XMFLOAT3 radius2);
+
+	static float CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2);
 };

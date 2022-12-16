@@ -98,7 +98,8 @@ void Player::Update()
 	//	fallV = { 0, jumpVYFist, 0, 0 };
 	//}
 	//オブジェクトのアップデート
-	//object->Update();
+	object->Update();
+	return;
 	object->UpdateWorldMatrix();
 	if (object->collider) {
 		object->collider->Update();
