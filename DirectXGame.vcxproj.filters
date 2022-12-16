@@ -268,9 +268,6 @@
     <ClInclude Include="SpriteManager.h">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SceneLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -416,9 +413,6 @@
     </ClCompile>
     <ClCompile Include="SpriteManager.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
       <Filter>ソース ファイル</Filter>

@@ -220,7 +220,6 @@
     <ClInclude Include="Collider\RaycastHit.h" />
     <ClInclude Include="Collider\SphereCollider.h" />
     <ClInclude Include="Collider\TouchableObject.h" />
-    <ClInclude Include="Collision.h" />
     <ClInclude Include="CopyObject.h" />
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy\Enemy.h" />
@@ -265,7 +264,6 @@
     <ClCompile Include="Collider\MeshCollider.cpp" />
     <ClCompile Include="Collider\SphereCollider.cpp" />
     <ClCompile Include="Collider\TouchableObject.cpp" />
-    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CopyObject.cpp" />
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy\Enemy.cpp" />
