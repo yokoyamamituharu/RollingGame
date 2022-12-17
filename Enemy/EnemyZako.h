@@ -15,7 +15,7 @@ private:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-	
+
 public:	//静的メンバ関数
 	//敵を行動させるかさせないか
 	static void Action() {
@@ -24,54 +24,59 @@ public:	//静的メンバ関数
 		}
 	}
 
-public:	//メンバ関数
-#pragma region メンバ関数
-	float Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2);
-
 	enum FIELDLOCATION {
 		FIELD_NONE,
 		FIELD_OUT,
 		FIELD_IN
 	};
 
+	static EnemyZako* CreateIn(int filedFlag, XMFLOAT3 pos,bool isTarget);
+
+public:	//静的メンバ変数
+//ざこてきの地面となるの座標
+	static const float groundOutPos;
+	static const float groundInPos;
+	//敵の行動させる/させないフラグ
+	static int isAction;
+
+public:	//メンバ関数	
 
 	//コンストラクタ
 	EnemyZako();
 
 	//デストラクタ
-	~EnemyZako();
+	~EnemyZako();	
 
-	void Damege(int attackPower);
+	virtual void InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
 
-	virtual void Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos = { 0,0,0 }, bool isTarget = false, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
-	virtual void Update();
+	virtual void InitializeIn(int filedFlag);
+
+	virtual void UpdateOut();
+
+	virtual void UpdateIn();
+
 	void Draw();
+	
+protected:
+	//プレイヤーの方を向かせる処理
+	void ViewpointPlayer(Player* player);
 
+	//プレイヤーの方に歩み寄る関数
+	void ApproachPlayer();
+
+	//突進前の予備動作
+	void PreliminaryOperation();
+	
+
+
+
+public:	//セッター、ゲッター	
+	void Damege(int attackPower);
+	
 	void SetPlayer(Player* player)
 	{
 		this->player = player;
 	}
-
-	
-#pragma endregion
-public:
-	void SetCamera(Camera* camera) { this->camera = camera; }
-
-	//プレイヤーの方を向かせる処理
-	void Direction(Player* player);
-
-
-	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
-
-	float num = 0;
-
-	XMFLOAT3 oldPos = { 0,0,0 };
-
-public:
-	ObjectObj* object = nullptr;
-	float GetHp() { return hp; }
-
-
 	void Stop();
 
 	void SetDead() { dead = true; }
@@ -82,22 +87,18 @@ public:
 
 	bool GetAttack() { return attackFlag; }
 
-protected:
-	//プレイヤーの方に歩み寄る関数
-	void DirectionWotch();
-	//突進前の処理
-	void Maeburi();
+	float GetHp() { return hp; }
 
-public:	//静的メンバ変数
-	//ざこてきの地面となるの座標
-	static const float groundOutPos;
-	static const float groundInPos;
-	//敵の行動させる/させないフラグ
-	static int isAction;
+	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
+
+
+
+public:
+	ObjectObj* object = nullptr;
+	XMFLOAT3 oldPos = { 0,0,0 };
 
 protected:	//メンバ変数
 	//ポインター
-	Camera* camera;
 	Player* player;
 
 	//丸影
@@ -118,7 +119,7 @@ protected:	//メンバ変数
 	bool attackFlag = false;
 	bool isTarget = false;		//生成した時に目的地が設定されたか
 
-	
+
 
 	//タイマー
 	int jumpTime = 0;
@@ -133,8 +134,6 @@ protected:	//メンバ変数
 	int rotaTime = 0;
 
 	/*座標*/
-	//ターゲットの座標
-	XMVECTOR targetPos;
 	//ターゲットに進む方向
 	XMVECTOR targetVec;
 	//ターゲットの場所
@@ -148,7 +147,6 @@ protected:	//メンバ変数
 	int num2 = 0;
 	XMFLOAT3 move;
 	
-	float angleToPlayer = 0.0f;
 
 	float m_Radius;		// 半径(描画用)
 	float m_Angle = 0;	// 角度

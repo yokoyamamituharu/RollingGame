@@ -3,18 +3,20 @@ using namespace DirectX;
 #include "Useful.h"
 #include "ModelManager.h"
 #include "safe_delete.h"
+#include "Collision.h"
+
 
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -4.0f;
 const float EnemyZako::groundOutPos = -4.0f;
 int EnemyZako::isAction = 1;
 
-float EnemyZako::Nitenkan(XMFLOAT3 pos1, XMFLOAT3 pos2)
-{
-	float distance = sqrtf(((pos1.x - pos2.x) * (pos1.x - pos2.x)) +
-		((pos1.z - pos2.z) * (pos1.z - pos2.z)));
 
-	return distance;
+EnemyZako* EnemyZako::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
+{
+	EnemyZako* ins = new EnemyZako();
+	ins->InitializeOut(filedFlag, pos, isTarget);
+	return ins;
 }
 
 EnemyZako::EnemyZako()
@@ -30,74 +32,81 @@ EnemyZako::~EnemyZako()
 void EnemyZako::Damege(int attackPower)
 {
 	hp -= attackPower;
-	for (int i = 0; i < attackPower; i++) {
-		for (std::unique_ptr<EnemyZako>& enemy : enemies) {
-			enemy->SetDead();
+	int deleteNum = 0;
+	for (std::unique_ptr<EnemyZako>& enemy : enemies) {
+		enemy->SetDead();
+		deleteNum++;
+		if (deleteNum >= attackPower) { 
+			return; 
 		}
 	}
 }
 
-void EnemyZako::Initialize(int filedFlag, Camera* camera, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
+void EnemyZako::InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
 	this->isFiled = filedFlag;
-	this->camera = camera;
 	this->isTarget = isTarget;
-	this->targetPos.m128_f32[0] = targetPos1.x;
-	this->targetPos.m128_f32[1] = targetPos1.y;
-	this->targetPos.m128_f32[2] = targetPos1.z;
 	this->targetPos1 = targetPos1;
 	this->targetPos2 = targetPos2;
-
 	targetIndex = 1;
+
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(ModelManager::GetModel("enemy"));
+	object->SetPosition(pos);
+	object->SetScale({ 4.0f,4.0f, 4.0f });
+	oldPos = object->GetPosition();
 
-	//外用の敵としてインスタンスが生成された場合
-	if (filedFlag == 1) {
-		object->SetPosition(pos);
-		object->SetScale({ 4.0f,4.0f, 4.0f });
-		oldPos = object->GetPosition();
-
-		//この敵が中シーンに移動した時に持っている小敵の情報を追加
-		int maxEnemyNum = rand() % 2 + 5;
-		for (int i = 0; i < maxEnemyNum; i++)
-		{
-			//敵をリストに追加していく
-			std::unique_ptr<EnemyZako> newEnemyZako = std::make_unique<EnemyZako>();
-			newEnemyZako->Initialize(FIELD_IN, camera);
-			//リストに登録
-			enemies.push_back(std::move(newEnemyZako));
-		}
-	}
-	//中用の敵としてインスタンスが生成された場合
-	else if (filedFlag == 2) {
-		//座標のセット
-		float x = rand() % 200 - 100;
-		float z = rand() % 200 - 100;
-		object->SetPosition({ x,groundInPos,z });
-		//サイズのセット
-		object->SetScale({ 4.0f,4.0f, 4.0f });
-	}
+	//敵の影を作成
+	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
+	shadowObj->SetScale({ 10,1,10 });
 
 	//目的地が設定されていたら
 	if (isTarget == true) {
 		//移動する方向を計算する
 		XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
-		targetVec = pos1 - this->targetPos;
+		targetVec = pos1 - XMLoadFloat3(&targetPos1);
 		targetVec = XMVector3Normalize(targetVec);
 		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 	}
 
-	if (filedFlag == 1) {
-		maxHp = enemies.size();
-		hp = maxHp;
+	//この敵が中シーンに移動した時に持っている小敵の情報を追加
+	int maxEnemyNum = rand() % 2 + 5;
+	for (int i = 0; i < maxEnemyNum; i++)
+	{
+		//敵をリストに追加していく
+		std::unique_ptr<EnemyZako> newEnemyZako = std::make_unique<EnemyZako>();
+		newEnemyZako->InitializeIn(FIELD_IN);
+		//リストに登録
+		enemies.push_back(std::move(newEnemyZako));
 	}
-	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
-	shadowObj->SetScale({ 10,1,10 });
+
+	//HPを計算
+	maxHp = enemies.size();
+	hp = maxHp;
 }
 
-void EnemyZako::Update()
+void EnemyZako::InitializeIn(int filedFlag)
+{
+	this->isFiled = filedFlag;
+
+	targetIndex = 1;
+	//オブジェクトの作成
+	object = ObjectObj::Create();
+	object->SetModel(ModelManager::GetModel("enemy"));
+	//影を作成
+	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
+	shadowObj->SetScale({ 10,1,10 });
+
+	//座標のセット
+	float x = rand() % 200 - 100;
+	float z = rand() % 200 - 100;
+	object->SetPosition({ x,groundInPos,z });
+	//サイズのセット
+	object->SetScale({ 4.0f,4.0f, 4.0f });
+}
+
+void EnemyZako::UpdateOut()
 {
 	scale = hp / maxHp;
 	if (scale <= 0) {
@@ -106,9 +115,11 @@ void EnemyZako::Update()
 	}
 	object->SetScale(maxScale * scale);
 
+	if (isFiled == FIELD_IN) {
+		return;
+	}
 
-	//外シーンでの処理
-	if (isFiled == FIELD_OUT && isAction > 0 && GetDead() == false) {
+	if (isAction > 0 && GetDead() == false) {
 		if (isTarget == true) {
 			float speed = 0.15;
 			//目的地に向かって直進			
@@ -145,26 +156,41 @@ void EnemyZako::Update()
 				}
 			}
 		}
+		for (std::unique_ptr<EnemyZako>& enemy : enemies) {
+			//enemy->SetDead();
+		}
+		enemies.remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 		if (hp <= 0) {
 			SetDead();
 		}
 	}
-	//中シーンでの処理
-	if (isFiled == FIELD_IN && isAction > 0) {
+	//オブジェクトの更新
+	object->Update();
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(-6 - 4);
+	shadowObj->Update();
+}
 
+void EnemyZako::UpdateIn()
+{
+	if (isFiled == FIELD_OUT) {
+		return;
+	}
+
+	if (isAction > 0) {
 		//移動処理
 		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
 		if (attackFlag == false && stopFlag == false) {
 			//プレイヤーの方向を見る
-			Direction(player);
+			ViewpointPlayer(player);
 			//プレイヤーと敵の距離を計算
-			float distance1 = Nitenkan(object->GetPosition(), player->object->GetPosition());
+			float distance1 = Collision::CheckDistance(object->GetPosition(), player->object->GetPosition());
 
 			//徐々にプレイヤーに近づく処理
 			if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
 				nearFlag = false;
 				//プレイヤーに近づく
-				DirectionWotch();
+				ApproachPlayer();
 			}
 			//近かったらプレイヤーの周りをまわるようにするための準備
 			else if (nearFlag == false) {
@@ -240,7 +266,7 @@ void EnemyZako::Update()
 			}
 		}
 
-		if (maeburiFlag == true)Maeburi();
+		if (maeburiFlag == true)PreliminaryOperation();
 		if (stopFlag == true)Stop();
 
 	}
@@ -259,7 +285,7 @@ void EnemyZako::Draw()
 
 
 
-void EnemyZako::Direction(Player* player)
+void EnemyZako::ViewpointPlayer(Player* player)
 {
 	const float direction = 90.0f;
 	XMFLOAT3 pos = object->GetPosition();
@@ -267,7 +293,7 @@ void EnemyZako::Direction(Player* player)
 
 	XMFLOAT3 distance = { pos.x - playerPos.x,pos.y - playerPos.y,pos.z - playerPos.z };
 
-	angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
+	float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 
 	object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 }
@@ -284,7 +310,7 @@ void EnemyZako::Stop()
 		stopFlag = false;
 	}
 }
-void EnemyZako::DirectionWotch()
+void EnemyZako::ApproachPlayer()
 {
 	//敵のいる位置からプレイヤーのいる方向を計算
 	XMVECTOR enemyVec = XMLoadFloat3(&object->GetPosition());
@@ -297,7 +323,7 @@ void EnemyZako::DirectionWotch()
 	object->SetPosition(Use::LoadXMVECTOR(enemyVec));
 }
 
-void EnemyZako::Maeburi()
+void EnemyZako::PreliminaryOperation()
 {
 	jumpTime++;
 	XMFLOAT3 vec = { 0,0.2,0 };

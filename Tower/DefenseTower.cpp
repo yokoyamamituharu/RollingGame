@@ -96,9 +96,6 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 		object->VecSetPosition({ 0,0,-1 });
 	}
 
-
-	//‚Æ‚è‚ ‚¦‚¸ƒvƒŒƒCƒ„[‚É‚Þ‚¯‚ÄŒ‚‚Â
-
 	object->Update();
 
 	for (std::unique_ptr<Bullet>& bullet : bullets) {

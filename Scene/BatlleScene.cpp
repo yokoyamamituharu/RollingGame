@@ -73,7 +73,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 	if (SceneManager::BattleInit == true) {
 		for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
-			//enemy->NotDead();
+			enemy->NotDead();
 		}
 		SceneManager::BattleInit = false;
 	}
@@ -100,7 +100,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			}
 			for (std::unique_ptr<EnemyZako>& enemy : enemy1->GetEnemies()) {
 				enemy->SetPlayer(player);
-				enemy->Update();
+				enemy->UpdateIn();
 			}
 		}
 
