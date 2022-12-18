@@ -67,7 +67,7 @@ protected:
 	//突進前の予備動作
 	void PreliminaryOperation();
 	
-
+	void BreakParticle();
 
 
 public:	//セッター、ゲッター	

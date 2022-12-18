@@ -344,3 +344,7 @@ void EnemyZako::PreliminaryOperation()
 	}
 }
 
+void EnemyZako::BreakParticle()
+{
+}
+

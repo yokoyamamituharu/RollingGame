@@ -92,7 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	SceneManager* sceneManager = new SceneManager;	
 	sceneManager->Initialize(dxCommon);
 	
-	//ParticleManager* particleMan = ParticleManager::Create();
+	ParticleManager* particleMan = ParticleManager::Create();
 	//FPSロック
 	FPSLock fpsLock;	
 	while (true)  // ゲームループ

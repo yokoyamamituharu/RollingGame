@@ -38,6 +38,12 @@ ParticleManager::VertexPos ParticleManager::vertices[vertexCount];
 XMMATRIX ParticleManager::matBillboard = XMMatrixIdentity();
 XMMATRIX ParticleManager::matBillboardY = XMMatrixIdentity();
 
+ParticleManager* ParticleManager::GetIns()
+{
+	static ParticleManager instance;
+	return &instance;	
+}
+
 bool ParticleManager::StaticInitialize(ID3D12Device *device, int window_width, int window_height)
 {
 	// nullptrチェック

@@ -54,6 +54,8 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	sceneEffect[2] = Sprite::Create(23, { 0,0 });
 	sceneEffect[3] = Sprite::Create(24, { 0,0 });
 	sceneEffect[4] = Sprite::Create(25, { 0,0 });
+
+	//particlManager = ParticleManager
 }
 
 void SceneManager::Update()

@@ -10,7 +10,8 @@ SpriteManager::~SpriteManager()
 
 SpriteManager* SpriteManager::GetIns()
 {
-	return nullptr;
+	static SpriteManager instance;
+	return &instance;
 }
 
 void SpriteManager::Initialize()
