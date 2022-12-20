@@ -81,25 +81,10 @@ void Player::Update()
 	//Move();
 	Res();
 
-	//// 落下処理
-	//if (!onGround) {
-	//	// 下向き加速度
-	//	const float fallAcc = -0.01f;
-	//	const float fallVYMin = -0.5f;
-	//	// 加速
-	//	fallV.m128_f32[1] = max(fallV.m128_f32[1] + fallAcc, fallVYMin);
-	//	// 移動
-	//	object->SetPosition(object->GetPosition() + fallV);		
-	//}
-	//// ジャンプ操作
-	//else if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-	//	onGround = false;
-	//	const float jumpVYFist = 0.6f;
-	//	fallV = { 0, jumpVYFist, 0, 0 };
-	//}
+
 	//オブジェクトのアップデート
 	object->Update();
-	return;
+
 	object->UpdateWorldMatrix();
 	if (object->collider) {
 		object->collider->Update();
@@ -184,6 +169,249 @@ void Player::Update()
 		//}
 		object->SetPosition(position);
 	}
+	// 行列の更新など
+	object->Update();
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->Update();
+}
+
+void Player::UpdateOut()
+{
+
+	//外シーンではY座標をとりあえず固定
+	if (object->collider) {
+		object->SetPosY(-6.0f);
+	}
+	//if (Input::GetInstance()->PushKey(DIK_3)) {
+	//	object->SetRotation({
+	//		object->GetRotation().x,
+	//		object->GetRotation().y ,
+	//		object->GetRotation().z + 1.0f });
+	//}
+
+	if (muteki == true) {
+		mutekiTime++;
+		if (mutekiTime > 60) {
+			muteki = false;
+			mutekiTime = 0;
+		}
+	}
+
+
+	object->SetPosition({
+		object->GetPosition().x + move.x,
+		object->GetPosition().y + move.y,
+		object->GetPosition().z + move.z });
+	//Move();
+	Res();
+
+
+	//オブジェクトのアップデート
+	object->Update();
+
+	object->UpdateWorldMatrix();
+	if (object->collider) {
+		object->collider->Update();
+
+		SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
+		assert(sphereCollider);
+
+		// クエリーコールバッククラス
+		class PlayerQueryCallback : public QueryCallback
+		{
+		public:
+			PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
+
+			// 衝突時コールバック関数
+			bool OnQueryHit(const QueryHit& info) {
+
+				const XMVECTOR up = { 0,1,0,0 };
+
+				XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+				float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+
+				// 地面判定しきい値
+				const float threshold = cosf(XMConvertToRadians(30.0f));
+
+				if (-threshold < cos && cos < threshold) {
+					sphere->center += info.reject;
+					move += info.reject;
+				}
+
+				return true;
+			}
+
+			Sphere* sphere = nullptr;
+			DirectX::XMVECTOR move = {};
+		};
+
+		PlayerQueryCallback callback(sphereCollider);
+
+		XMFLOAT3 position = object->GetPosition();
+
+		// 球と地形の交差を全検索
+		CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+		// 交差による排斥分動かす
+		position.x += callback.move.m128_f32[0];
+		position.y += callback.move.m128_f32[1];
+		position.z += callback.move.m128_f32[2];
+		// ワールド行列更新
+		object->SetPosition(position);
+		object->UpdateWorldMatrix();
+		object->collider->Update();
+
+		// 球の上端から球の下端までのレイキャスト
+		Ray ray;
+		ray.start = sphereCollider->center;
+		ray.start.m128_f32[1] += sphereCollider->GetRadius();
+		ray.dir = { 0,-1,0,0 };
+		RaycastHit raycastHit;
+
+		position = object->GetPosition();
+		// 接地状態
+		//if (onGround) {
+		//	// スムーズに坂を下る為の吸着距離
+		//	const float adsDistance = 0.2f;
+		//	// 接地を維持
+		//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+		//		onGround = true;
+		//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+		//	}
+		//	// 地面がないので落下
+		//	else {
+		//		onGround = false;
+		//		fallV = {};
+		//	}
+		//}
+		//// 落下状態
+		//else if (fallV.m128_f32[1] <= 0.0f) {
+		//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+		//		// 着地
+		//		onGround = true;
+		//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+		//	}
+		//}
+		object->SetPosition(position);
+	}
+	// 行列の更新など
+	object->Update();
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->Update();
+}
+
+void Player::UpdateIn()
+{
+	if (muteki == true) {
+		mutekiTime++;
+		if (mutekiTime > 60) {
+			muteki = false;
+			mutekiTime = 0;
+		}
+	}
+
+	object->SetPosition({
+		object->GetPosition().x + move.x,
+		object->GetPosition().y + move.y,
+		object->GetPosition().z + move.z });
+	//Move();
+	Res();
+
+	//オブジェクトのアップデート
+	object->Update();
+
+	//影の更新
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->Update();
+
+	//コライダーを持っていなかったら処理をしない
+	if (!object->collider) {
+		return;
+	}
+	object->UpdateWorldMatrix();
+	object->collider->Update();
+
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
+	assert(sphereCollider);
+
+	// クエリーコールバッククラス
+	class PlayerQueryCallback : public QueryCallback
+	{
+	public:
+		PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
+
+		// 衝突時コールバック関数
+		bool OnQueryHit(const QueryHit& info) {
+
+			const XMVECTOR up = { 0,1,0,0 };
+
+			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+
+			// 地面判定しきい値
+			const float threshold = cosf(XMConvertToRadians(30.0f));
+
+			if (-threshold < cos && cos < threshold) {
+				sphere->center += info.reject;
+				move += info.reject;
+			}
+
+			return true;
+		}
+
+		Sphere* sphere = nullptr;
+		DirectX::XMVECTOR move = {};
+	};
+
+	PlayerQueryCallback callback(sphereCollider);
+
+	XMFLOAT3 position = object->GetPosition();
+
+	// 球と地形の交差を全検索
+	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	// 交差による排斥分動かす
+	position.x += callback.move.m128_f32[0];
+	position.y += callback.move.m128_f32[1];
+	position.z += callback.move.m128_f32[2];
+	// ワールド行列更新
+	object->SetPosition(position);
+	object->UpdateWorldMatrix();
+	object->collider->Update();
+
+	// 球の上端から球の下端までのレイキャスト
+	Ray ray;
+	ray.start = sphereCollider->center;
+	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.dir = { 0,-1,0,0 };
+	RaycastHit raycastHit;
+
+	position = object->GetPosition();
+	// 接地状態
+	//if (onGround) {
+	//	// スムーズに坂を下る為の吸着距離
+	//	const float adsDistance = 0.2f;
+	//	// 接地を維持
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+	//		onGround = true;
+	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//	}
+	//	// 地面がないので落下
+	//	else {
+	//		onGround = false;
+	//		fallV = {};
+	//	}
+	//}
+	//// 落下状態
+	//else if (fallV.m128_f32[1] <= 0.0f) {
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+	//		// 着地
+	//		onGround = true;
+	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//	}
+	//}
+	object->SetPosition(position);
 	// 行列の更新など
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
@@ -303,6 +531,112 @@ void Player::Move()
 	//	SpiralVector(spiralSpeed);
 	//}
 #pragma endregion
+
+
+#pragma endregion
+
+	//これは進む方向にプレイヤーを向かせる処理
+	////移動の反映
+	//XMVECTOR playermatrot = { forvardvec };
+	////回転行列をかける
+	//playermatrot = XMVector3Normalize(playermatrot);
+	//playermatrot = XMVector3Transform(playermatrot, camera->matRot);
+	////正規化する
+	//playermatrot = XMVector3Normalize(playermatrot);
+
+	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
+	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
+	float speed = 1.2f;
+	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
+	//object->SetPosition({
+	//	object->GetPosition().x + move.x,
+	//	object->GetPosition().y + move.y,
+	//	object->GetPosition().z + move.z });
+
+	//プレイヤーを真正面に向かせる
+	//float buff = atan2f(playermatrot.m128_f32[0], playermatrot.m128_f32[2]);
+	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
+}
+
+void Player::MoveIn()
+{
+	DirectX::XMVECTOR forvardvec = {};
+
+	if (sphereFlag == false) {
+		if (Input::GetInstance()->PushKey(DIK_W)) {
+			forvardvec.m128_f32[2] += 1;
+		}
+		if (Input::GetInstance()->PushKey(DIK_S)) {
+			forvardvec.m128_f32[2] -= 1;
+		}
+		if (Input::GetInstance()->PushKey(DIK_A)) {
+			forvardvec.m128_f32[0] -= 1;
+		}
+		if (Input::GetInstance()->PushKey(DIK_D)) {
+			forvardvec.m128_f32[0] += 1;
+		}
+	}
+
+#pragma region 回転移動
+	//回転移動
+	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT)) {
+		clickTrigerPos = InputMouse::GetInstance()->GetPos();
+	}
+
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		isSphere = true;
+	}
+	else {
+		isSphere = false;
+	}
+
+	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
+		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetPos();
+		XMVECTOR pos1, pos2;
+		pos1.m128_f32[0] = clickTrigerPos.x;
+		pos1.m128_f32[1] = 0.0f;
+		pos1.m128_f32[2] = -clickTrigerPos.y;
+		pos2.m128_f32[0] = releasePos.x;
+		pos2.m128_f32[1] = 0.0;
+		pos2.m128_f32[2] = -releasePos.y;
+		attackDirection = pos1 - pos2;
+		attackDirection = XMVector3Normalize(attackDirection);
+		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+	}
+
+	if (isSphere) {
+		//モデルを変える
+		object->SetModel(playerSpheremodel);
+		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
+		rollingSpeed = 25;
+		if (rollingSpeed < 0) {
+			rollingSpeed = 0;
+		}
+		//マウスの移動量をプレイヤーの回転速度にもする
+		spiralSpeed.z = 100;
+		//マウスを離したとき、移動量があったらプレイヤーを直進させる
+
+		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
+
+		sphereFlag = true;
+	}
+	else if (rollingSpeed > 0) {
+		//forvardvec.m128_f32[2] += 6.5;
+		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
+		pos += attackDirection * 6.0f;
+		object->SetPosition(Use::LoadXMVECTOR(pos));
+		rollingSpeed -= 1;
+		attackFlag = true;
+	}
+	else {
+		rollingSpeed = 0.0f;
+		spiralSpeed.z = 0;
+		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
+		object->SetModel(playermodel);
+		attackFlag = false;
+		sphereFlag = false;
+	}
+	SpiralVector(spiralSpeed);
 
 
 #pragma endregion

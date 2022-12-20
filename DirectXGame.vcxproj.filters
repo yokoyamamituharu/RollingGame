@@ -307,6 +307,9 @@
     <ClInclude Include="Collider\Collision.h">
       <Filter>ソース ファイル\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="BattleCamera.h">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -434,6 +437,9 @@
     </ClCompile>
     <ClCompile Include="Collider\Collision.cpp">
       <Filter>ソース ファイル\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

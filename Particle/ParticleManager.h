@@ -79,7 +79,7 @@ private: // 定数
 	//static const int indexCount = 3 * 2;		// インデックス数
 
 public: // 静的メンバ関数
-
+	static ParticleManager* GetIns();
 
 
 	/// <summary>

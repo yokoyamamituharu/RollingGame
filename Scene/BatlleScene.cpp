@@ -25,7 +25,7 @@ BatlleScene::~BatlleScene()
 	safe_delete(player);
 	safe_delete(area);
 	enemy1.reset();
-	safe_delete(gameCamera);
+	safe_delete(battleCamera);
 }
 
 void BatlleScene::Initialize(DirectXCommon* dxCommon)
@@ -33,11 +33,11 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
 
-	gameCamera = GameCamera::Create();
+	battleCamera = BattleCamera::Create();
 
-	player = Player::Create(gameCamera, 2);
+	player = Player::Create(battleCamera, 2);
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
-	gameCamera->SetPlayer(player->object);
+	battleCamera->SetPlayer(player->object);
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));	
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
@@ -66,7 +66,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//EnemyZako::Action();
 
 
-	ObjectObj::SetCamera(gameCamera);
+	ObjectObj::SetCamera(battleCamera);
 	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
 		return;
 	}
@@ -131,10 +131,10 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		//player->Res(true);
 	}
 
-	gameCamera->Update();
+	battleCamera->Update();
 	ground->Update();
 	player->Res();
-	player->Move();
+	player->MoveIn();
 	//プレイヤーをエリア内に収める
 	if (Collision::CheckDistance(player->object->GetPosition() + player->move, { 0,0,0 }) > 125.0f) {
 		player->move = { 0,0,0 };

@@ -1,19 +1,19 @@
-#include "GameCamera.h"
+#include "BattleCamera.h"
 #include "Input.h"
 #include "InputMouse.h"
 #include "Useful.h"
 
-GameCamera* GameCamera::Create()
+BattleCamera* BattleCamera::Create()
 {
 	//カメラクラスのインスタンスを生成
-	GameCamera* ins = new GameCamera;
+	BattleCamera* ins = new BattleCamera;
 	//初期化処理
 	ins->Initialize();
 	//生成したインスタンスを返す
 	return ins;
 }
 
-void GameCamera::Update()
+void BattleCamera::Update()
 {
 	assert(playerObj);
 	//マウスでカメラ操作するかの切り替え操作
@@ -23,16 +23,16 @@ void GameCamera::Update()
 	}
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
-		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
+		//matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
-	//キーでカメラ操作
-	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-		matRot *= XMMatrixRotationY(0.02f);
-	}
-	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-		matRot *= XMMatrixRotationY(-0.02f);
-	}
+	////キーでカメラ操作
+	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+	//	matRot *= XMMatrixRotationY(0.02f);
+	//}
+	//else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+	//	matRot *= XMMatrixRotationY(-0.02f);
+	//}
 
 	if (Input::GetInstance()->TriggerKey(DIK_C)) {
 		if (showCorsl == true) {
@@ -40,8 +40,9 @@ void GameCamera::Update()
 		}
 		else {
 			showCorsl = true;
-		}		
+		}
 	}
+	showCorsl =true;
 	ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
@@ -49,10 +50,11 @@ void GameCamera::Update()
 	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
 	movement = XMVector3TransformNormal(movement, matRot);
 	movement *= XMVECTOR{ -1, -1, -1 };
-	SetEye(playerObj->GetPosition() + (movement * 20));
-	eye.y += 7;
+	SetEye(playerObj->GetPosition() + (movement * 30));
+	eye.y = 30;
+	eye.z -= 10;
 	target = playerObj->GetPosition();
-	target.y += 3;
+	target.y = 10;
 
 
 	//ビュー行列の更新

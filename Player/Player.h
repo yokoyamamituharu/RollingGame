@@ -22,7 +22,10 @@ public:
 	static Player* Create(Camera* camera,int InOrOut);
 	void Initialize(Camera* camera, int InOrOut);
 	void Update();
+	void UpdateOut();
+	void UpdateIn();
 	void Move();
+	void MoveIn();
 	void MoveVector(DirectX::XMFLOAT3 vec)
 	{
 		object->SetPosition({
@@ -103,6 +106,8 @@ private:
 
 	XMFLOAT3 backVec = { 0,0,0 };
 
+	XMFLOAT2 clickTrigerPos = { 0,0 };
+	XMVECTOR attackDirection;
 private:
 	//Ú’nƒtƒ‰ƒO
 	bool onGround = true;

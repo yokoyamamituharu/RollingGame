@@ -86,6 +86,46 @@ bool InputMouse::PushMouse(MouseDIK click)
 	return false;
 }
 
+bool InputMouse::TorigerMouse(MouseDIK click)
+{
+	bool check = oldmouse.rgbButtons[0] & (0x80);
+	//左クリック
+	if (click == MouseDIK::M_LEFT && mouse.rgbButtons[0] & (0x80) &&
+		check == false)
+	{
+		return true;
+	}
+	check = oldmouse.rgbButtons[1] & (0x80);
+	//右クリック
+	if (click == MouseDIK::M_RIGHT && mouse.rgbButtons[1] & (0x80) &&
+		check == false)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputMouse::ReleaseMouse(MouseDIK click)
+{
+	bool check = mouse.rgbButtons[0] & (0x80);
+	//左クリック
+	if (click == MouseDIK::M_LEFT && oldmouse.rgbButtons[0] & (0x80) &&
+		check == false)
+	{
+		return true;
+	}
+	check = mouse.rgbButtons[1] & (0x80);
+	//右クリック
+	if (click == MouseDIK::M_RIGHT && oldmouse.rgbButtons[1] & (0x80) &&
+		check == false)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 bool InputMouse::IsMoveMouse(char h)
 {
 	if (h == 'x')
@@ -111,6 +151,13 @@ bool InputMouse::IsMoveMouse(char h)
 		}
 	}
 	return 0;
+}
+
+DirectX::XMFLOAT2 InputMouse::GetPos()
+{
+	POINT mouse_p;
+	GetCursorPos(&mouse_p);
+	return XMFLOAT2{ (float)mouse_p.x,(float) mouse_p.y };
 }
 
 

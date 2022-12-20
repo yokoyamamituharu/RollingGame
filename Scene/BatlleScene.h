@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "EnemyZako.h"
 #include "Canvas.h"
+#include "BattleCamera.h"
 
 #include <vector>
 class GameScene;
@@ -58,5 +59,5 @@ private: // ƒƒ“ƒo•Ï”
 	ObjectObj* area = nullptr;
 
 	//ƒJƒƒ‰
-	GameCamera* gameCamera = nullptr;
+	BattleCamera* battleCamera = nullptr;
 };
