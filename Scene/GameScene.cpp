@@ -105,6 +105,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
+	player->SetHp(5);
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -239,9 +240,9 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
 	//	player->move = { 0,0,0 };
 	//}
-
+	gameCamera->Update();
 	//3Dオブジェクト更新
-	player->Update();
+	player->UpdateOut(gameCamera);
 	ground->Update();
 	defenseTower->Update(enemiesG);
 	castle->Update();
@@ -256,11 +257,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
-	if (enemiesG.size() <= 0 && index >= 5) {
+	if (enemiesG.size() <= 0 && index >= 6) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
 	//カメラのアップデート
-	gameCamera->Update();
+	
 	subCamera->Update();
 
 	//キャンバスにプレイヤーの情報をセット
@@ -311,7 +312,7 @@ void GameScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();
+	spriteBG->Draw();
 	canvas->Draw();
 	if (poseFlag == true) {
 		pose->Draw();

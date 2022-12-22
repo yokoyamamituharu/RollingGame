@@ -60,7 +60,7 @@ public:
 		//コンストラクタ
 		Material()
 		{
-			ambient = { 0.3f,0.3f,0.3f };
+			ambient = { 1.3f,1.3f,1.3f };
 			diffuse = { 0.0f,0.0f,0.0f };
 			specular = { 0.0f,0.0f,0.0f };
 			blackOutAlpha = 1.0f;

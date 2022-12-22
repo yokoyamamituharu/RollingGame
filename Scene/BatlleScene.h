@@ -40,7 +40,7 @@ public:
 	void Draw();
 
 	void SetEnemies(std::shared_ptr<EnemyZako>& enemy) {
-		enemy1 = std::move(enemy);
+		enemies = std::move(enemy);
 	}
 
 private: // ƒƒ“ƒo•Ï”        
@@ -55,7 +55,7 @@ private: // ƒƒ“ƒo•Ï”
 	ObjectObj* tenQ = nullptr;
 	ObjectObj* ground = nullptr;	
 	Player* player = nullptr;
-	std::shared_ptr<EnemyZako>enemy1;
+	std::shared_ptr<EnemyZako>enemies;
 	ObjectObj* area = nullptr;
 
 	//ƒJƒƒ‰

@@ -50,10 +50,9 @@ void GameCamera::Update()
 	movement = XMVector3TransformNormal(movement, matRot);
 	movement *= XMVECTOR{ -1, -1, -1 };
 	SetEye(playerObj->GetPosition() + (movement * 20));
-	eye.y += 7;
+	eye.y += 7;	
 	target = playerObj->GetPosition();
 	target.y += 3;
-
 
 	//ビュー行列の更新
 	UpdateViewMatrix();

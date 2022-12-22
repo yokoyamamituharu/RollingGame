@@ -114,7 +114,7 @@ private: // ƒƒ“ƒo•Ï”
 		int timer;
 		int basyo;
 	};
-	static const int maxEnemy = 8;	
+	static const int maxEnemy = 6;	
 	std::map<int,Dasu>dasu;
 	int index = 0;
 

@@ -49,6 +49,11 @@ void Player::Initialize(Camera* camera, int InOrOut)
 	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
 	shadowObj->SetScale({ 5,1,5 });
 
+	for (int i = 0; i < 4; i++) {
+		wave[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
+		wave[i]->SetScale({10,10,10});
+	}
+
 	breakEnemy = 0;
 }
 
@@ -176,7 +181,7 @@ void Player::Update()
 	shadowObj->Update();
 }
 
-void Player::UpdateOut()
+void Player::UpdateOut(Camera* camera)
 {
 
 	//外シーンではY座標をとりあえず固定
@@ -206,7 +211,7 @@ void Player::UpdateOut()
 	//Move();
 	Res();
 
-
+	camera->UpdateMat();
 	//オブジェクトのアップデート
 	object->Update();
 
@@ -215,7 +220,7 @@ void Player::UpdateOut()
 		object->collider->Update();
 
 		SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
-		assert(sphereCollider);
+		assert(sphereCollider);	
 
 		// クエリーコールバッククラス
 		class PlayerQueryCallback : public QueryCallback
@@ -332,6 +337,11 @@ void Player::UpdateIn()
 	}
 	object->UpdateWorldMatrix();
 	object->collider->Update();
+
+	for (int i = 0; i < 4; i++) {
+		wave[i]->SetPosition(object->GetPosition());
+		wave[i]->Update();
+	}
 
 	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
 	assert(sphereCollider);
@@ -608,7 +618,7 @@ void Player::MoveIn()
 		//モデルを変える
 		object->SetModel(playerSpheremodel);
 		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-		rollingSpeed = 25;
+		rollingSpeed = 20;
 		if (rollingSpeed < 0) {
 			rollingSpeed = 0;
 		}
@@ -715,6 +725,9 @@ void Player::Stop()
 
 void Player::Draw()
 {
+	if (rollingSpeed > 0) {
+		wave[0]->Draw();
+	}
 	if (muteki == true) {
 		if (mutekiTime % 2 == 0) {
 			object->Draw();

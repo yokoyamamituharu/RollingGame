@@ -22,7 +22,7 @@ public:
 	static Player* Create(Camera* camera,int InOrOut);
 	void Initialize(Camera* camera, int InOrOut);
 	void Update();
-	void UpdateOut();
+	void UpdateOut(Camera* camera);
 	void UpdateIn();
 	void Move();
 	void MoveIn();
@@ -57,7 +57,7 @@ public:
 	int GetMaxHp() { return maxHp; }
 	void Damage(int damage);
 	void Cure(int amount) { hp += amount; }
-
+	void SetHp(int hp) { this->hp = hp; }
 	void StopRolling();
 
 public:
@@ -113,7 +113,7 @@ private:
 	bool onGround = true;
 	//—Ž‰ºƒxƒNƒgƒ‹
 	XMVECTOR fallV;
-
+	ObjectObj* wave[4];
 public:
 	XMFLOAT3 move = { 0,0,0 };	
 };
