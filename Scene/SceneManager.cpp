@@ -2,6 +2,7 @@
 #include "safe_delete.h"
 #include "SpriteManager.h"
 #include "Useful.h"
+#include "ObjectObj.h"
 
 bool SceneManager::blackStartFlag = false;
 bool SceneManager::hitEnemyToPlayer = false;
@@ -32,6 +33,8 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	ModelManager::GetIns()->Initialize();
 	//スプライトマネージャーの読み込み
 	SpriteManager::GetIns()->Initialize();
+
+	particleMan = Particle::GetIns();	
 
 	//各シーンの生成
 	titleScene = new TitleScene;
@@ -194,6 +197,9 @@ void SceneManager::Update()
 	if (sceneNo == SCENE_BATTLE) {
 		batlleScene->Draw();
 	}
+	ObjectObj::PreDraw(dxCommon->GetCmdList());
+	particleMan->Draw();
+	ObjectObj::PostDraw();
 	post->PosDrawScene(dxCommon->GetCmdList());
 
 	//if (Input::GetInstance()->TriggerKey(DIK_E)) {
@@ -211,6 +217,8 @@ void SceneManager::Update()
 	//		effectFlag = false;
 	//	}
 	//}
+
+	particleMan->Update();
 }
 
 void SceneManager::Draw()
@@ -235,6 +243,10 @@ void SceneManager::Draw()
 		sceneEffect[effectIndex]->Draw();
 	}
 	Sprite::PostDraw();
+
+
+
+	
 }
 
 void SceneManager::GameSceneReset()

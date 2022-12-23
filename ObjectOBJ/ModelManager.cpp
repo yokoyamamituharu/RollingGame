@@ -22,6 +22,7 @@ void ModelManager::SetModelName()
 	modelname.push_back("shadow");
 	modelname.push_back("area");
 	modelname.push_back("wave");
+	modelname.push_back("particle");
 }
 
 void ModelManager::Initialize()

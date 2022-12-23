@@ -4,7 +4,7 @@ using namespace DirectX;
 #include "ModelManager.h"
 #include "safe_delete.h"
 #include "Collision.h"
-
+#include "Particle.h"
 
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -4.0f;
@@ -19,12 +19,31 @@ EnemyZako* EnemyZako::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
 	return ins;
 }
 
+void EnemyZako::ParticleCreate()
+{
+	for (int i = 0; i < 5; i++) {
+		Particle::ParticleTubu* tubu = new Particle::ParticleTubu;
+		tubu->obj = ObjectObj::Create(ModelManager::GetModel("particle"));
+		tubu->obj->SetScale({ 5,5,5 });
+		tubu->end_frame = rand() % 5 + 30;
+		tubu->position = object->GetPosition();
+		//tubu->scale = { 10,10,10 };
+		//const float rnd_vel = 0.1f;
+		int rndVel = 3.0f;
+		tubu->velocity.x =rand() % (rndVel * 2) - rndVel;
+		tubu->velocity.y =rand() % (rndVel * 2) - rndVel;
+		tubu->velocity.z =rand() % (rndVel * 2) - rndVel;
+		Particle::GetIns()->Add(tubu);
+	}
+}
+
 EnemyZako::EnemyZako()
 {
 }
 
 EnemyZako::~EnemyZako()
 {
+	ParticleCreate();
 	safe_delete(object);
 	enemies.clear();
 }
@@ -317,6 +336,7 @@ void EnemyZako::Stop()
 		stopFlag = false;
 	}
 }
+
 void EnemyZako::ApproachPlayer()
 {
 	//敵のいる位置からプレイヤーのいる方向を計算

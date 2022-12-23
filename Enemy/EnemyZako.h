@@ -91,7 +91,7 @@ public:	//セッター、ゲッター
 
 	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
 
-
+	void ParticleCreate();
 
 public:
 	ObjectObj* object = nullptr;

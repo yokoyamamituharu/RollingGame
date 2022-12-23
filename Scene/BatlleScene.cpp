@@ -61,7 +61,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 {
-	EnemyZako::isAction = 1;
+	EnemyZako::isAction = -1;
 
 	ObjectObj::SetCamera(battleCamera);
 	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
@@ -132,7 +132,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	if (Collision::CheckDistance(player->object->GetPosition() + player->move, { 0,0,0 }) > 125.0f) {
 		player->move = { 0,0,0 };
 	}
-	player->Update();
+	player->UpdateIn();
 	player->Res();
 	tenQ->Update();
 	area->Update();
@@ -145,6 +145,12 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 void BatlleScene::Draw()
 {
+
+	Sprite::PreDraw(dxCommon->GetCmdList());
+	//spriteBG->Draw();
+	Sprite::PostDraw();
+
+
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	tenQ->Draw();
 	area->Draw();
@@ -159,7 +165,6 @@ void BatlleScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	spriteBG->Draw();
 	canvas->Draw();
 	Sprite::PostDraw();
 }
