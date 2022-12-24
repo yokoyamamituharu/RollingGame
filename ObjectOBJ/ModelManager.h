@@ -12,7 +12,7 @@ public:
 	static void Initialize();
 	static void Finalize();
 
-	static Model* GetModel(std::string name) { return models[name]; }
+	static Model* GetModel(std::string name);
 
 private:
 	static void SetModelName();

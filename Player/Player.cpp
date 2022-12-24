@@ -49,9 +49,15 @@ void Player::Initialize(Camera* camera, int InOrOut)
 	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
 	shadowObj->SetScale({ 5,1,5 });
 
-	for (int i = 0; i < 4; i++) {
-		wave[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
-		wave[i]->SetScale({10,10,10});
+	waveNum = sizeof(waveright) / sizeof(waveright[0]);
+
+	for (int i = 0; i < waveNum; i++) {
+		waveright[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
+		waveright[i]->SetScale({7,7,7});
+		waveright[i]->SetRotation({ 0,90,0 });
+		waveleft[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
+		waveleft[i]->SetScale({ 7,7,7 });
+		waveleft[i]->SetRotation({ 0,90,0 });
 	}
 
 	breakEnemy = 0;
@@ -206,9 +212,10 @@ void Player::UpdateIn()
 	shadowObj->SetPosY(grundHeight - 4);
 	shadowObj->Update();
 
-	for (int i = 0; i < 4; i++) {
-		wave[i]->SetPosition(object->GetPosition());
-		wave[i]->Update();
+	for (int i = 0; i < waveNum; i++) {
+		//wave[i]->SetPosition(object->GetPosition());
+		waveright[i]->Update();
+		waveleft[i]->Update();
 	}
 }
 
@@ -431,6 +438,20 @@ void Player::MoveIn()
 	}
 	SpiralVector(spiralSpeed);
 
+	if (attackFlag > 0) {
+		if (waveTime > 4) {
+			waveIndex++;
+			if (waveIndex >= 4) {
+				waveIndex = 0;
+			}
+			waveright[waveIndex]->SetPosition(object->GetPosition());
+			waveright[waveIndex]->VecSetPosition({ +5,0,0 });
+			waveleft[waveIndex]->SetPosition(object->GetPosition());
+			waveleft[waveIndex]->VecSetPosition({ -5,0,0 });
+			waveTime = 0;
+		}
+		waveTime++;
+	}
 
 #pragma endregion
 
@@ -508,9 +529,12 @@ void Player::Stop()
 
 void Player::Draw()
 {
-	if (rollingSpeed > 0) {
-		wave[0]->Draw();
-	}
+	//if (attackFlag) {
+		for (int i = 0; i < waveNum; i++) {
+			waveright[i]->Draw();
+			waveleft[i]->Draw();
+		}
+	//}
 	if (muteki == true) {
 		if (mutekiTime % 2 == 0) {
 			object->Draw();

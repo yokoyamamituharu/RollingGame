@@ -113,7 +113,15 @@ private:
 	bool onGround = true;
 	//—Ž‰ºƒxƒNƒgƒ‹
 	XMVECTOR fallV;
-	ObjectObj* wave[4];
+	ObjectObj* waveright[4];
+	ObjectObj* waveleft[4];
+
+	int waveTime = 0;
+	int waveIndex = 0;
+
+	bool goFlag = false;
+
+	int waveNum = 0;
 public:
 	XMFLOAT3 move = { 0,0,0 };	
 };

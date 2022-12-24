@@ -41,6 +41,14 @@ void ModelManager::Finalize()
 	}
 }
 
+Model* ModelManager::GetModel(std::string name)
+{
+	if (models[name] == nullptr) {
+		assert(0);
+	}
+	return models[name];
+}
+
 ModelManager::ModelManager()
 {
 }
