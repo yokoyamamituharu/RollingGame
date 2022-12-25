@@ -53,7 +53,7 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 	for (int i = 0; i < waveNum; i++) {
 		waveright[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
-		waveright[i]->SetScale({7,7,7});
+		waveright[i]->SetScale({ 7,7,7 });
 		waveright[i]->SetRotation({ 0,90,0 });
 		waveleft[i] = ObjectObj::Create(ModelManager::GetModel("wave"));
 		waveleft[i]->SetScale({ 7,7,7 });
@@ -101,7 +101,7 @@ void Player::UpdateOut(Camera* camera)
 		object->collider->Update();
 
 		SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
-		assert(sphereCollider);	
+		assert(sphereCollider);
 
 		// クエリーコールバッククラス
 		class PlayerQueryCallback : public QueryCallback
@@ -402,6 +402,19 @@ void Player::MoveIn()
 		attackDirection = pos1 - pos2;
 		attackDirection = XMVector3Normalize(attackDirection);
 		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+
+		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());;
+		ppos2 += attackDirection * 6.0f;
+
+		const float direction = 270.0f;
+
+		XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
+		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
+		object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
+		for (int i = 0; i < waveNum; i++) {
+			waveright[i]->SetRotation(object->GetRotation());
+			waveleft[i]->SetRotation(object->GetRotation());
+		}
 	}
 
 	if (isSphere) {
@@ -439,7 +452,7 @@ void Player::MoveIn()
 	SpiralVector(spiralSpeed);
 
 	if (attackFlag > 0) {
-		if (waveTime > 4) {
+		if (waveTime > 2) {
 			waveIndex++;
 			if (waveIndex >= 4) {
 				waveIndex = 0;
@@ -530,10 +543,10 @@ void Player::Stop()
 void Player::Draw()
 {
 	//if (attackFlag) {
-		for (int i = 0; i < waveNum; i++) {
-			waveright[i]->Draw();
-			waveleft[i]->Draw();
-		}
+	for (int i = 0; i < waveNum; i++) {
+		waveright[i]->Draw();
+		waveleft[i]->Draw();
+	}
 	//}
 	if (muteki == true) {
 		if (mutekiTime % 2 == 0) {

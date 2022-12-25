@@ -116,6 +116,8 @@ private:
 	ObjectObj* waveright[4];
 	ObjectObj* waveleft[4];
 
+	XMFLOAT3 attackRota = { 0,0,0 };
+
 	int waveTime = 0;
 	int waveIndex = 0;
 
