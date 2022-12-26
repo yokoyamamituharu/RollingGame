@@ -203,7 +203,7 @@ void Player::UpdateIn()
 		object->GetPosition().z + move.z });
 	//Move();
 	Res();
-
+	CrowAttack();
 	//オブジェクトのアップデート
 	object->Update();
 
@@ -360,6 +360,7 @@ void Player::Move()
 
 void Player::MoveIn()
 {
+	if (crawAttackFlag == true) { return; }
 	DirectX::XMVECTOR forvardvec = {};
 
 	if (sphereFlag == false) {
@@ -403,11 +404,10 @@ void Player::MoveIn()
 		attackDirection = XMVector3Normalize(attackDirection);
 		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 
-		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());;
+		//エフェクトの向きを計算
+		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());
 		ppos2 += attackDirection * 6.0f;
-
 		const float direction = 270.0f;
-
 		XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
 		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 		object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
@@ -522,6 +522,7 @@ void Player::Res(bool flag, XMFLOAT3 vec)
 
 	//バウンドを起動
 	if (flag == 1 && resFlag1 == false) {
+		crawAttackFlag = false;
 		posY = object->GetPosition().y;
 		resFlag1 = true;
 		timer = 0;
@@ -557,6 +558,62 @@ void Player::Draw()
 		object->Draw();
 	}
 	shadowObj->Draw();
+}
+
+bool Player::GetRes()
+{
+	if (resFlag1 == true || resFlag2 == true) {
+		return true;
+	}
+	return false;
+}
+
+void Player::HitCrowAttack(XMFLOAT3 pos)
+{
+	if (pos.y == -100) {
+		return;
+	}
+	if (crawAttackFlag == false) {
+		crawTargetPos = pos;
+		crawAttackFlag = true;
+
+		XMVECTOR pos1, pos2, direction;
+		pos1.m128_f32[0] = object->GetPosition().x;
+		pos1.m128_f32[1] = object->GetPosition().y;
+		pos1.m128_f32[2] = object->GetPosition().z;
+		pos2.m128_f32[0] = crawTargetPos.x;
+		pos2.m128_f32[1] = crawTargetPos.y;
+		pos2.m128_f32[2] = crawTargetPos.z;
+		direction = pos1 - pos2;
+		direction = XMVector3Normalize(direction);
+		crawDirection = Use::LoadXMVECTOR(direction);
+
+		resFlag1 = false;
+		resFlag2 = false;
+		gravity = 0;
+		backVec = { 0,0,0 };
+	}
+}
+
+void Player::CrowAttack()
+{
+	if (crawAttackFlag == false) { return; }
+
+	XMVECTOR pos1, pos2, direction;
+	pos1.m128_f32[0] = crawTargetPos.x;
+	pos1.m128_f32[1] = crawTargetPos.y;
+	pos1.m128_f32[2] = crawTargetPos.z;
+	pos2.m128_f32[0] = object->GetPosition().x;
+	pos2.m128_f32[1] = object->GetPosition().y;
+	pos2.m128_f32[2] = object->GetPosition().z;
+	direction = pos1 - pos2;
+	direction = XMVector3Normalize(direction);
+	crawDirection = Use::LoadXMVECTOR(direction);
+
+	object->SetPosition(object->GetPosition() + crawDirection * 2);
+
+	//とりあえずターゲットにした敵に攻撃があたるまで処理
+	attackFlag = true;
 }
 
 float Player::Ease(float x, float s)

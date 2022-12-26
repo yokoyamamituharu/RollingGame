@@ -79,9 +79,9 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != 0) {
 		//死亡判定があったらエネミーを消す
-		enemies->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
-		//敵とプレイヤーのローリング攻撃の当たり判定
+		enemies->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });		
 		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+			//敵とプレイヤーのローリング攻撃の当たり判定
 			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 				if (player->attackFlag == true) {
 					enemy->SetDead();
@@ -98,6 +98,14 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			}
 			enemy->SetPlayer(player);
 			enemy->UpdateIn();
+
+			if (player->GetRes()&&enemy->GetDead()==false) {
+				if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+					if (Collision::CheckBox2Box(player->object->GetPosition(), { 5,5,5 }, enemy->object->GetPosition(), { 2.5,5,1 }) < 20) {
+						player->HitCrowAttack(enemy->object->GetPosition());
+					}
+				}
+			}
 		}
 
 		//バトルシーンから脱出するシーン

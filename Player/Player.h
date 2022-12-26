@@ -48,6 +48,13 @@ public:
 
 	void Draw();
 
+	bool GetRes();
+
+	void HitCrowAttack(XMFLOAT3 pos = { 0,-100,0 });
+
+
+	void CrowAttack();
+
 public:
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -108,6 +115,10 @@ private:
 
 	XMFLOAT2 clickTrigerPos = { 0,0 };
 	XMVECTOR attackDirection;
+
+	bool crawAttackFlag = 0;
+	XMFLOAT3 crawTargetPos = { 0,0,0 };
+	XMFLOAT3 crawDirection = { 0,0,0 };
 private:
 	//Ú’nƒtƒ‰ƒO
 	bool onGround = true;
