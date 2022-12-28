@@ -5,6 +5,7 @@
 #include "Useful.h"
 #include "safe_delete.h"
 #include "../Collider/Collision.h"
+#include "CollisionAttribute.h"
 
 using namespace DirectX;
 
@@ -57,6 +58,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 
 	canvas = new Canvas();
 	canvas->Initialize();
+
+	//enemies->
 }
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
@@ -104,6 +107,18 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 					if (Collision::CheckBox2Box(player->object->GetPosition(), { 5,5,5 }, enemy->object->GetPosition(), { 2.5,5,1 }) < 20) {
 						player->HitCrowAttack(enemy->object->GetPosition());
 					}
+				}
+			}
+		}
+		
+		if (player->GetRes()) {
+			if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {				
+				Ray ray;
+				ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, player->object->GetPosition().y, player->object->GetPosition().z));
+				ray.dir = { 0,0,1,0 };
+				RaycastHit raycastHit;
+				if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit)) {
+					player->HitCrowAttack(XMFLOAT3(raycastHit.inter.m128_f32));
 				}
 			}
 		}

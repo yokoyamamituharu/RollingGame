@@ -93,93 +93,97 @@ void Player::UpdateOut(Camera* camera)
 	Res();
 
 	camera->UpdateMat();
-	//オブジェクトのアップデート
+	//オブジェクトのアップデート		
 	object->Update();
-
+	shadowObj->SetPosition(object->GetPosition());
+	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->Update();
 	object->UpdateWorldMatrix();
-	if (object->collider) {
-		object->collider->Update();
 
-		SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
-		assert(sphereCollider);
+	if (object->collider == nullptr) {
+		return;
+	}
+	object->collider->Update();
 
-		// クエリーコールバッククラス
-		class PlayerQueryCallback : public QueryCallback
-		{
-		public:
-			PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
+	SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(object->collider);
+	assert(sphereCollider);
 
-			// 衝突時コールバック関数
-			bool OnQueryHit(const QueryHit& info) {
+	// クエリーコールバッククラス
+	class PlayerQueryCallback : public QueryCallback
+	{
+	public:
+		PlayerQueryCallback(Sphere* sphere) : sphere(sphere) {};
 
-				const XMVECTOR up = { 0,1,0,0 };
+		// 衝突時コールバック関数
+		bool OnQueryHit(const QueryHit& info) {
 
-				XMVECTOR rejectDir = XMVector3Normalize(info.reject);
-				float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
+			const XMVECTOR up = { 0,1,0,0 };
 
-				// 地面判定しきい値
-				const float threshold = cosf(XMConvertToRadians(30.0f));
+			XMVECTOR rejectDir = XMVector3Normalize(info.reject);
+			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
 
-				if (-threshold < cos && cos < threshold) {
-					sphere->center += info.reject;
-					move += info.reject;
-				}
+			// 地面判定しきい値
+			const float threshold = cosf(XMConvertToRadians(30.0f));
 
-				return true;
+			if (-threshold < cos && cos < threshold) {
+				sphere->center += info.reject;
+				move += info.reject;
 			}
 
-			Sphere* sphere = nullptr;
-			DirectX::XMVECTOR move = {};
-		};
+			return true;
+		}
 
-		PlayerQueryCallback callback(sphereCollider);
+		Sphere* sphere = nullptr;
+		DirectX::XMVECTOR move = {};
+	};
 
-		XMFLOAT3 position = object->GetPosition();
+	PlayerQueryCallback callback(sphereCollider);
 
-		// 球と地形の交差を全検索
-		CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
-		// 交差による排斥分動かす
-		position.x += callback.move.m128_f32[0];
-		position.y += callback.move.m128_f32[1];
-		position.z += callback.move.m128_f32[2];
-		// ワールド行列更新
-		object->SetPosition(position);
-		object->UpdateWorldMatrix();
-		object->collider->Update();
+	XMFLOAT3 position = object->GetPosition();
 
-		// 球の上端から球の下端までのレイキャスト
-		Ray ray;
-		ray.start = sphereCollider->center;
-		ray.start.m128_f32[1] += sphereCollider->GetRadius();
-		ray.dir = { 0,-1,0,0 };
-		RaycastHit raycastHit;
+	// 球と地形の交差を全検索
+	CollisionManager::GetInstance()->QuerySphere(*sphereCollider, &callback, COLLISION_ATTR_LANDSHAPE);
+	// 交差による排斥分動かす
+	position.x += callback.move.m128_f32[0];
+	position.y += callback.move.m128_f32[1];
+	position.z += callback.move.m128_f32[2];
+	// ワールド行列更新
+	object->SetPosition(position);
+	object->UpdateWorldMatrix();
+	object->collider->Update();
 
-		position = object->GetPosition();
-		// 接地状態
-		//if (onGround) {
-		//	// スムーズに坂を下る為の吸着距離
-		//	const float adsDistance = 0.2f;
-		//	// 接地を維持
-		//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-		//		onGround = true;
-		//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//	}
-		//	// 地面がないので落下
-		//	else {
-		//		onGround = false;
-		//		fallV = {};
-		//	}
-		//}
-		//// 落下状態
-		//else if (fallV.m128_f32[1] <= 0.0f) {
-		//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
-		//		// 着地
-		//		onGround = true;
-		//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-		//	}
-		//}
-		object->SetPosition(position);
-	}
+	// 球の上端から球の下端までのレイキャスト
+	Ray ray;
+	ray.start = sphereCollider->center;
+	ray.start.m128_f32[1] += sphereCollider->GetRadius();
+	ray.dir = { 0,-1,0,0 };
+	RaycastHit raycastHit;
+
+	position = object->GetPosition();
+	// 接地状態
+	//if (onGround) {
+	//	// スムーズに坂を下る為の吸着距離
+	//	const float adsDistance = 0.2f;
+	//	// 接地を維持
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+	//		onGround = true;
+	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//	}
+	//	// 地面がないので落下
+	//	else {
+	//		onGround = false;
+	//		fallV = {};
+	//	}
+	//}
+	//// 落下状態
+	//else if (fallV.m128_f32[1] <= 0.0f) {
+	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+	//		// 着地
+	//		onGround = true;
+	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+	//	}
+	//}
+	object->SetPosition(position);
 	// 行列の更新など
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
