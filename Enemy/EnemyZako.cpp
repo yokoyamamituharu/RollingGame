@@ -15,7 +15,7 @@ int EnemyZako::isAction = 1;
 EnemyZako* EnemyZako::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
 {
 	EnemyZako* ins = new EnemyZako();
-	ins->InitializeOut(filedFlag, pos, isTarget);
+	ins->InitializeOut(pos, isTarget);
 	return ins;
 }
 
@@ -30,9 +30,9 @@ void EnemyZako::ParticleCreate()
 		//tubu->scale = { 10,10,10 };
 		//const float rnd_vel = 0.1f;
 		int rndVel = 3.0f;
-		tubu->velocity.x =rand() % (rndVel * 2) - rndVel;
-		tubu->velocity.y =rand() % (rndVel * 2) - rndVel;
-		tubu->velocity.z =rand() % (rndVel * 2) - rndVel;
+		tubu->velocity.x = rand() % (rndVel * 2) - rndVel;
+		tubu->velocity.y = rand() % (rndVel * 2) - rndVel;
+		tubu->velocity.z = rand() % (rndVel * 2) - rndVel;
 		Particle::GetIns()->Add(tubu);
 	}
 }
@@ -61,9 +61,9 @@ void EnemyZako::Damege(int attackPower)
 	}
 }
 
-void EnemyZako::InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
+void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
-	this->isFiled = filedFlag;
+	this->isFiled = FIELD_OUT;
 	this->isTarget = isTarget;
 	this->targetPos1 = targetPos1;
 	this->targetPos2 = targetPos2;
@@ -95,7 +95,7 @@ void EnemyZako::InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOA
 	{
 		//敵をリストに追加していく
 		std::unique_ptr<EnemyZako> newEnemyZako = std::make_unique<EnemyZako>();
-		newEnemyZako->InitializeIn(FIELD_IN);
+		newEnemyZako->InitializeIn();
 		//リストに登録
 		enemies.push_back(std::move(newEnemyZako));
 	}
@@ -105,9 +105,9 @@ void EnemyZako::InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOA
 	hp = maxHp;
 }
 
-void EnemyZako::InitializeIn(int filedFlag)
+void EnemyZako::InitializeIn()
 {
-	this->isFiled = filedFlag;
+	this->isFiled = FIELD_IN;
 
 	targetIndex = 1;
 	//オブジェクトの作成

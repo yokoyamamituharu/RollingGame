@@ -194,12 +194,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				if (dasu[index].basyo == 1) {
 					//ƒ^ƒ[‚ª‚ ‚é•û
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->InitializeOut(EnemyZako::FIELD_OUT, { suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+					newEnemy->InitializeOut({ suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->InitializeOut(EnemyZako::FIELD_OUT, { suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+					newEnemy->InitializeOut({ suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;

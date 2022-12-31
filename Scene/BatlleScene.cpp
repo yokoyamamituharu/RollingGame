@@ -6,6 +6,7 @@
 #include "safe_delete.h"
 #include "../Collider/Collision.h"
 #include "CollisionAttribute.h"
+#include "SphereCollider.h"
 
 using namespace DirectX;
 
@@ -59,7 +60,32 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	canvas = new Canvas();
 	canvas->Initialize();
 
-	//enemies->
+	enemies = std::make_shared<EnemyZako>();
+	enemies->InitializeOut({ 0,0,0 }, false);
+
+	std::unique_ptr<EnemyZako> enemy1 = std::make_unique<EnemyZako>();
+	enemy1->InitializeIn();
+	enemy1->SetPlayer(player);
+	enemy1->object->SetRotation({ 0,90,0 });
+	enemy1->object->SetPosition({ 0,-4.0f,0 });
+	enemy1->object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	enemies->GetEnemies().push_back(std::move(enemy1));
+
+	std::unique_ptr<EnemyZako> enemy2 = std::make_unique<EnemyZako>();
+	enemy2->InitializeIn();
+	enemy2->SetPlayer(player);
+	enemy2->object->SetRotation({ 0,90,0 });
+	enemy2->object->SetPosition({ 10,-4.0f,0 });
+	enemy2->object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	enemies->GetEnemies().push_back(std::move(enemy2));
+
+	std::unique_ptr<EnemyZako> enemy3 = std::make_unique<EnemyZako>();
+	enemy3->InitializeIn();
+	enemy3->SetPlayer(player);
+	enemy3->object->SetRotation({ 0,90,0 });
+	enemy3->object->SetPosition({ 20,-4.0f,0 });
+	enemy3->object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	enemies->GetEnemies().push_back(std::move(enemy3));
 }
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
@@ -82,7 +108,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != 0) {
 		//死亡判定があったらエネミーを消す
-		enemies->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });		
+		enemies->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
 		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
 			//敵とプレイヤーのローリング攻撃の当たり判定
 			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
@@ -102,26 +128,38 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			enemy->SetPlayer(player);
 			enemy->UpdateIn();
 
-			if (player->GetRes()&&enemy->GetDead()==false) {
+			/*if (player->GetRes() && enemy->GetDead() == false) {
 				if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 					if (Collision::CheckBox2Box(player->object->GetPosition(), { 5,5,5 }, enemy->object->GetPosition(), { 2.5,5,1 }) < 20) {
 						player->HitCrowAttack(enemy->object->GetPosition());
 					}
 				}
-			}
-		}
-		
-		if (player->GetRes()) {
-			if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {				
-				Ray ray;
-				ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, player->object->GetPosition().y, player->object->GetPosition().z));
-				ray.dir = { 0,0,1,0 };
-				RaycastHit raycastHit;
-				if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit)) {
-					player->HitCrowAttack(XMFLOAT3(raycastHit.inter.m128_f32));
+			}*/
+
+			if (player->GetRes()) {
+				if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+					if (player->GetCrow() == false) {
+						if (enemy->GetDead() == false) {						
+							Sphere* SphereA = dynamic_cast<Sphere*>(enemy->object->collider);
+							if (SphereA != nullptr) {
+								Ray ray;
+								ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, 2.0f, player->object->GetPosition().z));
+								ray.dir = { 0,0,1,0 };
+								//プレイヤーのY軸の回転をもとにベクトルを計算しレイの方向をそれにする
+								float x = cos(player->object->GetRotation().y * 3.141592 / 180);
+								float y = sin(player->object->GetRotation().y * 3.141592 / 180);
+								ray.dir = { -x,0,y,0 };
+								if (Collision::CheckRay2Sphere(ray, *SphereA)) {
+									player->HitCrowAttack(enemy->object->GetPosition());
+								}
+							}
+						}
+					}
 				}
 			}
 		}
+
+	
 
 		//バトルシーンから脱出するシーン
 		if (enemies->GetEnemies().size() == 0) {
@@ -137,18 +175,12 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			player->Cure(5);
 			sceneNo = SceneManager::SCENE_END;
 		}
-	}
-
-	const int maxEnemy = 6;
-	canvas->SetEnemy(maxEnemy, player->breakEnemy);
-	canvas->SetHp(player->GetMaxHp(), player->GetHp());
-
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)) {
-		//player->Res(true);
-	}
+	}		
 
 	battleCamera->Update();
 	ground->Update();
+	tenQ->Update();
+	area->Update();
 	player->Res();
 	player->MoveIn();
 	//プレイヤーをエリア内に収める
@@ -157,13 +189,11 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	}
 	player->UpdateIn();
 	player->Res();
-	tenQ->Update();
-	area->Update();
 
+
+	const int maxEnemy = 6;
+	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
-
-
-
 }
 
 void BatlleScene::Draw()

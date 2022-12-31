@@ -47,9 +47,9 @@ public:	//メンバ関数
 	//デストラクタ
 	~EnemyZako();	
 
-	virtual void InitializeOut(int filedFlag, XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
+	virtual void InitializeOut( XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
 
-	virtual void InitializeIn(int filedFlag);
+	virtual void InitializeIn();
 
 	virtual void UpdateOut();
 
@@ -83,6 +83,10 @@ public:	//セッター、ゲッター
 
 	void NotDead() { dead = false; }
 
+	/// <summary>
+	/// 敵の死亡判定をとる
+	/// </summary>
+	/// <returns>死んでたらtrue</returns>
 	bool GetDead() { return dead; }
 
 	bool GetAttack() { return attackFlag; }

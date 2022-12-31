@@ -55,6 +55,8 @@ public:
 
 	void CrowAttack();
 
+	bool GetCrow() {return crawAttackFlag; }
+
 public:
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -72,7 +74,7 @@ public:
 
 	bool attackFlag = false;
 
-	const float grundHeight = -6.0f;
+	const static float grundHeight;
 
 	static int breakEnemy;
 

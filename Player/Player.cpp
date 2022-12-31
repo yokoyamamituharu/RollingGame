@@ -11,6 +11,7 @@ using namespace DirectX;
 int Player::breakEnemy = 0;
 int Player::maxHp = 5;
 int Player::hp = Player::maxHp;
+const float Player::grundHeight = -6.0f;
 
 Player::Player()
 {

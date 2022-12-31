@@ -75,7 +75,21 @@ public:
 	/// <returns>交差しているか否か</returns>
 	static bool CheckRay2Sphere(const Ray& lay, const Sphere& sphere, float*distance = nullptr, DirectX::XMVECTOR* inter = nullptr);
 
+	/// <summary>
+	/// 立方体と立方体の当たり判定
+	/// </summary>
+	/// <param name="pos1">立方体1</param>
+	/// <param name="radius1">立方体1の各軸の半径</param>
+	/// <param name="pos2">立方体2</param>
+	/// <param name="radius2">立方体2の各軸の半径</param>
+	/// <returns>当たっているか否か</returns>
 	static bool CheckBox2Box(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 radius1, const DirectX::XMFLOAT3 pos2, const DirectX::XMFLOAT3 radius2);
 
+	/// <summary>
+	///	二点間の距離を計算
+	/// </summary>
+	/// <param name="pos1">点1</param>
+	/// <param name="pos2">点2</param>
+	/// <returns>二点の距離</returns>
 	static float CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2);
 };
