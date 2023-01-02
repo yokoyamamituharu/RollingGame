@@ -40,6 +40,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	player = Player::Create(battleCamera, 2);
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	battleCamera->SetPlayer(player->object);
+	battleCamera->SetPlayer(player);
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });

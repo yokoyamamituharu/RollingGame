@@ -391,6 +391,25 @@ void Player::MoveIn()
 
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		isSphere = true;
+		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetPos();
+		XMVECTOR pos1, pos2;
+		pos1.m128_f32[0] = clickTrigerPos.x;
+		pos1.m128_f32[1] = 0.0f;
+		pos1.m128_f32[2] = -clickTrigerPos.y;
+		pos2.m128_f32[0] = releasePos.x;
+		pos2.m128_f32[1] = 0.0;
+		pos2.m128_f32[2] = -releasePos.y;
+		attackDirection = pos1 - pos2;
+		attackDirection = XMVector3Normalize(attackDirection);
+		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+
+		//エフェクトの向きを計算
+		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());
+		ppos2 += attackDirection * 6.0f;
+		const float direction = 270.0f;
+		XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
+		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
+		object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 	}
 	else {
 		isSphere = false;

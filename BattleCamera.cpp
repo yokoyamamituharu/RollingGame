@@ -15,6 +15,11 @@ BattleCamera* BattleCamera::Create()
 
 void BattleCamera::Update()
 {
+	eye = eye - dirEye;
+	target = target - dirTarget;
+	dirEye = {0.0f,0.0f ,0.0f };
+	dirTarget = { 0.0f,0.0f ,0.0f };
+
 	assert(playerObj);
 	//マウスでカメラ操作するかの切り替え操作
 	if (Input::GetInstance()->TriggerKey(DIK_F2)) {
@@ -42,7 +47,7 @@ void BattleCamera::Update()
 			showCorsl = true;
 		}
 	}
-	showCorsl =true;
+	showCorsl = true;
 	ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
@@ -56,6 +61,22 @@ void BattleCamera::Update()
 	target = playerObj->GetPosition();
 	target.y = 10;
 
+
+	if (player != nullptr) {
+		if (player->GetSphere() == true) {
+			float x = cos(player->object->GetRotation().y * 3.141592 / 180);
+			float y = sin(player->object->GetRotation().y * 3.141592 / 180);
+			XMFLOAT3 dir = { -x,0,y };
+
+			if (dirEye.x < 5) {
+				dirEye = dir * 20;
+				dirTarget = dir * 20;
+			}
+		}
+	}
+
+	eye = eye + dirEye;
+	target = target + dirTarget;
 
 	//ビュー行列の更新
 	UpdateViewMatrix();

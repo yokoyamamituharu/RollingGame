@@ -19,9 +19,8 @@ public:
 	Player();
 	~Player();
 
-	static Player* Create(Camera* camera,int InOrOut);
+	static Player* Create(Camera* camera, int InOrOut);
 	void Initialize(Camera* camera, int InOrOut);
-	void Update();
 	void UpdateOut(Camera* camera);
 	void UpdateIn();
 	void Move();
@@ -55,8 +54,12 @@ public:
 
 	void CrowAttack();
 
-	bool GetCrow() {return crawAttackFlag; }
+	bool GetCrow() { return crawAttackFlag; }
 
+
+	bool GetRolling() { return rollingSpeed > 0; }
+
+	bool GetSphere() { return sphereFlag; }
 public:
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -138,6 +141,6 @@ private:
 
 	int waveNum = 0;
 public:
-	XMFLOAT3 move = { 0,0,0 };	
+	XMFLOAT3 move = { 0,0,0 };
 };
 

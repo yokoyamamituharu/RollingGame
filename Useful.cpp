@@ -37,6 +37,7 @@ const DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lhs, const DirectX::X
 	return result;
 }
 
+
 const DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lhs, const float& scalar)
 {
 	XMFLOAT3 result;
