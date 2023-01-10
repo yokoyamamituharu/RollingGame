@@ -101,7 +101,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 	for (std::unique_ptr<Bullet>& bullet : bullets) {
 		if (targetEnemy.expired() == false) {
 			if (5.0f >= Kyori(bullet->object->GetPosition(), targetEnemy.lock()->object->GetPosition())) {
-				targetEnemy.lock()->Damege(1);
+				targetEnemy.lock()->DamageOut(1);
 				if (targetEnemy.lock()->GetHp()<=0) {
 					//Player::breakEnemy += 1;
 				}

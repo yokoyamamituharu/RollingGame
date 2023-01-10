@@ -62,22 +62,28 @@ void BattleCamera::Update()
 	target.y = 10;
 
 
+	//プレイヤーの回転方向にカメラをぐいーんするための処理
 	if (player != nullptr) {
-		if (player->GetSphere() == true) {
-			float x = cos(player->object->GetRotation().y * 3.141592 / 180);
-			float y = sin(player->object->GetRotation().y * 3.141592 / 180);
-			XMFLOAT3 dir = { -x,0,y };
+		//if (player->GetSphere() == true) {
+		//	float x = cos(player->object->GetRotation().y * 3.141592 / 180);
+		//	float y = sin(player->object->GetRotation().y * 3.141592 / 180);
+		//	XMFLOAT3 dir = { -x,0,y };
 
-			if (dirEye.x < 5) {
-				dirEye = dir * 20;
-				dirTarget = dir * 20;
-			}
-		}
+		//	if (dirEye.x < 5) {
+		//		dirEye = dir * 20;
+		//		dirTarget = dir * 20;
+		//	}
+		//}
+		//eye = eye + dirEye;
+		//target = target + dirTarget;
 	}
+	
 
-	eye = eye + dirEye;
-	target = target + dirTarget;
+	
+}
 
+void BattleCamera::UpdateView()
+{
 	//ビュー行列の更新
 	UpdateViewMatrix();
 	// ビュープロジェクションの合成

@@ -140,7 +140,18 @@ private:
 	bool goFlag = false;
 
 	int waveNum = 0;
+
 public:
 	XMFLOAT3 move = { 0,0,0 };
+
+	bool roolMoveFlag = false;
+
+	bool roolattackFlag = false;
+
+	bool roolstop = false;
+
+	int roolTime = 0;
+
+
 };
 

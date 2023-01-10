@@ -71,7 +71,7 @@ protected:
 
 
 public:	//セッター、ゲッター	
-	void Damege(int attackPower);
+	void DamageOut(int attackPower);
 	
 	void SetPlayer(Player* player)
 	{
@@ -96,6 +96,8 @@ public:	//セッター、ゲッター
 	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
 
 	void ParticleCreate();
+
+	void DamageIn(int damage);
 
 public:
 	ObjectObj* object = nullptr;
@@ -160,7 +162,7 @@ protected:	//メンバ変数
 	XMVECTOR attackDirection;
 
 
-	float maxHp = 100;
+	float maxHp = 5;
 	float hp = maxHp;
 
 	float scale = 1;

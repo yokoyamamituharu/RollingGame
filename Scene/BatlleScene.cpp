@@ -106,6 +106,43 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		SceneManager::BattleInit = false;
 	}
 
+
+	//エフェクト
+	if (Input::GetInstance()->PushKey(DIK_E)) {
+		for (int i = 0; i < 5; i++) {
+			int basyo = rand() % 4 + 1;
+			Particle::ParticleTubu* tubu = new Particle::ParticleTubu;
+			if (basyo == 1) {
+				tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_1"));
+			}
+			if (basyo == 2) {
+				tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_2"));
+			}
+			if (basyo == 3) {
+				tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_3"));
+			}
+			if (basyo == 4) {
+				tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_4"));
+			}
+
+			tubu->obj->SetScale({ 5,5,5 });
+			tubu->obj->SetRotation(player->object->GetRotation());
+			tubu->end_frame = rand() % 5 + 10;
+			tubu->position = player->object->GetPosition();
+			//tubu->scale = { 10,10,10 };
+			//const float rnd_vel = 0.1f;
+			int rndVel = 3.0f;
+			tubu->velocity.x = rand() % (rndVel * 2) - rndVel;
+			tubu->velocity.y = rand() % (rndVel * 2) - rndVel;
+			tubu->velocity.z = rand() % (rndVel * 2) - rndVel;
+			//tubu->velocity.x = 0;
+			//tubu->velocity.y = 0;
+			//tubu->velocity.z = -rand() % (rndVel * 2);
+			Particle::GetIns()->Add(tubu);
+		}
+	}
+
+
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != 0) {
 		//死亡判定があったらエネミーを消す
@@ -114,13 +151,19 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			//敵とプレイヤーのローリング攻撃の当たり判定
 			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 				if (player->attackFlag == true) {
-					enemy->SetDead();
+					//enemy->SetDead();
+					enemy->DamageIn(1);
 					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
 					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
 					XMVECTOR vec = pos1 - pos2;
 					vec = XMVector3Normalize(vec);
 					vec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
-					player->Res(true, Use::LoadXMVECTOR(vec));
+					if (player->roolattackFlag == true) {
+						player->roolstop = true;
+					}
+					else {
+						player->Res(true, Use::LoadXMVECTOR(vec));
+					}
 				}
 				else if (enemy->GetAttack()) {
 					player->Damage(1);
@@ -140,7 +183,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			if (player->GetRes()) {
 				if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 					if (player->GetCrow() == false) {
-						if (enemy->GetDead() == false) {						
+						if (enemy->GetDead() == false) {
 							Sphere* SphereA = dynamic_cast<Sphere*>(enemy->object->collider);
 							if (SphereA != nullptr) {
 								Ray ray;
@@ -160,7 +203,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			}
 		}
 
-	
+
 
 		//バトルシーンから脱出するシーン
 		if (enemies->GetEnemies().size() == 0) {
@@ -176,9 +219,11 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			player->Cure(5);
 			sceneNo = SceneManager::SCENE_END;
 		}
-	}		
+	}
 
-	battleCamera->Update();
+
+
+
 	ground->Update();
 	tenQ->Update();
 	area->Update();
@@ -191,6 +236,11 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	player->UpdateIn();
 	player->Res();
 
+	battleCamera->Update();
+
+	battleCamera->UpdateView();
+
+	player->object->Update();
 
 	const int maxEnemy = 6;
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);

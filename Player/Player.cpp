@@ -210,7 +210,7 @@ void Player::UpdateIn()
 	Res();
 	CrowAttack();
 	//オブジェクトのアップデート
-	object->Update();
+	//object->Update();
 
 	//影の更新
 	shadowObj->SetPosition(object->GetPosition());
@@ -385,11 +385,15 @@ void Player::MoveIn()
 
 #pragma region 回転移動
 	//回転移動
-	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT)) {
+	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
 		clickTrigerPos = InputMouse::GetInstance()->GetPos();
 	}
 
-	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+	if (roolMoveFlag == true && InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		roolattackFlag = true;
+	}
+
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
 		isSphere = true;
 		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetPos();
 		XMVECTOR pos1, pos2;
@@ -415,7 +419,7 @@ void Player::MoveIn()
 		isSphere = false;
 	}
 
-	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
+	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
 		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetPos();
 		XMVECTOR pos1, pos2;
 		pos1.m128_f32[0] = clickTrigerPos.x;
@@ -461,9 +465,24 @@ void Player::MoveIn()
 		//forvardvec.m128_f32[2] += 6.5;
 		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
 		pos += attackDirection * 6.0f;
-		object->SetPosition(Use::LoadXMVECTOR(pos));
-		rollingSpeed -= 1;
+
+		
 		attackFlag = true;
+		roolMoveFlag = true;
+		if (roolstop == false) {
+			object->SetPosition(Use::LoadXMVECTOR(pos));
+			rollingSpeed -= 1;
+		}
+		else {
+			if (roolTime >= 10) {
+				attackFlag = true;
+				roolTime = 0;
+			}
+			else {
+				attackFlag = false;
+				roolTime++;
+			}
+		}
 	}
 	else {
 		rollingSpeed = 0.0f;
@@ -472,6 +491,7 @@ void Player::MoveIn()
 		object->SetModel(playermodel);
 		attackFlag = false;
 		sphereFlag = false;
+		roolMoveFlag = false;
 	}
 	SpiralVector(spiralSpeed);
 

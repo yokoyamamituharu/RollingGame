@@ -37,6 +37,11 @@ void EnemyZako::ParticleCreate()
 	}
 }
 
+void EnemyZako::DamageIn(int damage)
+{
+	hp -= damage;
+}
+
 EnemyZako::EnemyZako()
 {
 }
@@ -48,7 +53,7 @@ EnemyZako::~EnemyZako()
 	enemies.clear();
 }
 
-void EnemyZako::Damege(int attackPower)
+void EnemyZako::DamageOut(int attackPower)
 {
 	hp -= attackPower;
 	int deleteNum = 0;
@@ -194,6 +199,10 @@ void EnemyZako::UpdateIn()
 {
 	if (isFiled == FIELD_OUT) {
 		return;
+	}
+
+	if (hp <= 0) {
+		dead = true;
 	}
 
 	if (isAction < 0) {

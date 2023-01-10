@@ -23,6 +23,11 @@ void ModelManager::SetModelName()
 	modelname.push_back("area");
 	modelname.push_back("wave");
 	modelname.push_back("particle");
+
+	modelname.push_back("effect_1");
+	modelname.push_back("effect_2");
+	modelname.push_back("effect_3");
+	modelname.push_back("effect_4");
 }
 
 void ModelManager::Initialize()

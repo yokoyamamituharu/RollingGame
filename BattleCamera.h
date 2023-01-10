@@ -13,6 +13,8 @@ public:
 
 	void SetPlayer(ObjectObj* obj) { playerObj = obj; }
 	void SetPlayer(Player* ptr) { player = ptr; }
+
+	void UpdateView();
 private:
 	//ƒJ[ƒ\ƒ‹‚ÌŒÅ’è
 	bool isSetMousePoint = false;
