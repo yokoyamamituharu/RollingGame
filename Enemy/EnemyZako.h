@@ -162,7 +162,7 @@ protected:	//メンバ変数
 	XMVECTOR attackDirection;
 
 
-	float maxHp = 5;
+	float maxHp = 1;
 	float hp = maxHp;
 
 	float scale = 1;
@@ -170,4 +170,8 @@ protected:	//メンバ変数
 
 
 	std::list<std::unique_ptr<EnemyZako>>enemies;
+
+	//中用の敵が外シーンでマップ当たり判定にひっかかんないように
+	XMFLOAT3 outPos = { 0,-100,0 };
+	XMFLOAT3 inPos = { 0,-100,0 };
 };

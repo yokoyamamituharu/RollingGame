@@ -71,6 +71,14 @@ void Camera::UpdateMat()
 	matViewProjection = matView * matProjection;
 }
 
+void Camera::UpdateView()
+{
+	//ビュー行列の更新
+	UpdateViewMatrix();
+	// ビュープロジェクションの合成
+	matViewProjection = matView * matProjection;
+}
+
 void Camera::UpdateViewMatrix()
 {
 	// ビュー行列の更新

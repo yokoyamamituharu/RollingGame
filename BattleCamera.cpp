@@ -81,11 +81,3 @@ void BattleCamera::Update()
 
 	
 }
-
-void BattleCamera::UpdateView()
-{
-	//ビュー行列の更新
-	UpdateViewMatrix();
-	// ビュープロジェクションの合成
-	matViewProjection = matView * matProjection;
-}

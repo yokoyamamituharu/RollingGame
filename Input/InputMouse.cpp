@@ -2,6 +2,8 @@
 #include <cassert>
 #pragma comment(lib, "dinput8.lib")
 #include <cmath>
+#include <windowsx.h>
+
 
 WinApp* InputMouse::winApp;
 
@@ -220,5 +222,8 @@ void InputMouse::SetCenterCoursolPos()
 
 	//ÉJÅ[É\ÉãÇå≈íË
 	SetCursorPos(left + (x / 2), bottom - (y / 2));
+
+	//short xxx = GET_X_LPARAM(0);
+	//short yyy = GET_Y_LPARAM(0);
 }
 

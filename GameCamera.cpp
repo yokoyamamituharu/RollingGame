@@ -34,13 +34,17 @@ void GameCamera::Update()
 		matRot *= XMMatrixRotationY(-0.02f);
 	}
 
-	if (Input::GetInstance()->TriggerKey(DIK_C)) {
-		if (showCorsl == true) {
-			showCorsl = false;
-		}
-		else {
-			showCorsl = true;
-		}		
+	//if (Input::GetInstance()->TriggerKey(DIK_C)) {
+	//	if (showCorsl == true) {
+	//		showCorsl = false;
+	//	}
+	//	else {
+	//		showCorsl = true;
+	//	}		
+	//}
+
+	if (isSetMousePoint == false) {
+		showCorsl = true;
 	}
 	ShowCursor(showCorsl);
 

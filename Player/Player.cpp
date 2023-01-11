@@ -208,7 +208,7 @@ void Player::UpdateIn()
 		object->GetPosition().z + move.z });
 	//Move();
 	Res();
-	CrowAttack();
+	//CrowAttack();
 	//オブジェクトのアップデート
 	//object->Update();
 
@@ -383,6 +383,10 @@ void Player::MoveIn()
 		}
 	}
 
+	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
+	float speed = 1.2f;
+	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
+
 #pragma region 回転移動
 	//回転移動
 	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
@@ -390,7 +394,7 @@ void Player::MoveIn()
 	}
 
 	if (roolMoveFlag == true && InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-		roolattackFlag = true;
+		//roolattackFlag = true;
 	}
 
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
@@ -462,15 +466,15 @@ void Player::MoveIn()
 		sphereFlag = true;
 	}
 	else if (rollingSpeed > 0) {
-		//forvardvec.m128_f32[2] += 6.5;
 		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
 		pos += attackDirection * 6.0f;
 
-		
+
 		attackFlag = true;
 		roolMoveFlag = true;
 		if (roolstop == false) {
-			object->SetPosition(Use::LoadXMVECTOR(pos));
+			//object->SetPosition(Use::LoadXMVECTOR(pos));
+			move = Use::LoadXMVECTOR(attackDirection * 6.0f);
 			rollingSpeed -= 1;
 		}
 		else {
@@ -495,7 +499,7 @@ void Player::MoveIn()
 	}
 	SpiralVector(spiralSpeed);
 
-	if (attackFlag > 0) {
+	if (attackFlag == true) {
 		if (waveTime > 2) {
 			waveIndex++;
 			if (waveIndex >= 4) {
@@ -509,35 +513,21 @@ void Player::MoveIn()
 		}
 		waveTime++;
 	}
+	else {
+		for (int i = 0; i < 4; i++) {
+			waveright[i]->SetPosition({ 0,-100,0 });
+			waveleft[i]->SetPosition({ 0,-100,0 });
+		}
+	}
+
 
 #pragma endregion
-
-	//これは進む方向にプレイヤーを向かせる処理
-	////移動の反映
-	//XMVECTOR playermatrot = { forvardvec };
-	////回転行列をかける
-	//playermatrot = XMVector3Normalize(playermatrot);
-	//playermatrot = XMVector3Transform(playermatrot, camera->matRot);
-	////正規化する
-	//playermatrot = XMVector3Normalize(playermatrot);
-
-	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
-	float speed = 1.2f;
-	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
-	//object->SetPosition({
-	//	object->GetPosition().x + move.x,
-	//	object->GetPosition().y + move.y,
-	//	object->GetPosition().z + move.z });
-
-	//プレイヤーを真正面に向かせる
-	//float buff = atan2f(playermatrot.m128_f32[0], playermatrot.m128_f32[2]);
-	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
 }
 
 void Player::Res(bool flag, XMFLOAT3 vec)
 {
-	object->VecSetPosition(backVec);
+	//object->VecSetPosition(backVec);
+	move = move + backVec;
 
 	//下降処理
 	if (resFlag2 == true) {
@@ -575,10 +565,21 @@ void Player::Res(bool flag, XMFLOAT3 vec)
 	}
 }
 
-void Player::Stop()
+void Player::StopIn()
 {
 	rollingSpeed = 0;
-	object->SetPosition(outPos);
+	attackFlag = false;
+	object->SetPosition({0,grundHeight,0});
+	resFlag1 = false;
+	resFlag2 = false;
+	gravity = 0.0f;
+	backVec = { 0,0,0 };
+}
+
+void Player::StopOut()
+{
+	rollingSpeed = 0;
+	attackFlag = false;
 	resFlag1 = false;
 	resFlag2 = false;
 	gravity = 0.0f;
@@ -587,12 +588,12 @@ void Player::Stop()
 
 void Player::Draw()
 {
-	//if (attackFlag) {
-	for (int i = 0; i < waveNum; i++) {
-		waveright[i]->Draw();
-		waveleft[i]->Draw();
+	if (attackFlag) {
+		for (int i = 0; i < waveNum; i++) {
+			waveright[i]->Draw();
+			waveleft[i]->Draw();
+		}
 	}
-	//}
 	if (muteki == true) {
 		if (mutekiTime % 2 == 0) {
 			object->Draw();

@@ -5,6 +5,7 @@ using namespace DirectX;
 #include "safe_delete.h"
 #include "Collision.h"
 #include "Particle.h"
+#include "SphereCollider.h"
 
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -4.0f;
@@ -128,6 +129,8 @@ void EnemyZako::InitializeIn()
 	object->SetPosition({ x,groundInPos,z });
 	//サイズのセット
 	object->SetScale({ 4.0f,4.0f, 4.0f });
+	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 }
 
 void EnemyZako::UpdateOut()

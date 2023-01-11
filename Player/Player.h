@@ -43,7 +43,9 @@ public:
 
 	void Res(bool flag = false, XMFLOAT3 vec = { 0,0,0 });
 
-	void Stop();
+	void StopIn();
+
+	void StopOut();
 
 	void Draw();
 

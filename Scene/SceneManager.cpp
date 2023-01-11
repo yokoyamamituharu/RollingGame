@@ -34,21 +34,21 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	//スプライトマネージャーの読み込み
 	SpriteManager::GetIns()->Initialize();
 
-	particleMan = Particle::GetIns();	
+	particleMan = Particle::GetIns();
 
 	//各シーンの生成
 	titleScene = new TitleScene;
 	titleScene->Initialize(dxCommon);
 	endScene = new EndScene;
 	endScene->Initialize(dxCommon);
-	//gameScene = new GameScene;
-	//gameScene->Initialize(dxCommon);
+	gameScene = new GameScene;
+	gameScene->Initialize(dxCommon);
 	batlleScene = new BatlleScene;
 	batlleScene->Initialize(dxCommon);
 
-	//sceneNo = SCENE_TITLE;
+	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
-	sceneNo = SCENE_BATTLE;
+	//sceneNo = SCENE_BATTLE;
 	post = new PostEffect;
 	post->Initialize();
 
@@ -198,7 +198,9 @@ void SceneManager::Update()
 		batlleScene->Draw();
 	}
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	particleMan->Draw();
+	if (sceneNo == SCENE_BATTLE || sceneNo == SCENE_KATI) {
+		particleMan->Draw();
+	}
 	ObjectObj::PostDraw();
 	post->PosDrawScene(dxCommon->GetCmdList());
 
@@ -246,7 +248,7 @@ void SceneManager::Draw()
 
 
 
-	
+
 }
 
 void SceneManager::GameSceneReset()
@@ -254,7 +256,7 @@ void SceneManager::GameSceneReset()
 	if (blackFlag == true) {
 		safe_delete(gameScene);
 		safe_delete(batlleScene);
-		gameScene = new GameScene();		
+		gameScene = new GameScene();
 		gameScene->Initialize(dxCommon);
 		batlleScene = new BatlleScene();
 		batlleScene->Initialize(dxCommon);

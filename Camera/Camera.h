@@ -33,6 +33,9 @@ public:	//メンバ関数
 
 	void UpdateMat();
 
+	void UpdateView();
+
+
 protected: //メンバ関数
 	/// <summary>
 	/// ビュー行列の更新

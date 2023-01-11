@@ -113,14 +113,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	index = 0;
 	dasu[0] = { 0,1 };
 	dasu[1] = { 0,2 };
-	dasu[2] = { 30,1 };
-	dasu[3] = { 10,1 };
+	dasu[2] = { 120,1 };
+	dasu[3] = { 100,1 };
 	dasu[4] = { 40,2 };
-	dasu[5] = { 50,2 };
-	dasu[6] = { 30,1 };
-	dasu[7] = { 80,2 };
+	dasu[5] = { 230,2 };
+	dasu[6] = { 120,1 };
+	dasu[7] = { 180,2 };
 	dasu[8] = { 40,1 };
-	dasu[9] = { 10,1 };
+	dasu[9] = { 80,1 };
 
 
 	//ミニマップ用カメラの生成
@@ -218,7 +218,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				batlleScene->SetEnemies(enemy);
 				enemiesG.remove(enemy);
 				player->outPos = player->object->GetPosition();
-				player->Stop();
+				player->StopOut();
 				//プレイヤーを原点に発生させる
 				//player->object->SetPosition({ 0,-6,0 });
 				SceneManager::hitEnemyToPlayer = true;
@@ -239,8 +239,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//scene->Update();
 	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
 	//	player->move = { 0,0,0 };
-	//}
-	gameCamera->Update();
+	//}	
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	ground->Update();
@@ -260,8 +259,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	if (enemiesG.size() <= 0 && index >= 6) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-	//カメラのアップデート
-	
+
+	gameCamera->Update();
+	gameCamera->UpdateView();
+	player->object->Update();
+	player->shadowObj->Update();
+
+
+	//カメラのアップデート	
 	subCamera->Update();
 
 	//キャンバスにプレイヤーの情報をセット
