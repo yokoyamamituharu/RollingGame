@@ -155,11 +155,19 @@ bool InputMouse::IsMoveMouse(char h)
 	return 0;
 }
 
-DirectX::XMFLOAT2 InputMouse::GetPos()
+DirectX::XMFLOAT2 InputMouse::GetScreanPos()
 {
 	POINT mouse_p;
 	GetCursorPos(&mouse_p);
-	return XMFLOAT2{ (float)mouse_p.x,(float) mouse_p.y };
+	return XMFLOAT2{ (float)mouse_p.x,(float)mouse_p.y };
+}
+
+DirectX::XMFLOAT2 InputMouse::GetWindowPos()
+{
+	POINT mouse_p;
+	GetCursorPos(&mouse_p);
+	bool check = ScreenToClient(WinApp::GetInstance()->GetHwnd(), &mouse_p);
+	return XMFLOAT2{ (float)mouse_p.x,(float)mouse_p.y };
 }
 
 
@@ -174,6 +182,21 @@ float InputMouse::MoveMouseVector(char h)
 		return mouse.lY;
 	}
 	return 0;
+}
+
+void InputMouse::ShowMouseCursor(bool flag)
+{	
+	int c;
+	if (flag == true) {
+		do {
+			c = ShowCursor(1);
+		} while (c < 0);
+	}
+	if (flag == false) {
+		do {
+			c = ShowCursor(0);
+		} while (c >= 0);
+	}
 }
 
 void InputMouse::SetCenterCoursolPos()

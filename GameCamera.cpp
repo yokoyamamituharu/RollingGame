@@ -46,7 +46,7 @@ void GameCamera::Update()
 	if (isSetMousePoint == false) {
 		showCorsl = true;
 	}
-	ShowCursor(showCorsl);
+	//ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };

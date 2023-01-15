@@ -94,6 +94,14 @@ void SceneManager::Update()
 		}
 	}
 
+	if (Input::GetInstance()->TriggerKey(DIK_C)) {
+		InputMouse::GetInstance()->ShowMouseCursor(false);
+	}
+
+	if (Input::GetInstance()->PushKey(DIK_Q)) {
+		InputMouse::GetInstance()->GetWindowPos();
+	}
+
 	if (Input::GetInstance()->TriggerKey(DIK_B))
 	{
 		blackStartFlag = true;

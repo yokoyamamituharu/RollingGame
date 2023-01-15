@@ -49,11 +49,22 @@ private: // メンバ変数
 
 	/*----オブジェクト----*/
 	//スプライト
-	Sprite* spriteBG = nullptr;
+	int hitNum;
+	int hitTime;
+	const int hitWaitTime = 90;	//ヒットが継続する猶予時間
+	bool hitFlag = false;
+
+	Sprite* hitNum1[10] = { nullptr };
+	Sprite* hitNum2[10] = { nullptr };
+	Sprite* hitSprite = nullptr;
+	float hitSize = 1.0f;
+	XMFLOAT2 hitSizeB = { 1.0f ,1.0f};
+
+	Sprite* torisetu = nullptr;
 	Canvas* canvas = nullptr;
 	//3Dオブジェクト
 	ObjectObj* tenQ = nullptr;
-	ObjectObj* ground = nullptr;	
+	ObjectObj* ground = nullptr;
 	Player* player = nullptr;
 	std::shared_ptr<EnemyZako>enemies;
 	ObjectObj* area = nullptr;

@@ -33,7 +33,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
-	ShowCursor(true);
+	//ShowCursor(true);
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE)||InputMouse::GetInstance()->PushMouse(M_LEFT)) {
 		SceneManager::blackStartFlag = true;
 	}

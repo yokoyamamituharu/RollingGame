@@ -19,7 +19,7 @@ BatlleScene::~BatlleScene()
 {
 	//スプライト解放
 	safe_delete(canvas);
-	safe_delete(spriteBG);
+	safe_delete(torisetu);
 
 	//3Dオブジェクト解放
 	safe_delete(tenQ);
@@ -38,9 +38,24 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	battleCamera = BattleCamera::Create();
 
 	player = Player::Create(battleCamera, 2);
-	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
+	torisetu = Sprite::Create(1, { 0.0f,0.0f });	
 	battleCamera->SetPlayer(player->object);
 	battleCamera->SetPlayer(player);
+
+	int intervalWidth = 30;
+	float height = 100;
+	float width = 200;
+	for (int i = 0; i < 10; i++) {		
+		hitNum2[i] = Sprite::Create(10 + i, { width  + float(intervalWidth * 1),height });
+		hitNum1[i] = Sprite::Create(10 + i, { width  + float(intervalWidth * 2),height });		
+		hitNum2[i]->SetScale({ 1.6,1.6 });
+		hitNum1[i]->SetScale({ 1.6,1.6 });		
+		hitNum2[i]->SetColor({ 0.9,0.9,0.9 });
+		hitNum1[i]->SetColor({ 0.9,0.9,0.9 });
+	}
+	hitSprite = Sprite::Create(27, { width + float(intervalWidth * 3) ,height });
+	hitSizeB = hitNum1[0]->GetSize();
+
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
@@ -61,6 +76,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	canvas = new Canvas();
 	canvas->Initialize();
 
+	hitNum = 0;
 	//enemies = std::make_shared<EnemyZako>();
 	//enemies->InitializeOut({ 0,0,0 }, false);
 
@@ -142,6 +158,21 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//	}
 	//}
 
+	if (hitFlag == true) {
+		hitTime++;
+		if (hitTime >= hitWaitTime) {
+			hitFlag = false;
+			hitNum = 0;
+		}
+	}
+	for (int i = 0; i < 10; i++) {		
+		hitNum1[i]->SetSize(hitSizeB * hitSize);
+		hitNum2[i]->SetSize(hitSizeB * hitSize);
+	}
+	if (hitSize > 1.0f) {
+		hitSize -= 0.1f;
+	}
+
 
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != 0) {
@@ -160,6 +191,10 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 					vec = XMVector3Normalize(vec);
 					vec.m128_f32[1] = 0;
 					player->Res(true, Use::LoadXMVECTOR(vec));
+					hitNum++;
+					hitFlag = true;
+					hitTime = 0;
+					hitSize = 1.5f;
 				}
 				else if (enemy->GetAttack()) {
 					player->Damage(1);
@@ -190,10 +225,13 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 
 
 		//バトルシーンから脱出するシーン
-		if (enemies->GetEnemies().size() == 0) {			
+		if (enemies->GetEnemies().size() == 0) {
 			player->StopIn();
 			player->breakEnemy++;	//敵の撃破数を増やす
 			enemies.reset();
+			hitFlag = false;
+			hitNum = 0;
+			hitSize = 1.0f;
 			//sceneNo = SceneManager::SCENE_GAME;
 			SceneManager::WinBattle = true;
 		}
@@ -253,5 +291,12 @@ void BatlleScene::Draw()
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	canvas->Draw();
+	if (hitFlag) {
+		hitSprite->Draw();		
+		int a = hitNum / 10;
+		int b = hitNum - a;
+		hitNum1[b]->Draw();
+		hitNum2[a]->Draw();
+	}
 	Sprite::PostDraw();
 }

@@ -20,7 +20,7 @@ private:
 	//プレイヤーのポインター
 	ObjectObj* playerObj = nullptr;
 	Player* player = nullptr;
-	bool showCorsl = false;
+	bool showCorsl = true;
 
 	XMFLOAT3 dirEye = { 0,0,0 };
 	XMFLOAT3 dirTarget = { 0,0,0 };

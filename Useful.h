@@ -8,6 +8,18 @@ using XMFLOAT4 = DirectX::XMFLOAT4;
 using XMMATRIX = DirectX::XMMATRIX;
 using XMVECTOR = DirectX::XMVECTOR;
 
+//XMFLOAT2のーバーロード
+const DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs);
+
+const DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs);
+
+const DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs);
+
+const DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const DirectX::XMFLOAT2& rhs);
+
+const DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& lhs, const float& scalar);
+
+const DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const float& scalar);
 
 //XMFLOAT3のオーバーロード
 const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs);

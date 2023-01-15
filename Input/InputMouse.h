@@ -48,9 +48,17 @@ public: // メンバ関数
 
 	bool IsMoveMouse(char h);
 
-	XMFLOAT2 GetPos();
+	XMFLOAT2 GetScreanPos();
+
+	XMFLOAT2 GetWindowPos();
 
 	float MoveMouseVector(char h);
+
+	/// <summary>
+	/// カーソルを表示するか否か
+	/// </summary>
+	/// <param name="flag">true=表示 false=非表示</param>
+	void ShowMouseCursor(bool flag);
 
 	/// <summary>
 	/// カーソルをウィンドウの中心に固定

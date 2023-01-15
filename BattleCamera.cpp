@@ -28,7 +28,6 @@ void BattleCamera::Update()
 	}
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
-		//matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
 	////キーでカメラ操作
@@ -41,14 +40,14 @@ void BattleCamera::Update()
 
 	if (Input::GetInstance()->TriggerKey(DIK_C)) {
 		if (showCorsl == true) {
+			ShowCursor(0);
 			showCorsl = false;
 		}
 		else {
+			int num = ShowCursor(1);
 			showCorsl = true;
 		}
 	}
-	showCorsl = true;
-	ShowCursor(showCorsl);
 
 	//カメラの向き、位置を計算
 	XMVECTOR movement = { 0, 0, 1.0f, 0 };

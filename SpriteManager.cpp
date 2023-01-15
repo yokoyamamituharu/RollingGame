@@ -49,4 +49,5 @@ void SpriteManager::Initialize()
 
 	//UI
 	Sprite::LoadTexture(26, L"Resources/pose.png");
+	Sprite::LoadTexture(27, L"Resources/num/hit.png");
 }

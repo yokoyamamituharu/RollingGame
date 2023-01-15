@@ -23,8 +23,10 @@ public:
 	void Initialize(Camera* camera, int InOrOut);
 	void UpdateOut(Camera* camera);
 	void UpdateIn();
-	void Move();
+	void MoveOut();
 	void MoveIn();
+	void RollingMoveOut();
+	void RollingMoveIn();
 	void MoveVector(DirectX::XMFLOAT3 vec)
 	{
 		object->SetPosition({
