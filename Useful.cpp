@@ -32,6 +32,24 @@ const DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& lhs, const DirectX::X
 	return result;
 }
 
+const DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const float& scalar)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x + scalar;
+	result.y = lhs.y + scalar;
+	result.z = lhs.z + scalar;
+	return result;
+}
+
+const DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const float& scalar)
+{
+	XMFLOAT3 result;
+	result.x = lhs.x - scalar;
+	result.y = lhs.y - scalar;
+	result.z = lhs.z - scalar;
+	return result;
+}
+
 
 const DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& lhs, const float& scalar)
 {

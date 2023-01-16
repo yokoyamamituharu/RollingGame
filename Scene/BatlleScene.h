@@ -36,6 +36,13 @@ public:
 	void Initialize(DirectXCommon* dxCommon);
 	//更新
 	void Update(int& sceneNo, GameScene* gameScene);
+
+	//3D空間上の更新
+	void Update3D(int& sceneNo, GameScene* gameScene);
+
+	//2D空間上の更新
+	void Update2D();
+
 	//描画
 	void Draw();
 
@@ -59,6 +66,9 @@ private: // メンバ変数
 	Sprite* hitSprite = nullptr;
 	float hitSize = 1.0f;
 	XMFLOAT2 hitSizeB = { 1.0f ,1.0f};
+
+	bool hitStopFlag = false;
+	int hitStopTime = 0;
 
 	Sprite* torisetu = nullptr;
 	Canvas* canvas = nullptr;

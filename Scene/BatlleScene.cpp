@@ -38,24 +38,26 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	battleCamera = BattleCamera::Create();
 
 	player = Player::Create(battleCamera, 2);
-	torisetu = Sprite::Create(1, { 0.0f,0.0f });	
+	torisetu = Sprite::Create(1, { 0.0f,0.0f });
 	battleCamera->SetPlayer(player->object);
 	battleCamera->SetPlayer(player);
 
 	int intervalWidth = 30;
 	float height = 100;
 	float width = 200;
-	for (int i = 0; i < 10; i++) {		
-		hitNum2[i] = Sprite::Create(10 + i, { width  + float(intervalWidth * 1),height });
-		hitNum1[i] = Sprite::Create(10 + i, { width  + float(intervalWidth * 2),height });		
+	for (int i = 0; i < 10; i++) {
+		hitNum2[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 1),height });
+		hitNum1[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 2),height });
 		hitNum2[i]->SetScale({ 1.6,1.6 });
-		hitNum1[i]->SetScale({ 1.6,1.6 });		
+		hitNum1[i]->SetScale({ 1.6,1.6 });
 		hitNum2[i]->SetColor({ 0.9,0.9,0.9 });
 		hitNum1[i]->SetColor({ 0.9,0.9,0.9 });
 	}
 	hitSprite = Sprite::Create(27, { width + float(intervalWidth * 3) ,height });
 	hitSizeB = hitNum1[0]->GetSize();
 
+	hitStopFlag = false;
+	hitStopTime = 0;
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
@@ -107,6 +109,12 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 {
+	Update3D(sceneNo, gameScene);
+	Update2D();
+}
+
+void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
+{
 	//EnemyZako::isAction = -1;
 
 	ObjectObj::SetCamera(battleCamera);
@@ -122,6 +130,10 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 		SceneManager::BattleInit = false;
 	}
 
+	//ヒットストップフラグが立っていたら更新をスキップ
+	if (hitStopFlag == true) {
+		return;
+	}
 
 	////エフェクト
 	//if (Input::GetInstance()->PushKey(DIK_E)) {
@@ -158,20 +170,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	//	}
 	//}
 
-	if (hitFlag == true) {
-		hitTime++;
-		if (hitTime >= hitWaitTime) {
-			hitFlag = false;
-			hitNum = 0;
-		}
-	}
-	for (int i = 0; i < 10; i++) {		
-		hitNum1[i]->SetSize(hitSizeB * hitSize);
-		hitNum2[i]->SetSize(hitSizeB * hitSize);
-	}
-	if (hitSize > 1.0f) {
-		hitSize -= 0.1f;
-	}
+
 
 
 	//敵の情報を外シーンから取得できていたら処理
@@ -195,6 +194,7 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 					hitFlag = true;
 					hitTime = 0;
 					hitSize = 1.5f;
+					hitStopFlag = true;
 				}
 				else if (enemy->GetAttack()) {
 					player->Damage(1);
@@ -232,6 +232,8 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 			hitFlag = false;
 			hitNum = 0;
 			hitSize = 1.0f;
+			hitStopFlag = false;
+			hitStopTime = 0;
 			//sceneNo = SceneManager::SCENE_GAME;
 			SceneManager::WinBattle = true;
 		}
@@ -268,6 +270,52 @@ void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 }
 
+void BatlleScene::Update2D()
+{
+	//ヒット数表示
+	if (hitFlag == true) {
+		hitTime++;
+		if (hitTime >= hitWaitTime) {
+			hitFlag = false;
+			hitNum = 0;
+		}
+		for (int i = 0; i < 10; i++) {
+			hitNum1[i]->SetSize(hitSizeB * hitSize);
+			hitNum2[i]->SetSize(hitSizeB * hitSize);
+		}
+		if (hitSize > 1.0f) {
+			hitSize -= 0.1f;
+		}
+	}
+
+
+	if (hitStopFlag == true) {
+		hitStopTime++;
+		if (hitStopTime >= 5) {
+			hitStopFlag = false;
+			hitStopTime = 0;
+		}
+
+		XMFLOAT3 oldEye = battleCamera->GetEye();
+		XMFLOAT3 oldTarget = battleCamera->GetTarget();
+		battleCamera->SetEye(battleCamera->GetEye() + float(rand() % 2 - 1));
+		battleCamera->SetTarget(battleCamera->GetTarget() + float(rand() % 2 - 1));
+
+		battleCamera->UpdateView();
+
+		player->object->Update();
+		player->shadowObj->Update();
+		ground->Update();
+		tenQ->Update();
+		area->Update();
+		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+			enemy->object->Update();
+		}
+		battleCamera->SetEye(oldEye);
+		battleCamera->SetTarget(oldTarget);
+	}
+}
+
 void BatlleScene::Draw()
 {
 
@@ -292,7 +340,7 @@ void BatlleScene::Draw()
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	canvas->Draw();
 	if (hitFlag) {
-		hitSprite->Draw();		
+		hitSprite->Draw();
 		int a = hitNum / 10;
 		int b = hitNum - a;
 		hitNum1[b]->Draw();
