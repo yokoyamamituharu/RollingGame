@@ -227,8 +227,7 @@ void Player::UpdateIn()
 void Player::MoveOut()
 {
 	DirectX::XMVECTOR forvardvec = {};
-
-	if (sphereFlag == false) {
+	if (isSphere == false) {
 		if (Input::GetInstance()->PushKey(DIK_W)) {
 			forvardvec.m128_f32[2] += 1;
 		}
@@ -242,28 +241,51 @@ void Player::MoveOut()
 			forvardvec.m128_f32[0] += 1;
 		}
 	}
-
-	//これは進む方向にプレイヤーを向かせる処理
-	////移動の反映
-	//XMVECTOR playermatrot = { forvardvec };
-	////回転行列をかける
-	//playermatrot = XMVector3Normalize(playermatrot);
-	//playermatrot = XMVector3Transform(playermatrot, camera->matRot);
-	////正規化する
-	//playermatrot = XMVector3Normalize(playermatrot);
-
 	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	//forvardvec = XMVector3TransformNormal(forvardvec, object->GetMatRot());
-	float speed = 1.2f;
+	const float speed = 1.2f;
 	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
-	//object->SetPosition({
-	//	object->GetPosition().x + move.x,
-	//	object->GetPosition().y + move.y,
-	//	object->GetPosition().z + move.z });
 
-	//プレイヤーを真正面に向かせる
-	//float buff = atan2f(playermatrot.m128_f32[0], playermatrot.m128_f32[2]);
-	//object->SetRotation(XMFLOAT3(0, buff * 180.0f / 3.14f, 0));
+	RollingMoveOut();
+}
+
+void Player::RollingMoveOut()
+{
+	//回転移動
+
+	//非球体状態じゃない時にクリックしたら球体状態
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		isSphere = true;
+
+		XMFLOAT2 windowCenter = { WinApp::window_width / 2,WinApp::window_height / 2 };
+		//回転チャージ
+		if (WinApp::window_height / 2 < InputMouse::GetInstance()->GetWindowPos().y) {
+			rollingPower = InputMouse::GetInstance()->GetWindowPos().y - WinApp::window_height / 2;
+		}
+		else{
+			rollingPower = 0;
+		}
+	}
+	else if (!InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
+		isSphere = false;
+	}
+
+	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && rollingPower > 0) {
+		isShoot = true;
+	}
+
+	if (isShoot == true) {
+		XMVECTOR forvardvec = {};
+		forvardvec.m128_f32[2] += 10;
+		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
+		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
+		
+		rollingTime++;
+		if (rollingTime >= 120) {
+			isShoot = false;
+			rollingTime = 0;
+			rollingPower = 0;
+		}
+	}
 }
 
 void Player::MoveIn()
@@ -271,7 +293,7 @@ void Player::MoveIn()
 	if (crawAttackFlag == true) { return; }
 	DirectX::XMVECTOR forvardvec = {};
 
-	if (sphereFlag == false) {
+	if (isSphere == false) {
 		if (Input::GetInstance()->PushKey(DIK_W)) {
 			forvardvec.m128_f32[2] += 1;
 		}
@@ -290,17 +312,19 @@ void Player::MoveIn()
 	float speed = 1.2f;
 	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
 
-#pragma region 回転移動
-	//回転移動
-	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
+	RollingMoveIn();
+}
+
+
+
+void Player::RollingMoveIn()
+{
+	//押した瞬間に中心点を決定
+	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		clickTrigerPos = InputMouse::GetInstance()->GetScreanPos();
 	}
-
-	if (roolMoveFlag == true && InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-		//roolattackFlag = true;
-	}
-
-	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
+	//中心点から向きを計算して保存
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		isSphere = true;
 		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetScreanPos();
 		XMVECTOR pos1, pos2;
@@ -312,7 +336,7 @@ void Player::MoveIn()
 		pos2.m128_f32[2] = -releasePos.y;
 		attackDirection = pos1 - pos2;
 		attackDirection = XMVector3Normalize(attackDirection);
-		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+		attackDirection.m128_f32[1] = 0;	//攻撃方向
 
 		//エフェクトの向きを計算
 		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());
@@ -322,7 +346,7 @@ void Player::MoveIn()
 		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 		object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 	}
-	else {
+	else if (!InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		isSphere = false;
 	}
 
@@ -350,24 +374,28 @@ void Player::MoveIn()
 			waveright[i]->SetRotation(object->GetRotation());
 			waveleft[i]->SetRotation(object->GetRotation());
 		}
+
+		isShoot = true;
 	}
 
-	if (isSphere) {
-		//モデルを変える
-		object->SetModel(playerSpheremodel);
-		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-		rollingSpeed = 20;
-		if (rollingSpeed < 0) {
-			rollingSpeed = 0;
+	if (isShoot == true) {
+		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
+		pos += attackDirection * 6.0f;
+		attackFlag = true;		
+		if (roolstop == false) {
+			move = Use::LoadXMVECTOR(attackDirection * 6.0f);
 		}
-		//マウスの移動量をプレイヤーの回転速度にもする
-		spiralSpeed.z = 100;
-		//マウスを離したとき、移動量があったらプレイヤーを直進させる
-
-		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
-
-		sphereFlag = true;
+		roolTime++;
+		if (roolTime > 10) {
+			roolTime = 0;
+			isShoot = 0;
+			isSphere = false;
+		}
 	}
+
+
+#pragma region 回転移動
+	
 	else if (rollingSpeed > 0) {
 		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
 		pos += attackDirection * 6.0f;
@@ -397,10 +425,9 @@ void Player::MoveIn()
 		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
 		object->SetModel(playermodel);
 		attackFlag = false;
-		sphereFlag = false;
 		roolMoveFlag = false;
 	}
-	SpiralVector(spiralSpeed);
+
 
 	if (attackFlag == true) {
 		if (waveTime > 2) {
@@ -425,67 +452,6 @@ void Player::MoveIn()
 
 
 #pragma endregion
-}
-
-void Player::RollingMoveOut()
-{
-//#pragma region 回転移動
-//	//回転移動
-//	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-//		isSphere = true;
-//	}
-//	else {
-//		isSphere = false;
-//	}
-//
-//	if (isSphere) {
-//		//モデルを変える
-//		object->SetModel(playerSpheremodel);
-//		//マウスの下への移動量を保存（下に下げれば＋、上にあげれば―（0以下にはならない））
-//		rollingSpeed += InputMouse::GetInstance()->MoveMouseVector('y') / 30;
-//		if (rollingSpeed < 0) {
-//			rollingSpeed = 0;
-//		}
-//		//マウスの移動量をプレイヤーの回転速度にもする
-//		spiralSpeed.z = rollingSpeed;
-//		//マウスを離したとき、移動量があったらプレイヤーを直進させる
-//
-//		//その時のプレイヤーの回転速度はプレイヤーの移動速度に依存
-//
-//		sphereFlag = true;
-//	}
-//	else if (rollingSpeed > 0) {
-//		if (rollingSpeed > 400) {
-//			forvardvec.m128_f32[2] += 10;
-//		}
-//		else if (rollingSpeed > 300) {
-//			forvardvec.m128_f32[2] += 7;
-//		}
-//		else if (rollingSpeed > 100) {
-//			forvardvec.m128_f32[2] += 5;
-//		}
-//		else {
-//			forvardvec.m128_f32[2] += 3;
-//		}
-//		rollingSpeed -= 1;
-//		attackFlag = true;
-//	}
-//	else {
-//		rollingSpeed = 0.0f;
-//		spiralSpeed.z = 0;
-//		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
-//		object->SetModel(playermodel);
-//		attackFlag = false;
-//		sphereFlag = false;
-//	}
-//	SpiralVector(spiralSpeed);
-//
-//
-//#pragma endregion
-}
-
-void Player::RollingMoveIn()
-{
 }
 
 void Player::Res(bool flag, XMFLOAT3 vec)

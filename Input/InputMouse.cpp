@@ -208,7 +208,7 @@ void InputMouse::SetCenterCoursolPos()
 	float right = rect.right;
 	float top = rect.top;
 	float bottom = rect.bottom;
-	float x, y;
+	float xCenter, yCenter;
 
 	//横の中心点を計算
 	if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
@@ -221,10 +221,10 @@ void InputMouse::SetCenterCoursolPos()
 			high = right;
 			min = left;
 		}
-		x = abs(high) - abs(min);
+		xCenter = abs(high) - abs(min);
 	}
 	else {
-		x = abs(left) + abs(right);
+		xCenter = abs(left) + abs(right);
 	}
 	//縦の中心点を計算
 	if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
@@ -237,14 +237,14 @@ void InputMouse::SetCenterCoursolPos()
 			high = bottom;
 			min = top;
 		}
-		y = abs(high) - abs(min);
+		yCenter = abs(high) - abs(min);
 	}
 	else {
-		y = abs(top) + abs(bottom);
+		yCenter = abs(top) + abs(bottom);
 	}
 
 	//カーソルを固定
-	SetCursorPos(left + (x / 2), bottom - (y / 2));
+	SetCursorPos(left + (xCenter / 2), bottom - (yCenter / 2));
 
 	//short xxx = GET_X_LPARAM(0);
 	//short yyy = GET_Y_LPARAM(0);

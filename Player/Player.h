@@ -63,7 +63,7 @@ public:
 
 	bool GetRolling() { return rollingSpeed > 0; }
 
-	bool GetSphere() { return sphereFlag; }
+	bool GetSphere() { return isSphere; }
 public:
 	void SetCamera(Camera* camera) { this->camera = camera; }
 
@@ -95,13 +95,15 @@ private:
 	bool muteki = false;
 	int mutekiTime = 0;
 
-	bool isSphere = false;		//クリックしてるとき
-	bool sphereFlag = false;	//玉の状態のとき
 	DirectX::XMFLOAT3 spiralSpeed = {};
 	float rollingSpeed = 0.0f;
 
 	Camera* camera;
 
+	bool isSphere = false;		//玉の状態のとき
+	float rollingPower = 0.0f;
+	bool isCharge = false;
+	bool isShoot = false;
 	int rollingTime = 0;
 
 	bool resFlag1 = false;
@@ -128,6 +130,8 @@ private:
 	bool crawAttackFlag = 0;
 	XMFLOAT3 crawTargetPos = { 0,0,0 };
 	XMFLOAT3 crawDirection = { 0,0,0 };
+
+	bool isRollingPowerCharge = false;;
 private:
 	//接地フラグ
 	bool onGround = true;

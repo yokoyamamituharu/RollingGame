@@ -59,6 +59,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	hitStopFlag = false;
 	hitStopTime = 0;
 
+	mousePosS = Sprite::Create(28, { 0,0 });
+
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
 	ground->SetPosition({ 0.0f,-10.1f,0.0f });
@@ -272,6 +274,10 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 void BatlleScene::Update2D()
 {
+	mousePosS->SetPos(InputMouse::GetInstance()->GetWindowPos());
+
+	
+
 	//ヒット数表示
 	if (hitFlag == true) {
 		hitTime++;
@@ -288,10 +294,10 @@ void BatlleScene::Update2D()
 		}
 	}
 
-
+	//ヒットストップ
 	if (hitStopFlag == true) {
 		hitStopTime++;
-		if (hitStopTime >= 5) {
+		if (hitStopTime >= 10) {
 			hitStopFlag = false;
 			hitStopTime = 0;
 		}
@@ -346,5 +352,6 @@ void BatlleScene::Draw()
 		hitNum1[b]->Draw();
 		hitNum2[a]->Draw();
 	}
+	mousePosS->Draw();
 	Sprite::PostDraw();
 }

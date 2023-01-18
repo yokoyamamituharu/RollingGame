@@ -30,6 +30,38 @@ void BattleCamera::Update()
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
+
+
+	RECT rcClip;           // new area for ClipCursor
+	RECT rcOldClip;        // previous area for ClipCursor
+
+	// Record the area in which the cursor can move. 
+
+	GetClipCursor(&rcOldClip);
+
+	// Get the dimensions of the application's window. 
+
+	GetWindowRect(WinApp::GetInstance()->GetHwnd(), &rcClip);
+
+	// Confine the cursor to the application's window. 
+
+	//ClipCursor(&rcClip);
+
+	// 
+	// Process input from the confined cursor. 
+	// 
+
+ // Restore the cursor to its previous area. 
+
+	//ClipCursor(&rcOldClip);
+
+	RECT clip ={400,300,500,400};
+	ClipCursor(&clip);
+	ClipCursor(&rcOldClip);
+
+	//回転方向を決めるためにカーソル固定を外す
+	//カーソルを一定の範囲にとどめる
+
 	////キーでカメラ操作
 	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 	//	matRot *= XMMatrixRotationY(0.02f);

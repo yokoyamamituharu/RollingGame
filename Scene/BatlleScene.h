@@ -64,6 +64,8 @@ private: // ƒƒ“ƒo•Ï”
 	Sprite* hitNum1[10] = { nullptr };
 	Sprite* hitNum2[10] = { nullptr };
 	Sprite* hitSprite = nullptr;
+	Sprite* mousePosS = nullptr;
+
 	float hitSize = 1.0f;
 	XMFLOAT2 hitSizeB = { 1.0f ,1.0f};
 
