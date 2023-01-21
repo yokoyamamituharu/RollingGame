@@ -30,7 +30,7 @@ public:	//静的メンバ関数
 		FIELD_IN
 	};
 
-	static EnemyZako* CreateIn(int filedFlag, XMFLOAT3 pos,bool isTarget);
+	static EnemyZako* CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget);
 
 public:	//静的メンバ変数
 //ざこてきの地面となるの座標
@@ -45,9 +45,9 @@ public:	//メンバ関数
 	EnemyZako();
 
 	//デストラクタ
-	~EnemyZako();	
+	~EnemyZako();
 
-	virtual void InitializeOut( XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
+	virtual void InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
 
 	virtual void InitializeIn();
 
@@ -56,7 +56,7 @@ public:	//メンバ関数
 	virtual void UpdateIn();
 
 	void Draw();
-	
+
 protected:
 	//プレイヤーの方を向かせる処理
 	void ViewpointPlayer(Player* player);
@@ -66,13 +66,13 @@ protected:
 
 	//突進前の予備動作
 	void PreliminaryOperation();
-	
+
 	void BreakParticle();
 
 
 public:	//セッター、ゲッター	
 	void DamageOut(int attackPower);
-	
+
 	void SetPlayer(Player* player)
 	{
 		this->player = player;
@@ -119,12 +119,11 @@ protected:	//メンバ変数
 
 	bool stopFlag = false;		//攻撃の終わりに停止させる
 	bool animeEndFlag = false;
-	
+
 	bool maeburiFlag = false;	//攻撃の前ぶりアニメショーン再生フラグ
 	bool tossinFlag = false;
 	bool attackFlag = false;
 	bool isTarget = false;		//生成した時に目的地が設定されたか
-
 
 
 	//タイマー
@@ -135,7 +134,7 @@ protected:	//メンバ変数
 	int time = 0;
 	int timer1 = 0;
 	int tossintime = 0;
-	int moveTime = 0;	
+	int moveTime = 0;
 	int attackTime = 0;
 	int rotaTime = 0;
 
@@ -148,17 +147,17 @@ protected:	//メンバ変数
 	int targetIndex;//いま何個目のターゲットなのか
 
 	/*その他*/
-	XMFLOAT3 atodekesuROta = {0,0,0};
+	XMFLOAT3 atodekesuROta = { 0,0,0 };
 	int num1 = 0;
 	int num2 = 0;
 	XMFLOAT3 move;
-	
+
 
 	float m_Radius;		// 半径(描画用)
 	float m_Angle = 0;	// 角度
 	float m_Length = 50;// 半径の長さ
 	XMFLOAT3 rollPoint;
-	
+
 	XMVECTOR attackDirection;
 
 
@@ -174,4 +173,8 @@ protected:	//メンバ変数
 	//中用の敵が外シーンでマップ当たり判定にひっかかんないように
 	XMFLOAT3 outPos = { 0,-100,0 };
 	XMFLOAT3 inPos = { 0,-100,0 };
+
+public:
+	bool tikai = false;
+
 };

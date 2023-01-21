@@ -66,6 +66,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
+	tikaiSprite = Sprite::Create(29, { 0,600 });
+
 
 	collisionManager = CollisionManager::GetInstance();
 
@@ -139,7 +141,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	scene = new SceneLoader;
 	scene->Initialize();
-
 	//castle->SetCollider(new SphereCollider);
 }
 
@@ -232,6 +233,34 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			//当たったら負け
 			//sceneNo = SceneManager::SCENE_END;
 		}
+
+		//敵と城が近いかどうか
+		if (enemy->tikai == false) {
+			if (Collision::CheckDistance(castle->GetPosition(), enemy->object->GetPosition()) < 30) {
+				enemy->tikai = true;
+				isTikai = true;
+				tikaiStack.push_back(true);
+			}
+		}
+	}
+
+	if (tikaiStack.size() > 0) {
+		isTikai = true;
+		tikaiTime++;
+		if (tikaiTime < 120) {
+			tikaiSprite->SetPos({ tikaiSprite->GetPos().x,tikaiSprite->GetPos().y - 1 });
+		}
+		else if (tikaiTime < 200) {
+			int kyomu = 0;
+		}
+		else if (tikaiTime < 320) {
+			tikaiSprite->SetPos({ tikaiSprite->GetPos().x,tikaiSprite->GetPos().y + 1 });
+		}
+		else {
+			tikaiTime = 0;
+			isTikai = false;
+			tikaiStack.pop_front();
+		}
 	}
 
 	//プレイヤーとシーンオブジェクトの当たり判定
@@ -321,6 +350,9 @@ void GameScene::Draw()
 	canvas->Draw();
 	if (poseFlag == true) {
 		pose->Draw();
+	}
+	if (isTikai) {
+		tikaiSprite->Draw();
 	}
 	Sprite::PostDraw();
 }

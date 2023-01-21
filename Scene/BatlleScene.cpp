@@ -59,7 +59,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	hitStopFlag = false;
 	hitStopTime = 0;
 
-	mousePosS = Sprite::Create(28, { 0,0 });
+	mousePosS = Sprite::Create(29, { 0,0 });
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
@@ -81,6 +81,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	canvas->Initialize();
 
 	hitNum = 0;
+
 	//enemies = std::make_shared<EnemyZako>();
 	//enemies->InitializeOut({ 0,0,0 }, false);
 

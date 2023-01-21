@@ -122,5 +122,10 @@ private: // メンバ変数
 	bool clear = false;
 	//ポーズフラグ
 	bool poseFlag = false;
+
+	std::list<bool> tikaiStack;
+	int tikaiTime = 0;
+	bool isTikai = false;
+	Sprite* tikaiSprite = nullptr;
 };
 
