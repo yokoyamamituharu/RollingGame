@@ -74,19 +74,9 @@ private: // メンバ変数
 	//3Dオブジェクト
 	//ゲームシーン用オブジェクト
 	SceneLoader* scene = nullptr;
-	//天球
-	ObjectObj* tenQ = nullptr;
-	//地面
-	ObjectObj* ground = nullptr;	
-	//お城
-	ObjectObj* castle = nullptr;
-	TouchableObject* touchCastle = nullptr;
 	//巣穴
 	ObjectObj* suana = nullptr;
 	ObjectObj* suana2 = nullptr;
-	//壁
-	ObjectObj* kabe = nullptr;
-	ObjectObj* kabe2 = nullptr;
 	//タワー
 	DefenseTower* defenseTower = nullptr;
 	//プレイヤー

@@ -10,9 +10,12 @@ SceneLoader::SceneLoader()
 
 SceneLoader::~SceneLoader()
 {
-	objects.clear();
+	notTouchObjects.clear();
 	for (auto& object : touchObjects) {
 		//safe_delete(object);
+	}
+	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
+		//safe_delete(itr->second);
 	}
 	touchObjects.clear();
 }
@@ -79,7 +82,7 @@ void SceneLoader::Initialize()
 			DirectX::XMStoreFloat3(&scale, objectData.scaling);
 			newObject->SetScale(scale);
 			//配列に登録
-			objects.push_back(newObject);
+			notTouchObjects.push_back(newObject);
 		}
 		else {
 			TouchableObject* newObject = TouchableObject::Create(model);
@@ -97,22 +100,8 @@ void SceneLoader::Initialize()
 			newObject->SetScale(scale);
 			//配列に登録
 			//touchObjects.insert(objectData.fileName,);
-			touchObjects[objectData.fileName] = newObject;
+			touchObjects[objectData.objectName] = newObject;
 		}
-
-
-
-		//トランスフォームを参照してコライダーを生成する
-		//ColliderData* newCollider = new ColliderData;
-		////座標
-		//DirectX::XMFLOAT3 cpos = { 0,0,0 };
-		//DirectX::XMStoreFloat3(&pos, objectData.colliderTransla);
-		//newCollider->translation = cpos;
-		////回転角
-		//DirectX::XMFLOAT3 cscale = { 0,0,0 };
-		//DirectX::XMStoreFloat3(&cscale, objectData.colliderScaling);
-		//newCollider->scaling = cscale;
-		//colliders.push_back(newCollider);
 	}
 
 }
@@ -137,6 +126,9 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 				//ファイル名
 				objectData.fileName = object["file_name"];
 			}
+
+			//オブジェクト名
+			objectData.objectName = object["name"];
 
 			//トランスフォームのパロメータ読み込み
 			nlohmann::json& transform = object["transform"];
@@ -211,30 +203,25 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 
 void SceneLoader::Update()
 {
-	for (auto& object : objects) {
+	for (auto& object : notTouchObjects) {
 		object->Update();
 	}
-	for (auto& object : touchObjects) {
-		object.
+	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
+		itr->second->Update();
 	}
 }
 
 void SceneLoader::Draw()
 {
-	for (auto& object : objects) {
+	for (auto& object : notTouchObjects) {
 		object->Draw();
 	}
-	for (auto& object : touchObjects) {
-		object->Draw();
+	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
+		itr->second->Draw();
 	}
 }
 
-bool SceneLoader::Collision(XMFLOAT3 playerpos, XMFLOAT3 radius)
+ObjectObj* SceneLoader::GetObjectObj(const std::string& objectName)
 {
-	/*for (auto& collider : colliders) {
-		if (CollisitonBoxToBox(collider->translation, collider->scaling, playerpos, radius)) {
-			return true;
-		}
-	}*/
-	return false;
+	return touchObjects[objectName];	
 }

@@ -26,13 +26,8 @@ GameScene::~GameScene()
 	safe_delete(miniMapPost);
 	//3Dオブジェクト解放
 	safe_delete(scene);
-	safe_delete(tenQ);
-	safe_delete(ground);
-	safe_delete(castle);
 	safe_delete(suana);
 	safe_delete(suana2);
-	safe_delete(kabe);
-	safe_delete(kabe2);
 	safe_delete(defenseTower);
 	safe_delete(player);
 	safe_delete(copyGround);
@@ -42,7 +37,6 @@ GameScene::~GameScene()
 	enemiesG.clear();
 	dasu.clear();
 	safe_delete(gameCamera);
-	safe_delete(touchCastle);
 	safe_delete(touchGround);
 	safe_delete(subCamera);
 
@@ -72,15 +66,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	collisionManager = CollisionManager::GetInstance();
 
 	//3Dオブジェクトの生成
-	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
-	tenQ->SetScale({ 5,5,5 });
-	ground = ObjectObj::Create(ModelManager::GetModel("ground"));
-	ground->SetScale({ 10.0f,1.0f,10.0f });
-	ground->SetPosition({ 0.0f,-10.0f,0.0f });
-	castle = ObjectObj::Create(ModelManager::GetModel("castle"));
-	castle->SetScale({ 10.0f,10.0f,10.0f });
-	//touchCastle = TouchableObject::Create(ModelManager::GetModel("castle"));
-	//touchCastle->SetScale({ 10.0f,10.0f,10.0f });
 	suana = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
@@ -89,13 +74,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
-	kabe = ObjectObj::Create(ModelManager::GetModel("kabe"));
-	kabe->SetPosition({ 70.0f,-5.0f,50.0f });
-	kabe->SetScale({ 5.0f,5.0f,5.0f });
-	kabe2 = ObjectObj::Create(ModelManager::GetModel("kabe"));
-	kabe2->SetPosition({ -60.0f,-5.0f,-50.0f });
-	kabe2->SetScale({ 5.0f,5.0f,5.0f });
-	kabe2->SetRotation({ 0,180,0 });
 	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
 	touchGround->SetScale({ 10.0f,1.0f,10.0f });
 	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
@@ -130,8 +108,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	subCamera->SetEye({ 0, 100, -1 });
 	subCamera->SetTarget({ 0, 0, 0 });
 	//ミニマップ用オブジェクトの初期化	
-	copyGround = CopyObject::Create(ground);
-	copyCastle = CopyObject::Create(castle);
+	//copyGround = CopyObject::Create(ground);
+	//copyCastle = CopyObject::Create(castle);
 	copyDefenseTower = CopyObject::Create(defenseTower->GetObjectObj());
 	copyPlayer = CopyObject::Create(player->object);
 	//ミニマップ用ポストエフェクト生成処理
@@ -229,14 +207,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
-			//当たったら負け
-			//sceneNo = SceneManager::SCENE_END;
-		}
+		//if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
+		//	//当たったら負け
+		//	//sceneNo = SceneManager::SCENE_END;
+		//}
 
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
-			if (Collision::CheckDistance(castle->GetPosition(), enemy->object->GetPosition()) < 30) {
+			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 30) {
 				enemy->tikai = true;
 				isTikai = true;
 				tikaiStack.push_back(true);
@@ -265,21 +243,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//プレイヤーとシーンオブジェクトの当たり判定
 	player->MoveOut();
-	//scene->Update();
 	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
 	//	player->move = { 0,0,0 };
 	//}	
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
-	ground->Update();
 	defenseTower->Update(enemiesG);
-	castle->Update();
-	//touchCastle->Update();
 	suana->Update();
 	suana2->Update();
-	kabe->Update();
-	kabe2->Update();
-	tenQ->Update();
 	scene->Update();
 	touchGround->Update();
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
@@ -304,8 +275,8 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//ミニマップ用オブジェクトの更新
 	copyPlayer->Update(player->object, subCamera);
-	copyGround->Update(ground, subCamera);
-	copyCastle->Update(castle, subCamera);
+	//copyGround->Update(ground, subCamera);
+	//copyCastle->Update(castle, subCamera);
 	copyDefenseTower->Update(defenseTower->GetObjectObj(), subCamera);
 	subCamera->SetTarget(player->object->GetPosition());
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
@@ -364,8 +335,8 @@ void GameScene::PostReserve()
 	//ポストエフェクトさせたいオブジェクト
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	copyPlayer->Draw();
-	copyGround->Draw();
-	copyCastle->Draw();
+	//copyGround->Draw();
+	//copyCastle->Draw();
 	copyDefenseTower->Draw();
 	ObjectObj::PostDraw();
 

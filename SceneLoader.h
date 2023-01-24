@@ -12,9 +12,9 @@ class SceneLoader
 public:	//サブクラス
 	struct LevelData {
 		//オブジェクト1個分のデータ
-		struct ObjectData {
-			//ファイル名
-			std::string fileName;
+		struct ObjectData {			
+			std::string objectName;	//オブジェクトネーム
+			std::string fileName;	//ファイル名
 			DirectX::XMVECTOR translation;
 			DirectX::XMVECTOR rotation;
 			DirectX::XMVECTOR scaling;
@@ -43,16 +43,15 @@ public:
 
 	void Draw();
 
-	bool Collision(XMFLOAT3 playerpos, XMFLOAT3 radius);
+	ObjectObj* GetObjectObj(const std::string &objectName);
 private:
 
 	LevelData* levelData;
 
-	//オブジェクトデータ
-	std::vector<ObjectObj*>objects;
-	//オブジェクトデータ
+	//オブジェクトデータ	//プレイヤーと当たり判定を行わないオブジェクト
+	std::vector<ObjectObj*>notTouchObjects;
+	//オブジェクトデータ	//プレイヤーと当たり判定を行なうオブジェクト
 	std::map<std::string,TouchableObject*>touchObjects;
 
-	std::vector<ColliderData*>colliders;
 };
 
