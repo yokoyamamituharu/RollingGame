@@ -51,7 +51,7 @@ private:
 	//オブジェクトデータ
 	std::vector<ObjectObj*>objects;
 	//オブジェクトデータ
-	std::list<TouchableObject*>touchObjects;
+	std::map<std::string,TouchableObject*>touchObjects;
 
 	std::vector<ColliderData*>colliders;
 };

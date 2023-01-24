@@ -353,6 +353,6 @@ void BatlleScene::Draw()
 		hitNum1[b]->Draw();
 		hitNum2[a]->Draw();
 	}
-	mousePosS->Draw();
+	//mousePosS->Draw();
 	Sprite::PostDraw();
 }

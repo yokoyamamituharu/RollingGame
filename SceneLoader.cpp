@@ -12,10 +12,9 @@ SceneLoader::~SceneLoader()
 {
 	objects.clear();
 	for (auto& object : touchObjects) {
-		safe_delete(object);
+		//safe_delete(object);
 	}
 	touchObjects.clear();
-	//touchObjects.clear();
 }
 
 void SceneLoader::Initialize()
@@ -34,7 +33,7 @@ void SceneLoader::Initialize()
 		assert(0);
 	}
 
-	//JSONもおじ列から解凍したデータ
+	//JSON文字列から解凍したデータ
 	nlohmann::json deserialized;
 
 	//解凍
@@ -97,7 +96,8 @@ void SceneLoader::Initialize()
 			DirectX::XMStoreFloat3(&scale, objectData.scaling);
 			newObject->SetScale(scale);
 			//配列に登録
-			touchObjects.push_back(newObject);
+			//touchObjects.insert(objectData.fileName,);
+			touchObjects[objectData.fileName] = newObject;
 		}
 
 
@@ -215,7 +215,7 @@ void SceneLoader::Update()
 		object->Update();
 	}
 	for (auto& object : touchObjects) {
-		object->Update();
+		object.
 	}
 }
 

@@ -55,9 +55,9 @@ void BattleCamera::Update()
 
 	//ClipCursor(&rcOldClip);
 
-	RECT clip ={400,300,500,400};
-	ClipCursor(&clip);
-	ClipCursor(&rcOldClip);
+	//RECT clip ={400,300,500,400};
+	//ClipCursor(&clip);
+	//ClipCursor(&rcOldClip);
 
 	//回転方向を決めるためにカーソル固定を外す
 	//カーソルを一定の範囲にとどめる
