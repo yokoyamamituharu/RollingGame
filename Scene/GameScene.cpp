@@ -69,7 +69,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	suana = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana->SetPosition({ 100.0f,0.0f,100.0f });
 	suana->SetScale({ 10.0f,10.0f,10.0f });
-	suana->SetRotation({ 0,90,0 });
+	suana->SetRotation({ 0,0,0 });
 	suana2 = ObjectObj::Create(ModelManager::GetModel("suana"));
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
@@ -119,7 +119,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	scene = new SceneLoader;
 	scene->Initialize();
-	//castle->SetCollider(new SphereCollider);
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)

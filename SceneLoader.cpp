@@ -15,7 +15,7 @@ SceneLoader::~SceneLoader()
 		//safe_delete(object);
 	}
 	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
-		//safe_delete(itr->second);
+		safe_delete(itr->second);
 	}
 	touchObjects.clear();
 }
@@ -23,7 +23,7 @@ SceneLoader::~SceneLoader()
 void SceneLoader::Initialize()
 {
 	//パス
-	const std::string fullpath = std::string("Resources/levels/") + "scene.json";
+	const std::string fullpath = std::string("Resources/levels/") + "level.json";
 
 	//ファイルストリーム
 	std::ifstream file;
@@ -144,8 +144,8 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 			objectData.rotation.m128_f32[2] = 0.0f;
 			objectData.rotation.m128_f32[3] = 0.0f;
 			//スケーリング
-			objectData.scaling.m128_f32[0] = (float)transform["scaling"][1];
-			objectData.scaling.m128_f32[1] = (float)transform["scaling"][2];
+			objectData.scaling.m128_f32[0] = (float)transform["scaling"][2];
+			objectData.scaling.m128_f32[1] = (float)transform["scaling"][1];
 			objectData.scaling.m128_f32[2] = (float)transform["scaling"][0];
 			objectData.scaling.m128_f32[3] = 0.0f;
 

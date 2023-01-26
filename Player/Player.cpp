@@ -11,7 +11,7 @@ using namespace DirectX;
 int Player::breakEnemy = 0;
 int Player::maxHp = 5;
 int Player::hp = Player::maxHp;
-const float Player::grundHeight = -6.0f;
+const float Player::groundHeight = 0.0f;
 
 Player::Player()
 {
@@ -40,8 +40,9 @@ void Player::Initialize(Camera* camera, int InOrOut)
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(playermodel);
-	object->SetPosition({ 0.0f,-6.0f,-50.0f });
+	object->SetPosition({ 0.0f,groundHeight,-50.0f });
 	object->SetRotation({ 0.0f,90.0f,0.0f });
+	object->SetScale({ 1.0f,1.0f,1.0f });
 	if (InOrOut == 1) {
 		object->SetCollider(new SphereCollider({ 0,0,0 }, 6.0f));
 		object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
@@ -68,14 +69,8 @@ void Player::UpdateOut(Camera* camera)
 {
 	//外シーンではY座標をとりあえず固定
 	if (object->collider) {
-		object->SetPosY(-6.0f);
+		object->SetPosY(groundHeight);
 	}
-	//if (Input::GetInstance()->PushKey(DIK_3)) {
-	//	object->SetRotation({
-	//		object->GetRotation().x,
-	//		object->GetRotation().y ,
-	//		object->GetRotation().z + 1.0f });
-	//}
 
 	if (muteki == true) {
 		mutekiTime++;
@@ -97,7 +92,7 @@ void Player::UpdateOut(Camera* camera)
 	//オブジェクトのアップデート		
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->SetPosY(groundHeight - 4);
 	shadowObj->Update();
 	object->UpdateWorldMatrix();
 
@@ -188,7 +183,7 @@ void Player::UpdateOut(Camera* camera)
 	// 行列の更新など
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->SetPosY(groundHeight - 4);
 	shadowObj->Update();
 }
 
@@ -214,7 +209,7 @@ void Player::UpdateIn()
 
 	//影の更新
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(grundHeight - 4);
+	shadowObj->SetPosY(groundHeight - 4);
 	shadowObj->Update();
 
 	for (int i = 0; i < waveNum; i++) {
@@ -261,7 +256,7 @@ void Player::RollingMoveOut()
 		if (WinApp::window_height / 2 < InputMouse::GetInstance()->GetWindowPos().y) {
 			rollingPower = InputMouse::GetInstance()->GetWindowPos().y - WinApp::window_height / 2;
 		}
-		else{
+		else {
 			rollingPower = 0;
 		}
 	}
@@ -278,7 +273,7 @@ void Player::RollingMoveOut()
 		forvardvec.m128_f32[2] += 10;
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
-		
+
 		rollingTime++;
 		if (rollingTime >= 120) {
 			isShoot = false;
@@ -315,14 +310,13 @@ void Player::MoveIn()
 	RollingMoveIn();
 }
 
-
-
 void Player::RollingMoveIn()
 {
 	//押した瞬間に中心点を決定
 	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		clickTrigerPos = InputMouse::GetInstance()->GetScreanPos();
 	}
+
 	//中心点から向きを計算して保存
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		isSphere = true;
@@ -346,11 +340,11 @@ void Player::RollingMoveIn()
 		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 		object->SetRotation(XMFLOAT3(0.0f, angleToPlayer, 0.0f));
 	}
-	else if (!InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
+	else if (!InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		isSphere = false;
 	}
 
-	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && roolMoveFlag == false) {
+	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetScreanPos();
 		XMVECTOR pos1, pos2;
 		pos1.m128_f32[0] = clickTrigerPos.x;
@@ -381,28 +375,22 @@ void Player::RollingMoveIn()
 	if (isShoot == true) {
 		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
 		pos += attackDirection * 6.0f;
-		attackFlag = true;		
+		attackFlag = true;
 		if (roolstop == false) {
 			move = Use::LoadXMVECTOR(attackDirection * 6.0f);
 		}
 		roolTime++;
 		if (roolTime > 10) {
 			roolTime = 0;
-			isShoot = 0;
+			isShoot = false;
 			isSphere = false;
 		}
 	}
-
-
-#pragma region 回転移動
-	
 	else if (rollingSpeed > 0) {
 		XMVECTOR pos = XMLoadFloat3(&object->GetPosition());
 		pos += attackDirection * 6.0f;
-
-
 		attackFlag = true;
-		roolMoveFlag = true;
+		isShoot = true;
 		if (roolstop == false) {
 			//object->SetPosition(Use::LoadXMVECTOR(pos));
 			move = Use::LoadXMVECTOR(attackDirection * 6.0f);
@@ -425,10 +413,11 @@ void Player::RollingMoveIn()
 		object->SetRotation({ object->GetRotation().x, object->GetRotation().y, 0.0f, });
 		object->SetModel(playermodel);
 		attackFlag = false;
-		roolMoveFlag = false;
+		isShoot = false;
 	}
 
 
+	//エフェクト処理
 	if (attackFlag == true) {
 		if (waveTime > 2) {
 			waveIndex++;
@@ -449,9 +438,6 @@ void Player::RollingMoveIn()
 			waveleft[i]->SetPosition({ 0,-100,0 });
 		}
 	}
-
-
-#pragma endregion
 }
 
 void Player::Res(bool flag, XMFLOAT3 vec)
@@ -465,7 +451,7 @@ void Player::Res(bool flag, XMFLOAT3 vec)
 			gravity += 0.03f;
 		}
 		object->SetPosY({ object->GetPosition().y - gravity });
-		if (object->GetPosition().y <= grundHeight) {
+		if (object->GetPosition().y <= groundHeight) {
 			resFlag2 = false;
 			gravity = 0.0f;
 			object->SetPosY(-6.0f);
@@ -499,7 +485,7 @@ void Player::StopIn()
 {
 	rollingSpeed = 0;
 	attackFlag = false;
-	object->SetPosition({ 0,grundHeight,0 });
+	object->SetPosition({ 0,groundHeight,0 });
 	resFlag1 = false;
 	resFlag2 = false;
 	gravity = 0.0f;

@@ -81,7 +81,7 @@ public:
 
 	bool attackFlag = false;
 
-	const static float grundHeight;
+	const static float groundHeight;
 
 	static int breakEnemy;
 
