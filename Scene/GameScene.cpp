@@ -60,7 +60,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
-	tikaiSprite = Sprite::Create(29, { 0,600 });
+	tikaiSprite = Sprite::Create(29, { 300,600 });
 
 
 	collisionManager = CollisionManager::GetInstance();
@@ -77,11 +77,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
 	touchGround->SetScale({ 10.0f,1.0f,10.0f });
 	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
-	//touchGround->collider.
+	
+
+	tamesi = ObjectObj::Create(ModelManager::GetModel("level"));
+	tamesi->SetPosition({ 0.0f,0.0f,0.0f });
+	tamesi->SetScale({ 1.0f,1.0f,1.0f });
+	tamesi->SetRotation({ 0,0,0 });
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
-	defenseTower->GetObjectObj()->SetPosition({ 20,0,20 });
+	defenseTower->GetObjectObj()->SetPosition({ 20,0,35 });
+	defenseTower->GetObjectObj()->SetScale({ 15,15,15 });
 
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
@@ -93,9 +99,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	index = 0;
 	dasu[0] = { 0,1 };
 	dasu[1] = { 0,2 };
-	dasu[2] = { 120,1 };
-	dasu[3] = { 100,1 };
-	dasu[4] = { 40,2 };
+	dasu[2] = { 240,1 };
+	dasu[3] = { 200,1 };
+	dasu[4] = { 80,2 };
 	dasu[5] = { 230,2 };
 	dasu[6] = { 120,1 };
 	dasu[7] = { 180,2 };
@@ -206,10 +212,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		//if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, castle->GetPosition(), { 10,10,10 })) {
-		//	//当たったら負け
-		//	//sceneNo = SceneManager::SCENE_END;
-		//}
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, {0,0,0}, { 10,10,10 })) {
+			//当たったら負け
+			sceneNo = SceneManager::SCENE_END;
+		}
 
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
@@ -255,7 +261,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
-	if (enemiesG.size() <= 0 && index >= 6) {
+	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
 
@@ -263,7 +269,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	gameCamera->UpdateView();
 	player->object->Update();
 	player->shadowObj->Update();
-
+	tamesi->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -301,18 +307,12 @@ void GameScene::Draw()
 	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
 		enemy->Draw();
 	}
-	scene->Draw();
-	//tenQ->Draw();
-	//ground->Draw();	
-	//castle->Draw();
-	//touchCastle->Draw();
+	scene->Draw();	
 	suana->Draw();
 	suana2->Draw();
-	//kabe->Draw();
-	//kabe2->Draw();
 	defenseTower->Draw();
 	player->Draw();
-	//touchGround->Draw();
+	//tamesi->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

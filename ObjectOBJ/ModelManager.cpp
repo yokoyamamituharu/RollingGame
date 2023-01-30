@@ -23,6 +23,8 @@ void ModelManager::SetModelName()
 	modelname.push_back("area");
 	modelname.push_back("wave");
 	modelname.push_back("particle");
+	modelname.push_back("tamesiObj");
+	modelname.push_back("level");
 
 	modelname.push_back("effect_1");
 	modelname.push_back("effect_2");

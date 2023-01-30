@@ -87,6 +87,9 @@ private: // メンバ変数
 	//敵
 	std::list<std::shared_ptr<EnemyZako>>enemiesG;
 	TouchableObject* touchGround = nullptr;
+	
+	ObjectObj* tamesi = nullptr;
+
 
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;
@@ -104,7 +107,7 @@ private: // メンバ変数
 		int timer;
 		int basyo;
 	};
-	static const int maxEnemy = 6;	
+	static const int maxEnemy = 7;	
 	std::map<int,Dasu>dasu;
 	int index = 0;
 

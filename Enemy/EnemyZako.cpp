@@ -9,7 +9,7 @@ using namespace DirectX;
 
 /// 静的メンバ変数の実体
 const float EnemyZako::groundInPos = -4.0f;
-const float EnemyZako::groundOutPos = -4.0f;
+const float EnemyZako::groundOutPos = 6.0f;
 int EnemyZako::isAction = 1;
 
 
@@ -194,7 +194,7 @@ void EnemyZako::UpdateOut()
 	//オブジェクトの更新
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(-6 - 4);
+	shadowObj->SetPosY(groundOutPos - 6);
 	shadowObj->Update();
 }
 

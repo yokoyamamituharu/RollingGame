@@ -11,7 +11,7 @@ using namespace DirectX;
 int Player::breakEnemy = 0;
 int Player::maxHp = 5;
 int Player::hp = Player::maxHp;
-const float Player::groundHeight = 0.0f;
+const float Player::groundHeight = 4.0f;
 
 Player::Player()
 {
@@ -40,7 +40,13 @@ void Player::Initialize(Camera* camera, int InOrOut)
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(playermodel);
-	object->SetPosition({ 0.0f,groundHeight,-50.0f });
+	if (InOrOut == 2) {
+		object->SetPosition({ 0.0f,-6.0f,-50.0f });
+	}
+	else {
+		object->SetPosition({ 0.0f,groundHeight,-50.0f });
+	}
+
 	object->SetRotation({ 0.0f,90.0f,0.0f });
 	object->SetScale({ 1.0f,1.0f,1.0f });
 	if (InOrOut == 1) {
@@ -209,7 +215,7 @@ void Player::UpdateIn()
 
 	//影の更新
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(groundHeight - 4);
+	shadowObj->SetPosY(-6.0f - 4);
 	shadowObj->Update();
 
 	for (int i = 0; i < waveNum; i++) {
@@ -270,7 +276,7 @@ void Player::RollingMoveOut()
 
 	if (isShoot == true) {
 		XMVECTOR forvardvec = {};
-		forvardvec.m128_f32[2] += 10;
+		forvardvec.m128_f32[2] += 3;
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
 
@@ -280,6 +286,13 @@ void Player::RollingMoveOut()
 			rollingTime = 0;
 			rollingPower = 0;
 		}
+	}
+
+	if (isSphere || isShoot) {
+		object->SetModel(ModelManager::GetModel("playerSphere"));
+	}
+	else {
+		object->SetModel(ModelManager::GetModel("player"));
 	}
 }
 
@@ -416,6 +429,13 @@ void Player::RollingMoveIn()
 		isShoot = false;
 	}
 
+	if (isSphere || isShoot) {
+		object->SetModel(ModelManager::GetModel("playerSphere"));
+	}
+	else {
+		object->SetModel(ModelManager::GetModel("player"));
+	}
+
 
 	//エフェクト処理
 	if (attackFlag == true) {
@@ -485,7 +505,7 @@ void Player::StopIn()
 {
 	rollingSpeed = 0;
 	attackFlag = false;
-	object->SetPosition({ 0,groundHeight,0 });
+	object->SetPosition({ 0,-6.0f,0 });
 	resFlag1 = false;
 	resFlag2 = false;
 	gravity = 0.0f;
@@ -495,6 +515,7 @@ void Player::StopIn()
 void Player::StopOut()
 {
 	rollingSpeed = 0;
+	rollingPower = 0;
 	attackFlag = false;
 	resFlag1 = false;
 	resFlag2 = false;

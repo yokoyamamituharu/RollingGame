@@ -82,20 +82,6 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 		}
 	}
 
-	if (Input::GetInstance()->PushKey(DIK_L)) {
-		object->VecSetPosition({ +1,0,0 });
-	}
-	if (Input::GetInstance()->PushKey(DIK_J)) {
-		object->VecSetPosition({ -1,0,0 });
-	}
-
-	if (Input::GetInstance()->PushKey(DIK_I)) {
-		object->VecSetPosition({ 0,0,+1 });
-	}
-	if (Input::GetInstance()->PushKey(DIK_K)) {
-		object->VecSetPosition({ 0,0,-1 });
-	}
-
 	object->Update();
 
 	for (std::unique_ptr<Bullet>& bullet : bullets) {
