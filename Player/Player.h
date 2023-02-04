@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "InputMouse.h"
 #include <DirectXMath.h>
+class Sprite;
 
 class Player
 {
@@ -160,6 +161,7 @@ public:
 
 	int roolTime = 0;
 
-
+	Sprite* yazirusi = nullptr;
+	XMFLOAT2 yazirusiScale = { 1,1 };
 };
 

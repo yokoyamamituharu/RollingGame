@@ -281,7 +281,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 void BatlleScene::Update2D()
 {
-	mousePosS->SetPos(InputMouse::GetInstance()->GetWindowPos());
+	mousePosS->SetPosition(InputMouse::GetInstance()->GetWindowPos());
 
 	
 
@@ -360,5 +360,8 @@ void BatlleScene::Draw()
 		hitNum2[a]->Draw();
 	}
 	//mousePosS->Draw();
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		player->yazirusi->Draw();
+	}
 	Sprite::PostDraw();
 }

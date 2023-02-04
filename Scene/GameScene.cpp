@@ -214,7 +214,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//“G‚Æé‚Ì“–‚½‚è”»’è
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, {0,0,0}, { 10,10,10 })) {
 			//“–‚½‚Á‚½‚ç•‰‚¯
-			sceneNo = SceneManager::SCENE_END;
+			//sceneNo = SceneManager::SCENE_END;
 		}
 
 		//“G‚Æé‚ª‹ß‚¢‚©‚Ç‚¤‚©
@@ -231,13 +231,13 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		isTikai = true;
 		tikaiTime++;
 		if (tikaiTime < 120) {
-			tikaiSprite->SetPos({ tikaiSprite->GetPos().x,tikaiSprite->GetPos().y - 1 });
+			tikaiSprite->SetPosition({ tikaiSprite->GetPosition().x,tikaiSprite->GetPosition().y - 1 });
 		}
 		else if (tikaiTime < 200) {
 			int kyomu = 0;
 		}
 		else if (tikaiTime < 320) {
-			tikaiSprite->SetPos({ tikaiSprite->GetPos().x,tikaiSprite->GetPos().y + 1 });
+			tikaiSprite->SetPosition({ tikaiSprite->GetPosition().x,tikaiSprite->GetPosition().y + 1 });
 		}
 		else {
 			tikaiTime = 0;
@@ -324,6 +324,10 @@ void GameScene::Draw()
 	if (isTikai) {
 		tikaiSprite->Draw();
 	}
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		player->yazirusi->Draw();
+	}	
+	
 	Sprite::PostDraw();
 }
 

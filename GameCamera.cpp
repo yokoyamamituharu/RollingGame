@@ -24,7 +24,7 @@ void GameCamera::Update()
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
 		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
-		InputMouse::GetInstance()->SetCenterCoursolPos();
+		//InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
 	//キーでカメラ操作
 	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {

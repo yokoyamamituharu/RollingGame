@@ -175,9 +175,6 @@
     <ClInclude Include="Enemy\EnemyZako.h">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Player\Player.h">
-      <Filter>ソース ファイル\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneManager.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
@@ -315,6 +312,9 @@
     </ClInclude>
     <ClInclude Include="BaseEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\Player.h">
+      <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
