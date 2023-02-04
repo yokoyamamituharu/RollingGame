@@ -75,6 +75,9 @@ protected://メンバ変数
 	//テクスチャ番号
 	UINT texNumber = 0;
 
+	//アンカーポイント
+	XMFLOAT2 anchorpoint = { 0.5f,0.5f };
+
 public://静的メンバ関数
 	//静的初期化
 	static bool StaticInitialize(ID3D12Device* device, int window_width, int window_height);
@@ -119,10 +122,13 @@ public://メンバ関数
 	void SetScale(XMFLOAT2 scale);
 
 	//場所を変更
-	void SetPos(XMFLOAT2 pos) { position = pos; }
+	void SetPosition(XMFLOAT2 pos) { position = pos; }
+
+	//回転
+	void SetRotation(float rota) { rotation = rota; }
 
 	XMFLOAT2 GetSize() { return size; }
-	XMFLOAT2 GetPos() { return position; }
+	XMFLOAT2 GetPosition() { return position; }
 
 protected:
 	//頂点データ転送

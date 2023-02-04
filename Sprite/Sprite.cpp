@@ -444,10 +444,15 @@ void Sprite::TransferVertices()
 	//左下、左上、右下、右上
 	enum { LB, LT, RB, RT };
 
-	vertices[LB].pos = { 0.0f,size.y * scale.y,0.0f };//左下
-	vertices[LT].pos = { 0.0f,0.0f,0.0f };//左上
-	vertices[RB].pos = { size.x * scale.x,size.y * scale.y,0.0f };//右下
-	vertices[RT].pos = { size.x * scale.x,0.0f,0.0f };//右上
+	float left = (0.0f - anchorpoint.x) * size.x * scale.x;
+	float right = (1.0f - anchorpoint.x) * size.x * scale.x;
+	float top = (0.0f - anchorpoint.y) * size.y * scale.y;
+	float bottom = (1.0f - anchorpoint.y) * size.y * scale.y;
+
+	vertices[LB].pos = { left ,bottom ,0.0f };//左下
+	vertices[LT].pos = { left ,top    ,0.0f };//左上
+	vertices[RB].pos = { right ,bottom ,0.0f };//右下
+	vertices[RT].pos = { right ,top    ,0.0f };//右上
 
 	//頂点バッファへのデータ転送
 	VertexPosUv* vertMap = nullptr;
