@@ -76,7 +76,7 @@ protected://メンバ変数
 	UINT texNumber = 0;
 
 	//アンカーポイント
-	XMFLOAT2 anchorpoint = { 0.5f,0.5f };
+	XMFLOAT2 anchorpoint = { 0.0f,0.0f };
 
 public://静的メンバ関数
 	//静的初期化
@@ -129,6 +129,8 @@ public://メンバ関数
 
 	XMFLOAT2 GetSize() { return size; }
 	XMFLOAT2 GetPosition() { return position; }
+
+	void SetAnchorPoint(XMFLOAT2 anchorpoint) { this->anchorpoint = anchorpoint; }
 
 protected:
 	//頂点データ転送
