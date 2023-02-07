@@ -4,7 +4,7 @@
 #include "InputMouse.h"
 #include <DirectXMath.h>
 #include "Player.h"
-class EnemyZako
+class BaseEnemy
 {
 private:
 	//DirectXを省略
@@ -29,7 +29,7 @@ public:	//静的メンバ関数
 		FIELD_IN
 	};
 
-	static EnemyZako* CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget);
+	static BaseEnemy* CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget);
 
 public:	//静的メンバ変数
 //ざこてきの地面となるの座標
@@ -41,10 +41,10 @@ public:	//静的メンバ変数
 public:	//メンバ関数	
 
 	//コンストラクタ
-	EnemyZako();
+	BaseEnemy();
 
 	//デストラクタ
-	~EnemyZako();
+	~BaseEnemy();
 
 	virtual void InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
 
@@ -90,9 +90,9 @@ public:	//セッター、ゲッター
 
 	bool GetAttack() { return attackFlag; }
 
-	float GetHp() { return outhp; }
+	float GetHp() { return hp; }
 
-	std::list<std::unique_ptr<EnemyZako>>& GetEnemies() { return enemies; }
+	std::list<std::unique_ptr<BaseEnemy>>& GetEnemies() { return enemies; }
 
 	void ParticleCreate();
 
@@ -160,17 +160,14 @@ protected:	//メンバ変数
 	XMVECTOR attackDirection;
 
 
-	float outmaxHp = 1;
-	float outhp = outmaxHp;
-
-	float inmaxHp = 1;
-	float inhp = inmaxHp;
+	float maxHp = 1;
+	float hp = maxHp;
 
 	float scale = 1;
 	XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
 
 
-	std::list<std::unique_ptr<EnemyZako>>enemies;
+	std::list<std::unique_ptr<BaseEnemy>>enemies;
 
 	//中用の敵が外シーンでマップ当たり判定にひっかかんないように
 	XMFLOAT3 outPos = { 0,-100,0 };

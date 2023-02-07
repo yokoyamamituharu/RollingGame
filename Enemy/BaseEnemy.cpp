@@ -1,4 +1,4 @@
-#include "EnemyZako.h"
+#include "BaseEnemy.h"
 using namespace DirectX;
 #include "Useful.h"
 #include "ModelManager.h"
@@ -6,22 +6,21 @@ using namespace DirectX;
 #include "Collision.h"
 #include "Particle.h"
 #include "SphereCollider.h"
-#include "YowaiEnemy.h"
 
 /// 静的メンバ変数の実体
-const float EnemyZako::groundInPos = -4.0f;
-const float EnemyZako::groundOutPos = 6.0f;
-int EnemyZako::isAction = 1;
+const float BaseEnemy::groundInPos = -4.0f;
+const float BaseEnemy::groundOutPos = 6.0f;
+int BaseEnemy::isAction = 1;
 
 
-EnemyZako* EnemyZako::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
+BaseEnemy* BaseEnemy::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
 {
-	EnemyZako* ins = new EnemyZako();
+	BaseEnemy* ins = new BaseEnemy();
 	ins->InitializeOut(pos, isTarget);
 	return ins;
 }
 
-void EnemyZako::ParticleCreate()
+void BaseEnemy::ParticleCreate()
 {
 	for (int i = 0; i < 5; i++) {
 		Particle::ParticleTubu* tubu = new Particle::ParticleTubu;
@@ -39,27 +38,27 @@ void EnemyZako::ParticleCreate()
 	}
 }
 
-void EnemyZako::DamageIn(int damage)
+void BaseEnemy::DamageIn(int damage)
 {
-	inhp -= damage;
+	hp -= damage;
 }
 
-EnemyZako::EnemyZako()
+BaseEnemy::BaseEnemy()
 {
 }
 
-EnemyZako::~EnemyZako()
+BaseEnemy::~BaseEnemy()
 {
 	ParticleCreate();
 	safe_delete(object);
 	enemies.clear();
 }
 
-void EnemyZako::DamageOut(int attackPower)
+void BaseEnemy::DamageOut(int attackPower)
 {
-	outhp -= attackPower;
+	hp -= attackPower;
 	int deleteNum = 0;
-	for (std::unique_ptr<EnemyZako>& enemy : enemies) {
+	for (std::unique_ptr<BaseEnemy>& enemy : enemies) {
 		enemy->SetDead();
 		deleteNum++;
 		if (deleteNum >= attackPower) {
@@ -68,7 +67,7 @@ void EnemyZako::DamageOut(int attackPower)
 	}
 }
 
-void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
+void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
 {
 	this->isFiled = FIELD_OUT;
 	this->isTarget = isTarget;
@@ -100,28 +99,19 @@ void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 	int maxEnemyNum = rand() % 2 + 5;
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		if (rand() % 10 > 4) {
-			//敵をリストに追加していく
-			std::unique_ptr<EnemyZako> newEnemyZako = std::make_unique<EnemyZako>();
-			newEnemyZako->InitializeIn();
-			//リストに登録
-			enemies.push_back(std::move(newEnemyZako));
-		}
-		else {
-			//敵をリストに追加していく
-			std::unique_ptr<YowaiEnemy> newEnemyZako = std::make_unique<YowaiEnemy>();
-			newEnemyZako->InitializeIn();
-			//リストに登録
-			enemies.push_back(std::move(newEnemyZako));
-		}
+		//敵をリストに追加していく
+		std::unique_ptr<BaseEnemy> newBaseEnemy = std::make_unique<BaseEnemy>();
+		newBaseEnemy->InitializeIn();
+		//リストに登録
+		enemies.push_back(std::move(newBaseEnemy));
 	}
 
 	//HPを計算
-	outmaxHp = enemies.size();
-	outhp = outmaxHp;
+	maxHp = enemies.size();
+	hp = maxHp;
 }
 
-void EnemyZako::InitializeIn()
+void BaseEnemy::InitializeIn()
 {
 	this->isFiled = FIELD_IN;
 
@@ -141,13 +131,11 @@ void EnemyZako::InitializeIn()
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
-
-	inhp = 5;
 }
 
-void EnemyZako::UpdateOut()
+void BaseEnemy::UpdateOut()
 {
-	scale = outhp / outmaxHp;
+	scale = hp / maxHp;
 	if (scale <= 0) {
 		scale = 1;
 		object->SetRotation({ 180,90,0 });
@@ -195,11 +183,11 @@ void EnemyZako::UpdateOut()
 				}
 			}
 		}
-		for (std::unique_ptr<EnemyZako>& enemy : enemies) {
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies) {
 			//enemy->SetDead();
 		}
-		enemies.remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
-		if (outhp <= 0) {
+		enemies.remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
+		if (hp <= 0) {
 			SetDead();
 		}
 	}
@@ -210,13 +198,13 @@ void EnemyZako::UpdateOut()
 	shadowObj->Update();
 }
 
-void EnemyZako::UpdateIn()
+void BaseEnemy::UpdateIn()
 {
 	if (isFiled == FIELD_OUT) {
 		return;
 	}
 
-	if (inhp <= 0) {
+	if (hp <= 0) {
 		dead = true;
 	}
 
@@ -327,7 +315,7 @@ void EnemyZako::UpdateIn()
 	shadowObj->Update();
 }
 
-void EnemyZako::Draw()
+void BaseEnemy::Draw()
 {
 	object->Draw();
 	shadowObj->Draw();
@@ -335,7 +323,7 @@ void EnemyZako::Draw()
 
 
 
-void EnemyZako::ViewpointPlayer(Player* player)
+void BaseEnemy::ViewpointPlayer(Player* player)
 {
 	const float direction = 90.0f;
 	XMFLOAT3 pos = object->GetPosition();
@@ -349,7 +337,7 @@ void EnemyZako::ViewpointPlayer(Player* player)
 }
 
 
-void EnemyZako::Stop()
+void BaseEnemy::Stop()
 {
 	stopTime++;
 	//ストップ処理
@@ -361,7 +349,7 @@ void EnemyZako::Stop()
 	}
 }
 
-void EnemyZako::ApproachPlayer()
+void BaseEnemy::ApproachPlayer()
 {
 	//敵のいる位置からプレイヤーのいる方向を計算
 	XMVECTOR enemyVec = XMLoadFloat3(&object->GetPosition());
@@ -374,7 +362,7 @@ void EnemyZako::ApproachPlayer()
 	object->SetPosition(Use::LoadXMVECTOR(enemyVec));
 }
 
-void EnemyZako::PreliminaryOperation()
+void BaseEnemy::PreliminaryOperation()
 {
 	jumpTime++;
 	XMFLOAT3 vec = { 0,0.2,0 };
@@ -395,7 +383,7 @@ void EnemyZako::PreliminaryOperation()
 	}
 }
 
-void EnemyZako::BreakParticle()
+void BaseEnemy::BreakParticle()
 {
 }
 

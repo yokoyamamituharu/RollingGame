@@ -224,7 +224,7 @@
     <ClInclude Include="Collider\TouchableObject.h" />
     <ClInclude Include="CopyObject.h" />
     <ClInclude Include="EndScene.h" />
-    <ClInclude Include="Enemy\Enemy.h" />
+    <ClInclude Include="Enemy\BaseEnemy.h" />
     <ClInclude Include="Enemy\EnemyManager.h" />
     <ClInclude Include="Enemy\EnemyZako.h" />
     <ClInclude Include="Enemy\StrongZakoEnemy.h" />
@@ -255,6 +255,7 @@
     <ClInclude Include="tuyoEnemy.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Useful.h" />
+    <ClInclude Include="YowaiEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseEnemy.cpp" />
@@ -271,7 +272,7 @@
     <ClCompile Include="Collider\TouchableObject.cpp" />
     <ClCompile Include="CopyObject.cpp" />
     <ClCompile Include="EndScene.cpp" />
-    <ClCompile Include="Enemy\Enemy.cpp" />
+    <ClCompile Include="Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Enemy\EnemyManager.cpp" />
     <ClCompile Include="Enemy\EnemyZako.cpp" />
     <ClCompile Include="Enemy\StrongZakoEnemy.cpp" />
@@ -302,6 +303,7 @@
     <ClCompile Include="tuyoEnemy.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Useful.cpp" />
+    <ClCompile Include="YowaiEnemy.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

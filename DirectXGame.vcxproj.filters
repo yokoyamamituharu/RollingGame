@@ -235,9 +235,6 @@
     <ClInclude Include="Useful.h">
       <Filter>ソース ファイル\Base\Use</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\Enemy.h">
-      <Filter>ソース ファイル\Enemy\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Enemy\EnemyManager.h">
       <Filter>ソース ファイル\Enemy\Enemy</Filter>
     </ClInclude>
@@ -315,6 +312,12 @@
     </ClInclude>
     <ClInclude Include="Player\Player.h">
       <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="YowaiEnemy.h">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\BaseEnemy.h">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -396,9 +399,6 @@
     <ClCompile Include="Useful.cpp">
       <Filter>ソース ファイル\Base\Use</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\Enemy.cpp">
-      <Filter>ソース ファイル\Enemy\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy\EnemyManager.cpp">
       <Filter>ソース ファイル\Enemy\Enemy</Filter>
     </ClCompile>
@@ -452,6 +452,12 @@
     </ClCompile>
     <ClCompile Include="BaseEnemy.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="YowaiEnemy.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\BaseEnemy.cpp">
+      <Filter>ソース ファイル\Enemy\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

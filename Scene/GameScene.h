@@ -12,7 +12,6 @@
 #include "Player.h"
 #include "EnemyZako.h"
 #include "DefenseTower.h"
-#include "Enemy.h"
 #include "BatlleScene.h"
 class BattleScene;
 class SceneManeger;

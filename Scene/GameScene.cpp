@@ -8,6 +8,7 @@
 #include "../Collider/Collision.h"
 #include "Useful.h"
 #include "SphereCollider.h"
+#include "YowaiEnemy.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -182,7 +183,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
-					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
+					std::shared_ptr<YowaiEnemy> newEnemy = std::make_shared<YowaiEnemy>();
 					newEnemy->InitializeOut({ suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
