@@ -116,7 +116,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	subCamera->SetTarget({ 0, 0, 0 });
 	//ミニマップ用オブジェクトの初期化	
 	//copyGround = CopyObject::Create(ground);
-	//copyCastle = CopyObject::Create(castle);
+	//copyCastle = CopyObject::Create(scene->GetObjectObj("castle"));
 	copyDefenseTower = CopyObject::Create(defenseTower->GetObjectObj());
 	copyPlayer = CopyObject::Create(player->object);
 	//ミニマップ用ポストエフェクト生成処理
@@ -126,6 +126,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	scene = new SceneLoader;
 	scene->Initialize();
+	playerSprte = Sprite::Create(31, { 0,0 });
+	towerSprte = Sprite::Create(32, { 0,0 });
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -282,7 +284,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//ミニマップ用オブジェクトの更新
 	copyPlayer->Update(player->object, subCamera);
 	//copyGround->Update(ground, subCamera);
-	//copyCastle->Update(castle, subCamera);
+	//copyCastle->Update(scene->GetObjectObj("castle"), subCamera);
 	copyDefenseTower->Update(defenseTower->GetObjectObj(), subCamera);
 	subCamera->SetTarget(player->object->GetPosition());
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
@@ -347,6 +349,10 @@ void GameScene::PostReserve()
 	//ポストエフェクトさせたいスプライト
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();
+	playerSprte->SetPosition({ player->object->GetPosition().x-gameCamera->GetEye().x ,player->object->GetPosition().z - gameCamera->GetEye().z});
+	playerSprte->Draw();
+	towerSprte->SetPosition({ defenseTower->object->GetPosition().x - gameCamera->GetEye().x ,defenseTower->object->GetPosition().z - gameCamera->GetEye().z});
+	towerSprte->Draw();
 	Sprite::PostDraw();
 
 	miniMapPost->PosDrawScene(dxCommon->GetCmdList());

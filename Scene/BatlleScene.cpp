@@ -192,7 +192,13 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 					XMVECTOR vec = pos1 - pos2;
 					vec = XMVector3Normalize(vec);
 					vec.m128_f32[1] = 0;
-					player->Res(true, Use::LoadXMVECTOR(vec));
+					if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) == false) {
+						player->Res(true, Use::LoadXMVECTOR(vec));
+					}
+					else {
+						player->garigariFlag = true;
+					}
+					player->rollingSpeed = 0;
 					hitNum++;
 					hitFlag = true;
 					hitTime = 0;
@@ -283,7 +289,7 @@ void BatlleScene::Update2D()
 {
 	mousePosS->SetPosition(InputMouse::GetInstance()->GetWindowPos());
 
-	
+
 
 	//ƒqƒbƒg”•\¦
 	if (hitFlag == true) {

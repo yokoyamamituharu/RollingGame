@@ -248,6 +248,13 @@ void Player::UpdateIn()
 		}
 	}
 
+	if (garigariFlag == true && InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		attackFlag = true;
+	}
+	else {
+		garigariFlag = false;
+	}
+
 	object->SetPosition({
 		object->GetPosition().x + move.x,
 		object->GetPosition().y + move.y,
@@ -427,7 +434,6 @@ void Player::RollingMoveIn()
 		attackDirection = XMVector3Normalize(attackDirection);
 		attackDirection.m128_f32[1] = 0;	//攻撃方向
 
-		//エフェクトの向きを計算
 		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());
 		ppos2 += attackDirection * 6.0f;
 		const float direction = 270.0f;
@@ -439,6 +445,7 @@ void Player::RollingMoveIn()
 		isSphere = false;
 	}
 
+	//クリックを放した瞬間に突進方向を計算して保存
 	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetScreanPos();
 		XMVECTOR pos1, pos2;
@@ -452,7 +459,6 @@ void Player::RollingMoveIn()
 		attackDirection = XMVector3Normalize(attackDirection);
 		attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 
-		//エフェクトの向きを計算
 		XMVECTOR ppos1 = XMLoadFloat3(&object->GetPosition()), ppos2 = XMLoadFloat3(&object->GetPosition());
 		ppos2 += attackDirection * 6.0f;
 		const float direction = 270.0f;

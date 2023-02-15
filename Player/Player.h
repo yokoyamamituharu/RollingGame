@@ -90,7 +90,7 @@ public:
 	ObjectObj* shadowObj = nullptr;
 
 	XMFLOAT3 outPos = { 0,0,0 };	//中シーンに行くときに今の座標を保存しておく
-private:
+public:
 	Model* playermodel = nullptr;
 	Model* playerSpheremodel = nullptr;
 	bool muteki = false;
@@ -163,5 +163,7 @@ public:
 
 	Sprite* yazirusi = nullptr;
 	XMFLOAT2 yazirusiScale = { 1,1 };
+
+	bool garigariFlag = false;
 };
 

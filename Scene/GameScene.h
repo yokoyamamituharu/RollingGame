@@ -119,5 +119,8 @@ private: // ƒƒ“ƒo•Ï”
 	int tikaiTime = 0;
 	bool isTikai = false;
 	Sprite* tikaiSprite = nullptr;
+
+	Sprite* playerSprte = nullptr;
+	Sprite* towerSprte = nullptr;
 };
 

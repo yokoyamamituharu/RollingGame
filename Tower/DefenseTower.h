@@ -26,7 +26,7 @@ public:
 private:
 	bool Initialize();
 
-private:
+public:
 	int type = NONE_TOWER;
 	ObjectObj* object = nullptr;
 	bool attackFlag = false;
