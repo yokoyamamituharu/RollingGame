@@ -37,7 +37,7 @@ DefenseTower::~DefenseTower()
 	safe_delete(object);
 }
 
-void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
+void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 {
 	//フラグが立った弾を消す
 	bullets.remove_if([](std::unique_ptr<Bullet>& bullet) {return bullet->GetDead(); });
@@ -46,7 +46,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<EnemyZako>>& enemies)
 	//検知範囲に敵が入ったら攻撃開始
 	//ターゲットのエネミーが空（倒されている）だったら新たなターゲットを探す
 	if (targetEnemy.expired()) {
-		for (std::shared_ptr<EnemyZako>& enemy : enemies) {
+		for (std::shared_ptr<BaseEnemy>& enemy : enemies) {
 			if (Kyori(object->GetPosition(), enemy->object->GetPosition()) <= 100.0f &&
 				enemy->GetHp() > 0) {
 				attackFlag = true;

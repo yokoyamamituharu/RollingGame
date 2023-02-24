@@ -206,9 +206,9 @@ void SceneManager::Update()
 		batlleScene->Draw();
 	}
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	if (sceneNo == SCENE_BATTLE || sceneNo == SCENE_KATI) {
+	//if (sceneNo == SCENE_BATTLE || sceneNo == SCENE_KATI) {
 		particleMan->Draw();
-	}
+	//}
 	ObjectObj::PostDraw();
 	post->PosDrawScene(dxCommon->GetCmdList());
 

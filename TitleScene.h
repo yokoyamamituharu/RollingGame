@@ -1,7 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "DirectXCommon.h"
-
+#include "ObjectOBJ.h"
 
 
 class TitleScene
@@ -48,5 +48,8 @@ private:
 	int effectIndex = 0;
 	int effectTime = 0;
 	bool effectFlag = false;
+
+	ObjectObj* titleObj = nullptr;
+
 };
 

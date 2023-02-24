@@ -92,4 +92,6 @@ public:
 	/// <param name="pos2">点2</param>
 	/// <returns>二点の距離</returns>
 	static float CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2);
+
+	static float CheckDistance(const DirectX::XMFLOAT2 pos1, const DirectX::XMFLOAT2 pos2);
 };

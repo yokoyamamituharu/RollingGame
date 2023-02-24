@@ -754,12 +754,6 @@ void ParticleManager::Update()
 		vertBuff->Unmap(0, nullptr);
 	}
 
-
-
-
-
-
-
 	// 定数バッファへデータ転送
 	ConstBufferData *constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void **)&constMap);
@@ -767,10 +761,6 @@ void ParticleManager::Update()
 	//行列の合成
 	constMap->matBillboard = matBillboard;
 	constBuff->Unmap(0, nullptr);
-
-
-
-
 }
 
 void ParticleManager::Draw()

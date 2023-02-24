@@ -26,6 +26,8 @@ void ModelManager::SetModelName()
 	modelname.push_back("tamesiObj");
 	modelname.push_back("level");
 	modelname.push_back("yowaienemy");
+	modelname.push_back("cloudBurst");
+	modelname.push_back("title");
 
 	modelname.push_back("effect_1");
 	modelname.push_back("effect_2");

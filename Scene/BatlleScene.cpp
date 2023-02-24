@@ -127,7 +127,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 	//外シーンから中シーンに移行した直後の処理
 	if (SceneManager::BattleInit == true) {
-		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
 			enemy->NotDead();
 		}
 		SceneManager::BattleInit = false;
@@ -135,53 +135,22 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 	//ヒットストップフラグが立っていたら更新をスキップ
 	if (hitStopFlag == true) {
+		if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) == false) {
+			//player->Res(true, Use::LoadXMVECTOR(vec));
+		}
+		else {
+			player->garigariFlag = true;
+		}
 		return;
 	}
-
-	////エフェクト
-	//if (Input::GetInstance()->PushKey(DIK_E)) {
-	//	for (int i = 0; i < 5; i++) {
-	//		int basyo = rand() % 4 + 1;
-	//		Particle::ParticleTubu* tubu = new Particle::ParticleTubu;
-	//		if (basyo == 1) {
-	//			tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_1"));
-	//		}
-	//		if (basyo == 2) {
-	//			tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_2"));
-	//		}
-	//		if (basyo == 3) {
-	//			tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_3"));
-	//		}
-	//		if (basyo == 4) {
-	//			tubu->obj = ObjectObj::Create(ModelManager::GetModel("effect_4"));
-	//		}
-
-	//		tubu->obj->SetScale({ 5,5,5 });
-	//		tubu->obj->SetRotation(player->object->GetRotation());
-	//		tubu->end_frame = rand() % 5 + 10;
-	//		tubu->position = player->object->GetPosition();
-	//		//tubu->scale = { 10,10,10 };
-	//		//const float rnd_vel = 0.1f;
-	//		int rndVel = 3.0f;
-	//		tubu->velocity.x = rand() % (rndVel * 2) - rndVel;
-	//		tubu->velocity.y = rand() % (rndVel * 2) - rndVel;
-	//		tubu->velocity.z = rand() % (rndVel * 2) - rndVel;
-	//		//tubu->velocity.x = 0;
-	//		//tubu->velocity.y = 0;
-	//		//tubu->velocity.z = -rand() % (rndVel * 2);
-	//		Particle::GetIns()->Add(tubu);
-	//	}
-	//}
-
-
 
 
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != 0) {
 		//死亡判定があったらエネミーを消す
-		enemies->GetEnemies().remove_if([](std::unique_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
+		enemies->GetEnemies().remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
-		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
 			//敵とプレイヤーのローリング攻撃の当たり判定
 			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 				if (player->attackFlag == true) {
@@ -199,6 +168,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 						player->garigariFlag = true;
 					}
 					player->rollingSpeed = 0;
+					player->attackDirection = { 0,0,0,0 };
 					hitNum++;
 					hitFlag = true;
 					hitTime = 0;
@@ -233,7 +203,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 		//キルコマンド
 		if (Input::GetInstance()->TriggerKey(DIK_K)) {
-			for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+			for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
 				enemy->DamageIn(10000);
 			}
 		}
@@ -327,7 +297,7 @@ void BatlleScene::Update2D()
 		ground->Update();
 		tenQ->Update();
 		area->Update();
-		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
 			enemy->object->Update();
 		}
 		battleCamera->SetEye(oldEye);
@@ -350,7 +320,7 @@ void BatlleScene::Draw()
 	player->Draw();
 	ground->Draw();
 	if (enemies != 0) {
-		for (std::unique_ptr<EnemyZako>& enemy : enemies->GetEnemies()) {
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
 			enemy->Draw();
 		}
 	}

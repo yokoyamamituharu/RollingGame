@@ -9,8 +9,8 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	XMVECTOR p0_p2 = triangle.p2 - triangle.p0;
 	XMVECTOR p0_pt = point - triangle.p0;
 
-	float d1 = XMVector3Dot(p0_p1,p0_pt).m128_f32[0];
-	float d2 = XMVector3Dot(p0_p2,p0_pt).m128_f32[0];
+	float d1 = XMVector3Dot(p0_p1, p0_pt).m128_f32[0];
+	float d2 = XMVector3Dot(p0_p2, p0_pt).m128_f32[0];
 
 	if (d1 <= 0.0f && d2 <= 0.0f)
 	{
@@ -22,8 +22,8 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	// pointがp1の外側の頂点領域の中にあるかどうかチェック
 	XMVECTOR p1_pt = point - triangle.p1;
 
-	float d3 = XMVector3Dot(p0_p1,p1_pt).m128_f32[0];
-	float d4 = XMVector3Dot(p0_p2,p1_pt).m128_f32[0];
+	float d3 = XMVector3Dot(p0_p1, p1_pt).m128_f32[0];
+	float d4 = XMVector3Dot(p0_p2, p1_pt).m128_f32[0];
 
 	if (d3 >= 0.0f && d4 <= d3)
 	{
@@ -44,8 +44,8 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	// pointがp2の外側の頂点領域の中にあるかどうかチェック
 	XMVECTOR p2_pt = point - triangle.p2;
 
-	float d5 = XMVector3Dot(p0_p1,p2_pt).m128_f32[0];
-	float d6 = XMVector3Dot(p0_p2,p2_pt).m128_f32[0];
+	float d5 = XMVector3Dot(p0_p1, p2_pt).m128_f32[0];
+	float d6 = XMVector3Dot(p0_p2, p2_pt).m128_f32[0];
 	if (d6 >= 0.0f && d5 <= d6)
 	{
 		*closest = triangle.p2;
@@ -77,7 +77,7 @@ void Collision::ClosestPtPoint2Triangle(const DirectX::XMVECTOR& point, const Tr
 	*closest = triangle.p0 + p0_p1 * v + p0_p2 * w;
 }
 
-bool Collision::CheckSphere2Sphere(const Sphere & sphereA, const Sphere & sphereB, DirectX::XMVECTOR*inter, DirectX::XMVECTOR * reject)
+bool Collision::CheckSphere2Sphere(const Sphere& sphereA, const Sphere& sphereB, DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {
 	// 中心点の距離の２乗 <= 半径の和の２乗　なら交差
 	float dist = XMVector3LengthSq(sphereA.center - sphereB.center).m128_f32[0];
@@ -121,7 +121,7 @@ bool Collision::CheckSphere2Plane(const Sphere& sphere, const Plane& plane, Dire
 	return true;
 }
 
-bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, DirectX::XMVECTOR* inter, DirectX::XMVECTOR * reject)
+bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& triangle, DirectX::XMVECTOR* inter, DirectX::XMVECTOR* reject)
 {
 	XMVECTOR p;
 	// 球の中心に対する最近接点である三角形上にある点pを見つける
@@ -148,7 +148,7 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere, const Triangle& trian
 	return true;
 }
 
-bool Collision::CheckRay2Plane(const Ray & lay, const Plane & plane, float*distance, DirectX::XMVECTOR * inter)
+bool Collision::CheckRay2Plane(const Ray& lay, const Plane& plane, float* distance, DirectX::XMVECTOR* inter)
 {
 	const float epsilon = 1.0e-5f;	// 誤差吸収用の微小な値
 
@@ -157,7 +157,7 @@ bool Collision::CheckRay2Plane(const Ray & lay, const Plane & plane, float*dista
 	if (d1 > -epsilon) {
 		return false;
 	}
-	
+
 	float d2 = XMVector3Dot(plane.normal, lay.start).m128_f32[0];
 	float t = (plane.distance - d2) / d1;
 
@@ -176,7 +176,7 @@ bool Collision::CheckRay2Plane(const Ray & lay, const Plane & plane, float*dista
 	return true;
 }
 
-bool Collision::CheckRay2Triangle(const Ray & lay, const Triangle & triangle, float*distance, DirectX::XMVECTOR * inter)
+bool Collision::CheckRay2Triangle(const Ray& lay, const Triangle& triangle, float* distance, DirectX::XMVECTOR* inter)
 {
 	// 三角形が乗っている平面を算出
 	Plane plane;
@@ -227,7 +227,7 @@ bool Collision::CheckRay2Triangle(const Ray & lay, const Triangle & triangle, fl
 	return true;
 }
 
-bool Collision::CheckRay2Sphere(const Ray & lay, const Sphere & sphere, float*distance, DirectX::XMVECTOR * inter)
+bool Collision::CheckRay2Sphere(const Ray& lay, const Sphere& sphere, float* distance, DirectX::XMVECTOR* inter)
 {
 	XMVECTOR m = lay.start - sphere.center;
 	float b = XMVector3Dot(m, lay.dir).m128_f32[0];
@@ -249,7 +249,7 @@ bool Collision::CheckRay2Sphere(const Ray & lay, const Sphere & sphere, float*di
 	float t = -b - sqrtf(discr);
 	// tが負である場合、レイは球の内側から開始しているのでtをゼロにクランプ
 	if (t < 0) t = 0.0f;
-	
+
 	if (distance) {
 		*distance = t;
 	}
@@ -283,6 +283,14 @@ float Collision::CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFL
 {
 	float distance = sqrtf(((pos1.x - pos2.x) * (pos1.x - pos2.x)) +
 		((pos1.z - pos2.z) * (pos1.z - pos2.z)));
+
+	return distance;
+}
+
+float Collision::CheckDistance(const DirectX::XMFLOAT2 pos1, const DirectX::XMFLOAT2 pos2)
+{
+	float distance = sqrtf(((pos1.x - pos2.x) * (pos1.x - pos2.x)) +
+		((pos1.y - pos2.y) * (pos1.y - pos2.y)));
 
 	return distance;
 }

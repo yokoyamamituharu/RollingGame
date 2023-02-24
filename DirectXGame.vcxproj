@@ -223,6 +223,7 @@
     <ClInclude Include="Collider\SphereCollider.h" />
     <ClInclude Include="Collider\TouchableObject.h" />
     <ClInclude Include="CopyObject.h" />
+    <ClInclude Include="Easing.h" />
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy\BaseEnemy.h" />
     <ClInclude Include="Enemy\EnemyManager.h" />
@@ -258,7 +259,6 @@
     <ClInclude Include="YowaiEnemy.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Base\DirectXCommon.cpp" />
     <ClCompile Include="Base\WinApp.cpp" />
     <ClCompile Include="BattleCamera.cpp" />
@@ -271,6 +271,7 @@
     <ClCompile Include="Collider\SphereCollider.cpp" />
     <ClCompile Include="Collider\TouchableObject.cpp" />
     <ClCompile Include="CopyObject.cpp" />
+    <ClCompile Include="Easing.cpp" />
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy\BaseEnemy.cpp" />
     <ClCompile Include="Enemy\EnemyManager.cpp" />

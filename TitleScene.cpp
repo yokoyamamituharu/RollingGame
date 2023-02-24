@@ -23,6 +23,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	blackOutAlpha = 0.0f;
 	blackInAlpha = 1.0f;
 	black->SetAlpha(blackOutAlpha);
+	titleObj = ObjectObj::Create(ModelManager::GetModel("title"));
+
+
 
 	sceneEffect[0] = Sprite::Create(21, { 0,0 });
 	sceneEffect[1] = Sprite::Create(22, { 0,0 });

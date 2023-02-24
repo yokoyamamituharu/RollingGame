@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "CollisionAttribute.h"
 #include "Sprite.h"
+#include "Collision.h"
 
 using namespace DirectX;
 
@@ -117,7 +118,7 @@ void Player::UpdateOut(Camera* camera)
 		pos2.m128_f32[2] = -releasePos.y;
 		attackDirection = pos1 - pos2;
 		attackDirection = XMVector3Normalize(attackDirection);
-		attackDirection.m128_f32[1] = 0;	//UŒ‚•ûŒü
+		attackDirection.m128_f32[1] = 0;	//UŒ‚•ûŒü		
 
 		//ƒGƒtƒFƒNƒg‚ÌŒü‚«‚ðŒvŽZ
 		XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
@@ -126,18 +127,22 @@ void Player::UpdateOut(Camera* camera)
 		XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
 		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
 		yazirusi->SetRotation(angleToPlayer);
-		if (InputMouse::GetInstance()->MoveMouseVector('y') > 0) {
-			yazirusiScale.x += 0.1f;
-			yazirusiScale.y += 0.3f;
-		}
+		//if (InputMouse::GetInstance()->MoveMouseVector('y') > 0) {
+		//	yazirusiScale.x += 0.1f;
+		//	yazirusiScale.y += 0.3f;
+		//}
 	}
 	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
 		yazirusiScale = { 1,1 };
 	}
 
+	XMFLOAT2 rotapoint = InputMouse::GetInstance()->GetScreanPos();
+	float rotadistance = Collision::CheckDistance(rotapoint, clickTrigerPos);
+	float yaziscale = 1 + rotadistance / 100 ;
 
-	yazirusi->SetPosition(InputMouse::GetInstance()->GetWindowPos());
-	yazirusi->SetScale(yazirusiScale);
+
+	yazirusi->SetPosition(clickTrigerPos);
+	yazirusi->SetScale({ yaziscale ,yaziscale });
 
 
 	camera->UpdateMat();
@@ -148,7 +153,8 @@ void Player::UpdateOut(Camera* camera)
 	shadowObj->Update();
 	object->UpdateWorldMatrix();
 
-	if (object->collider == nullptr) {		return;
+	if (object->collider == nullptr) {
+		return;
 	}
 	object->collider->Update();
 
@@ -250,6 +256,7 @@ void Player::UpdateIn()
 
 	if (garigariFlag == true && InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		attackFlag = true;
+		attackDirection = { 0,0,0,0 };
 	}
 	else {
 		garigariFlag = false;

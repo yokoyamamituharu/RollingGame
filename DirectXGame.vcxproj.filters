@@ -316,8 +316,11 @@
     <ClInclude Include="YowaiEnemy.h">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Easing.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Enemy\BaseEnemy.h">
-      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -450,14 +453,14 @@
     <ClCompile Include="Particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BaseEnemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="YowaiEnemy.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Easing.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Enemy\BaseEnemy.cpp">
-      <Filter>ソース ファイル\Enemy\Enemy</Filter>
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

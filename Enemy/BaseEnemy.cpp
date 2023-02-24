@@ -6,19 +6,12 @@ using namespace DirectX;
 #include "Collision.h"
 #include "Particle.h"
 #include "SphereCollider.h"
+#include "YowaiEnemy.h"
 
 /// Ã“Iƒƒ“ƒo•Ï”‚ÌŽÀ‘Ì
 const float BaseEnemy::groundInPos = -4.0f;
 const float BaseEnemy::groundOutPos = 6.0f;
 int BaseEnemy::isAction = 1;
-
-
-BaseEnemy* BaseEnemy::CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget)
-{
-	BaseEnemy* ins = new BaseEnemy();
-	ins->InitializeOut(pos, isTarget);
-	return ins;
-}
 
 void BaseEnemy::ParticleCreate()
 {
@@ -40,7 +33,7 @@ void BaseEnemy::ParticleCreate()
 
 void BaseEnemy::DamageIn(int damage)
 {
-	hp -= damage;
+	inhp -= damage;
 }
 
 BaseEnemy::BaseEnemy()
@@ -54,14 +47,14 @@ BaseEnemy::~BaseEnemy()
 	enemies.clear();
 }
 
-void BaseEnemy::DamageOut(int attackPower)
+void BaseEnemy::DamageOut(int damage)
 {
-	hp -= attackPower;
+	outhp -= damage;
 	int deleteNum = 0;
 	for (std::unique_ptr<BaseEnemy>& enemy : enemies) {
 		enemy->SetDead();
 		deleteNum++;
-		if (deleteNum >= attackPower) {
+		if (deleteNum >= damage) {
 			return;
 		}
 	}
@@ -99,16 +92,25 @@ void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 	int maxEnemyNum = rand() % 2 + 5;
 	for (int i = 0; i < maxEnemyNum; i++)
 	{
-		//“G‚ðƒŠƒXƒg‚É’Ç‰Á‚µ‚Ä‚¢‚­
-		std::unique_ptr<BaseEnemy> newBaseEnemy = std::make_unique<BaseEnemy>();
-		newBaseEnemy->InitializeIn();
-		//ƒŠƒXƒg‚É“o˜^
-		enemies.push_back(std::move(newBaseEnemy));
+		if (rand() % 10 > 4) {
+			//“G‚ðƒŠƒXƒg‚É’Ç‰Á‚µ‚Ä‚¢‚­
+			std::unique_ptr<BaseEnemy> newBaseEnemy = std::make_unique<BaseEnemy>();
+			newBaseEnemy->InitializeIn();
+			//ƒŠƒXƒg‚É“o˜^
+			enemies.push_back(std::move(newBaseEnemy));
+		}
+		else {
+			//“G‚ðƒŠƒXƒg‚É’Ç‰Á‚µ‚Ä‚¢‚­
+			std::unique_ptr<YowaiEnemy> newBaseEnemy = std::make_unique<YowaiEnemy>();
+			newBaseEnemy->InitializeIn();
+			//ƒŠƒXƒg‚É“o˜^
+			//enemies.push_back(std::move(newBaseEnemy));
+		}
 	}
 
 	//HP‚ðŒvŽZ
-	maxHp = enemies.size();
-	hp = maxHp;
+	outmaxHp = enemies.size();
+	outhp = outmaxHp;
 }
 
 void BaseEnemy::InitializeIn()
@@ -131,11 +133,13 @@ void BaseEnemy::InitializeIn()
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
+
+	inhp = 5;
 }
 
 void BaseEnemy::UpdateOut()
 {
-	scale = hp / maxHp;
+	scale = outhp / outmaxHp;
 	if (scale <= 0) {
 		scale = 1;
 		object->SetRotation({ 180,90,0 });
@@ -187,7 +191,7 @@ void BaseEnemy::UpdateOut()
 			//enemy->SetDead();
 		}
 		enemies.remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
-		if (hp <= 0) {
+		if (outhp <= 0) {
 			SetDead();
 		}
 	}
@@ -204,7 +208,7 @@ void BaseEnemy::UpdateIn()
 		return;
 	}
 
-	if (hp <= 0) {
+	if (inhp <= 0) {
 		dead = true;
 	}
 

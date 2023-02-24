@@ -45,7 +45,7 @@ public:
 	//•`‰æ
 	void Draw();
 
-	void SetEnemy(std::shared_ptr<EnemyZako>& enemy) {
+	void SetEnemy(std::shared_ptr<BaseEnemy>& enemy) {
 		enemiesG.push_back(std::move(enemy));
 	}
 
@@ -84,7 +84,7 @@ private: // ƒƒ“ƒo•Ï”
 	GameCamera* gameCamera = nullptr;
 	//std::map<std::string, ObjectObj*> objects;
 	//“G
-	std::list<std::shared_ptr<EnemyZako>>enemiesG;
+	std::list<std::shared_ptr<BaseEnemy>>enemiesG;
 	TouchableObject* touchGround = nullptr;
 	
 	ObjectObj* tamesi = nullptr;

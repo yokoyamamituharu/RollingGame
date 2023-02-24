@@ -34,7 +34,8 @@ public: // サブクラス
 		//速度
 		XMFLOAT3 velocity = {};
 		//加速度
-		//XMFLOAT3 accel = {};
+		float startScale = 0.0f;
+		float endScale = 0.0f;
 		//現在のフレーム
 		int frame = 0;
 		//終了フレーム

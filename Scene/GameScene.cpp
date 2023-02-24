@@ -78,7 +78,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
 	touchGround->SetScale({ 10.0f,1.0f,10.0f });
 	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
-	
+
 
 	tamesi = ObjectObj::Create(ModelManager::GetModel("level"));
 	tamesi->SetPosition({ 0.0f,0.0f,0.0f });
@@ -137,7 +137,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		return;
 	}
 
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		if (enemy->GetHp() <= 0) {
 			Player::breakEnemy += 1;
 		}
@@ -152,7 +152,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		return;
 	}
 
-	enemiesG.remove_if([](std::shared_ptr<EnemyZako>& enemy) {return enemy->GetDead(); });
+	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
 	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		//spriteBG->SetSize({ 2, 2 });
@@ -173,6 +173,37 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//敵を行動させるかさせないかのトルグスイッチ
 	//EnemyZako::Action();
 
+
+	//if (Input::GetInstance()->PushKey(DIK_E)) {
+		for (int i = 0; i < 2; i++) {
+
+			Particle::ParticleTubu* particle = new Particle::ParticleTubu;
+			particle->obj = ObjectObj::Create(ModelManager::GetModel("cloudBurst"));
+
+			int scale = rand() % 20 + 1;
+			particle->startScale = rand() % 4 + 1;
+			particle->obj->SetScale({ float(scale),float(scale),float(scale) });
+			particle->obj->SetRotation({ 0,0,0 });
+			//プレイヤーの足元に生成
+			particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
+
+			particle->end_frame = rand() % 5 + 10;
+			//int rndVel = 3.0f;
+			//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+			//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+			//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+			//tubu->velocity.x = 0;
+			//tubu->velocity.y = 0;
+			//tubu->velocity.z = -rand() % (rndVel * 2);
+			Particle::GetIns()->Add(particle);
+		}
+	//}
+
+
+
+
+
+
 	//敵生成処理
 	if (index <= 6) {
 		dasu[index].timer--;
@@ -181,12 +212,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				if (dasu[index].basyo == 1) {
 					//タワーがある方
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->InitializeOut({ suana->GetPosition().x,EnemyZako::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+					newEnemy->InitializeOut({ suana->GetPosition().x,BaseEnemy::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
 					std::shared_ptr<YowaiEnemy> newEnemy = std::make_shared<YowaiEnemy>();
-					newEnemy->InitializeOut({ suana2->GetPosition().x,EnemyZako::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+					newEnemy->InitializeOut({ suana2->GetPosition().x,BaseEnemy::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;
@@ -198,7 +229,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//敵とプレイヤーの当たり判定
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 			if (enemy->GetDead() == false) {
 				//バトルシーンに行く処理
@@ -215,7 +246,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, {0,0,0}, { 10,10,10 })) {
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, { 0,0,0 }, { 10,10,10 })) {
 			//当たったら負け
 			//sceneNo = SceneManager::SCENE_END;
 		}
@@ -261,7 +292,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	suana2->Update();
 	scene->Update();
 	touchGround->Update();
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
@@ -307,10 +338,10 @@ void GameScene::Draw()
 	}
 
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
-	for (std::shared_ptr<EnemyZako>& enemy : enemiesG) {
+	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->Draw();
 	}
-	scene->Draw();	
+	scene->Draw();
 	suana->Draw();
 	suana2->Draw();
 	defenseTower->Draw();
@@ -319,18 +350,18 @@ void GameScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	spriteBG->Draw();
-	canvas->Draw();
-	if (poseFlag == true) {
-		pose->Draw();
-	}
-	if (isTikai) {
-		tikaiSprite->Draw();
-	}
+	//spriteBG->Draw();
+	//canvas->Draw();
+	//if (poseFlag == true) {
+	//	pose->Draw();
+	//}
+	//if (isTikai) {
+	//	tikaiSprite->Draw();
+	//}
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		player->yazirusi->Draw();
-	}	
-	
+	}
+
 	Sprite::PostDraw();
 }
 
@@ -349,9 +380,9 @@ void GameScene::PostReserve()
 	//ポストエフェクトさせたいスプライト
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	spriteBG->Draw();
-	playerSprte->SetPosition({ player->object->GetPosition().x-gameCamera->GetEye().x ,player->object->GetPosition().z - gameCamera->GetEye().z});
+	playerSprte->SetPosition({ player->object->GetPosition().x - gameCamera->GetEye().x ,player->object->GetPosition().z - gameCamera->GetEye().z });
 	playerSprte->Draw();
-	towerSprte->SetPosition({ defenseTower->object->GetPosition().x - gameCamera->GetEye().x ,defenseTower->object->GetPosition().z - gameCamera->GetEye().z});
+	towerSprte->SetPosition({ defenseTower->object->GetPosition().x - gameCamera->GetEye().x ,defenseTower->object->GetPosition().z - gameCamera->GetEye().z });
 	towerSprte->Draw();
 	Sprite::PostDraw();
 

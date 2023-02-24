@@ -19,7 +19,7 @@ public:
 	DefenseTower();
 	~DefenseTower();
 
-	void Update(std::list<std::shared_ptr<EnemyZako>>& enemies);
+	void Update(std::list<std::shared_ptr<BaseEnemy>>& enemies);
 	void Draw();
 	ObjectObj* GetObjectObj() { return object; }
 
@@ -37,6 +37,6 @@ public:
 	const int maxInterval = 120;
 	int interval = maxInterval;
 
-	std::weak_ptr<EnemyZako> targetEnemy;
+	std::weak_ptr<BaseEnemy> targetEnemy;
 };
 

@@ -6,7 +6,7 @@
 #include "Player.h"
 class BaseEnemy
 {
-private:
+protected:
 	//DirectXを省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
@@ -29,10 +29,8 @@ public:	//静的メンバ関数
 		FIELD_IN
 	};
 
-	static BaseEnemy* CreateIn(int filedFlag, XMFLOAT3 pos, bool isTarget);
-
 public:	//静的メンバ変数
-//ざこてきの地面となるの座標
+	//敵の地面となるの座標
 	static const float groundOutPos;
 	static const float groundInPos;
 	//敵の行動させる/させないフラグ
@@ -54,7 +52,7 @@ public:	//メンバ関数
 
 	virtual void UpdateIn();
 
-	void Draw();
+	virtual void Draw();
 
 protected:
 	//プレイヤーの方を向かせる処理
@@ -69,38 +67,72 @@ protected:
 	void BreakParticle();
 
 
-public:	//セッター、ゲッター	
-	void DamageOut(int attackPower);
+public:	//セッター、ゲッター
 
+	/// <summary>
+	/// 外シーンでダメージを受けるときの処理
+	/// </summary>
+	/// <param name="damage">受けるダメージ量</param>
+	void DamageOut(int damage);
+
+	/// <summary>
+	/// 中シーンでダメージを受けるときの処理
+	/// </summary>
+	/// <param name="damage">受けるダメージ量</param>
+	void DamageIn(int damage);
+
+	/// <summary>
+	/// プレイヤーをセットする処理
+	/// </summary>
+	/// <param name="player">プレイヤーのアドレス</param>
 	void SetPlayer(Player* player)
 	{
 		this->player = player;
 	}
+
+	/// <summary>
+	/// 攻撃した後立ち止まる時間を計算する処理
+	/// </summary>
 	void Stop();
 
+	/// <summary>
+	/// 死亡フラグをセット
+	/// </summary>
 	void SetDead() { dead = true; }
 
+	/// <summary>
+	/// 死亡フラグを外す
+	/// </summary>
 	void NotDead() { dead = false; }
 
 	/// <summary>
-	/// 敵の死亡判定をとる
+	/// 死亡判定を取得
 	/// </summary>
-	/// <returns>死んでたらtrue</returns>
+	/// <returns>死亡フラグ</returns>
 	bool GetDead() { return dead; }
 
+	/// <summary>
+	/// 攻撃判定を取得
+	/// </summary>
+	/// <returns>攻撃判定</returns>
 	bool GetAttack() { return attackFlag; }
 
-	float GetHp() { return hp; }
+	/// <summary>
+	/// HPを取得
+	/// </summary>
+	/// <returns>HP</returns>
+	float GetHp() { return outhp; }
 
-	std::list<std::unique_ptr<BaseEnemy>>& GetEnemies() { return enemies; }
 
 	void ParticleCreate();
 
-	void DamageIn(int damage);
+
 
 public:
 	ObjectObj* object = nullptr;
 	XMFLOAT3 oldPos = { 0,0,0 };
+	std::list<std::unique_ptr<BaseEnemy>>& GetEnemies() { return enemies; }
+
 
 protected:	//メンバ変数
 	//ポインター
@@ -160,8 +192,11 @@ protected:	//メンバ変数
 	XMVECTOR attackDirection;
 
 
-	float maxHp = 1;
-	float hp = maxHp;
+	float outmaxHp = 1;
+	float outhp = outmaxHp;
+
+	float inmaxHp = 1;
+	float inhp = inmaxHp;
 
 	float scale = 1;
 	XMFLOAT3 maxScale = { 4.0f,4.0f, 4.0f };
