@@ -77,6 +77,9 @@ public:
 	void SetHp(int hp) { this->hp = hp; }
 	void StopRolling();
 
+private:
+	void YazirusiUpdate();
+
 public:
 	ObjectObj* object = nullptr;
 

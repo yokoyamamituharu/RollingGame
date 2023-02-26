@@ -67,7 +67,7 @@ void ObjectObj::PostDraw()
 	ObjectObj::commandList = nullptr;
 }
 
-ObjectObj* ObjectObj::Create(Model* model)
+ObjectObj* ObjectObj::Create(Model* model,XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	ObjectObj* objectObj = new ObjectObj;
@@ -81,6 +81,10 @@ ObjectObj* ObjectObj::Create(Model* model)
 		assert(0);
 		return nullptr;
 	}	
+
+	objectObj->SetPosition(position);
+	objectObj->SetRotation(rotation);
+	objectObj->SetScale(scale);
 
 	return objectObj;
 }

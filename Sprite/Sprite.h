@@ -14,7 +14,6 @@ protected://エエイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public://サブクラス
-
 	//新しい頂点構造体の定義
 	struct VertexPosUv
 	{
@@ -22,14 +21,12 @@ public://サブクラス
 		XMFLOAT2 uv;
 	};
 
-
 	//定数バッファ用データ構造体
 	struct ConstBufferData {
 		XMFLOAT4 color;		//色(RGBA)
 		XMMATRIX mat;		//3D変換行列
 		float value;
 	};
-
 
 protected://性的メンバ変数
 	//テクスチャの最大枚数
@@ -53,30 +50,6 @@ protected://性的メンバ変数
 	//テクスチャバッファ
 	static ComPtr<ID3D12Resource>texBuffer[srvCount];
 
-
-
-
-protected://メンバ変数
-	ComPtr<ID3D12Resource>vertBuff;		//頂点バッファ
-	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
-	ComPtr<ID3D12Resource> constBuff;//定数バッファ
-	//Z軸回りの回転角
-	float rotation = 0.0f;
-	//座標
-	XMFLOAT2 position = { 0,0 };
-	//大きさ
-	XMFLOAT2 size = { 100,100 };
-	//大きさの倍率
-	XMFLOAT2 scale = { 1.0f,1.0f };
-	//ワールド行列
-	XMMATRIX matWorld;
-	//色(RGBA)
-	XMFLOAT4 color = { 1,1,1,1 };
-	//テクスチャ番号
-	UINT texNumber = 0;
-
-	//アンカーポイント
-	XMFLOAT2 anchorpoint = { 0.0f,0.0f };
 
 public://静的メンバ関数
 	//静的初期化
@@ -135,4 +108,26 @@ public://メンバ関数
 protected:
 	//頂点データ転送
 	void TransferVertices();
+
+protected://メンバ変数
+	ComPtr<ID3D12Resource>vertBuff;		//頂点バッファ
+	D3D12_VERTEX_BUFFER_VIEW vbView{};	//頂点バッファビュー
+	ComPtr<ID3D12Resource> constBuff;//定数バッファ
+	//Z軸回りの回転角
+	float rotation = 0.0f;
+	//座標
+	XMFLOAT2 position = { 0,0 };
+	//大きさ
+	XMFLOAT2 size = { 100,100 };
+	//大きさの倍率
+	XMFLOAT2 scale = { 1.0f,1.0f };
+	//ワールド行列
+	XMMATRIX matWorld;
+	//色(RGBA)
+	XMFLOAT4 color = { 1,1,1,1 };
+	//テクスチャ番号
+	UINT texNumber = 0;
+
+	//アンカーポイント
+	XMFLOAT2 anchorpoint = { 0.0f,0.0f };
 };

@@ -92,7 +92,7 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static ObjectObj* Create(Model* model = nullptr);
+	static ObjectObj* Create(Model* model = nullptr, XMFLOAT3 position = { 0,0,0 }, XMFLOAT3 rotation = { 0,0,0 }, XMFLOAT3 scale = { 1,1,1 });
 
 	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
 
@@ -166,9 +166,7 @@ public: // メンバ関数
 	/// <param name="position">座標</param>
 	void SetPosition(XMFLOAT3 position) { this->position = position; }
 
-	/// <
-	/// 
-	/// >
+	/// </summary>
 	/// スケールの設定
 	/// </summary>
 	/// <param name="scale">スケール</param>

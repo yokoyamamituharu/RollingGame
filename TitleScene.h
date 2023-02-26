@@ -50,6 +50,6 @@ private:
 	bool effectFlag = false;
 
 	ObjectObj* titleObj = nullptr;
-
+	Camera* camera;
 };
 

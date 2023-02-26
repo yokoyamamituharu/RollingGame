@@ -27,6 +27,7 @@ void Camera::Initialize()
 	this->window_width = WinApp::GetWindowSize().x;
 	this->window_height = WinApp::GetWindowSize().y;
 
+	//初期位置を0,0,0の地点を見れる位置にする
 	eye = { 0,0,-50 };
 	target = { 0,0,0 };
 	up = { 0,1,0 };

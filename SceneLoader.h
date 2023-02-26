@@ -35,7 +35,7 @@ public:
 	SceneLoader();
 	~SceneLoader();
 
-	void Initialize();
+	void Initialize(const std::string& fileName);
 
 	void ScanningObjects(nlohmann::json& transform);
 

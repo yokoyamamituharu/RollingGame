@@ -22,16 +22,17 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	blackOutFlag = false;
 	blackOutAlpha = 0.0f;
 	blackInAlpha = 1.0f;
-	black->SetAlpha(blackOutAlpha);
-	titleObj = ObjectObj::Create(ModelManager::GetModel("title"));
-
-
+	black->SetAlpha(blackOutAlpha);	
 
 	sceneEffect[0] = Sprite::Create(21, { 0,0 });
 	sceneEffect[1] = Sprite::Create(22, { 0,0 });
 	sceneEffect[2] = Sprite::Create(23, { 0,0 });
 	sceneEffect[3] = Sprite::Create(24, { 0,0 });
 	sceneEffect[4] = Sprite::Create(25, { 0,0 });
+
+	camera = Camera::Create();
+	ObjectObj::SetCamera(camera);
+	titleObj = ObjectObj::Create(ModelManager::GetModel("title"));
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
@@ -65,17 +66,22 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 			effectFlag = false;
 		}
 	}
+	titleObj->Update();
 }
 
 void TitleScene::Draw()
 {
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	sprite->Draw();
-	black->Draw();	
-	if (effectFlag == true) {
-		sceneEffect[effectIndex]->Draw();
-	}	
+	//sprite->Draw();
+	//black->Draw();	
+	//if (effectFlag == true) {
+	//	sceneEffect[effectIndex]->Draw();
+	//}	
 	Sprite::PostDraw();
+
+	ObjectObj::PreDraw(dxCommon->GetCmdList());
+	titleObj->Draw();
+	ObjectObj::PostDraw();
 }
 
 int TitleScene::BlackOut()

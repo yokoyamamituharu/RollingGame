@@ -125,7 +125,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize();
+	scene->Initialize("level");
 	playerSprte = Sprite::Create(31, { 0,0 });
 	towerSprte = Sprite::Create(32, { 0,0 });
 }

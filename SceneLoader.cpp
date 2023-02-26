@@ -20,10 +20,10 @@ SceneLoader::~SceneLoader()
 	touchObjects.clear();
 }
 
-void SceneLoader::Initialize()
+void SceneLoader::Initialize(const std::string& fileName)
 {
 	//パス
-	const std::string fullpath = std::string("Resources/levels/") + "level.json";
+	const std::string fullpath = std::string("Resources/levels/") + fileName + ".json";
 
 	//ファイルストリーム
 	std::ifstream file;
