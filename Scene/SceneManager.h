@@ -5,7 +5,6 @@
 #include "EndScene.h"
 #include "ModelManager.h"
 #include "PostEffect.h"
-#include "ParticleManager.h"
 #include "Particle.h"
 
 class SceneManager
@@ -36,7 +35,6 @@ public:
 	TitleScene* titleScene = nullptr;
 	EndScene* endScene = nullptr;
 
-	ParticleManager* particlManager = nullptr;
 
 	Particle* particleMan = nullptr;
 

@@ -177,9 +177,9 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//if (Input::GetInstance()->PushKey(DIK_E)) {
 		for (int i = 0; i < 2; i++) {
 
-			Particle::ParticleTubu* particle = new Particle::ParticleTubu;
-			particle->obj = ObjectObj::Create(ModelManager::GetModel("cloudBurst"));
-
+			std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+			particle->obj = std::make_unique<ObjectObj>();
+			particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));
 			int scale = rand() % 20 + 1;
 			particle->startScale = rand() % 4 + 1;
 			particle->obj->SetScale({ float(scale),float(scale),float(scale) });
@@ -195,7 +195,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			//tubu->velocity.x = 0;
 			//tubu->velocity.y = 0;
 			//tubu->velocity.z = -rand() % (rndVel * 2);
-			Particle::GetIns()->Add(particle);
+			//Particle::GetIns()->Add(std::move(particle));
 		}
 	//}
 
@@ -351,13 +351,13 @@ void GameScene::Draw()
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	//spriteBG->Draw();
-	//canvas->Draw();
-	//if (poseFlag == true) {
-	//	pose->Draw();
-	//}
-	//if (isTikai) {
-	//	tikaiSprite->Draw();
-	//}
+	canvas->Draw();
+	if (poseFlag == true) {
+		pose->Draw();
+	}
+	if (isTikai) {
+		tikaiSprite->Draw();
+	}
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		player->yazirusi->Draw();
 	}
@@ -374,7 +374,7 @@ void GameScene::PostReserve()
 	copyPlayer->Draw();
 	//copyGround->Draw();
 	//copyCastle->Draw();
-	copyDefenseTower->Draw();
+	//copyDefenseTower->Draw();
 	ObjectObj::PostDraw();
 
 	//ポストエフェクトさせたいスプライト

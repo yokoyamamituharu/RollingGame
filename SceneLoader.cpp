@@ -98,6 +98,8 @@ void SceneLoader::Initialize(const std::string& fileName)
 			DirectX::XMFLOAT3 scale;
 			DirectX::XMStoreFloat3(&scale, objectData.scaling);
 			newObject->SetScale(scale);
+			//–¼‘O‚ð“o˜^
+			newObject->SetName(objectData.fileName);
 			//”z—ñ‚É“o˜^
 			//touchObjects.insert(objectData.fileName,);
 			touchObjects[objectData.objectName] = newObject;

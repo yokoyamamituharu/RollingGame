@@ -35,6 +35,16 @@ public:	//メンバ関数
 
 	void UpdateView();
 
+	//上下の視点移動
+	void VecUp(float scaler) {
+		matRot *= DirectX::XMMatrixRotationY(0.8f * scaler);
+	}
+
+	//左右の視点移動
+	void VecSide(float scaler) {
+		matRot *= DirectX::XMMatrixRotationX(0.8f * scaler);
+
+	}
 
 protected: //メンバ関数
 	/// <summary>
@@ -48,15 +58,15 @@ public:	//ゲッター
 	/// </summary>
 	/// <returns>ビュー行列</returns>
 	XMMATRIX GetMatView() {
-		return matView; 
+		return matView;
 	}
 
 	/// <summary>
 	/// 射影行列を取得
 	/// </summary>
 	/// <returns>射影行列</returns>
-	XMMATRIX GetMatProjection() { 
-		return matProjection; 
+	XMMATRIX GetMatProjection() {
+		return matProjection;
 	}
 
 	/// <summary>
@@ -71,16 +81,16 @@ public:	//ゲッター
 	/// 視点座標を取得
 	/// </summary>
 	/// <returns>視点座標</returns>
-	XMFLOAT3 GetEye() { 
-		return eye; 
+	XMFLOAT3 GetEye() {
+		return eye;
 	}
 
 	/// <summary>
 	/// 注視点座標を取得
 	/// </summary>
 	/// <returns>注視点座標</returns>
-	XMFLOAT3 GetTarget() { 
-		return target; 
+	XMFLOAT3 GetTarget() {
+		return target;
 	}
 
 	/// <summary>
@@ -88,7 +98,7 @@ public:	//ゲッター
 	/// </summary>
 	/// <returns>上方向ベクトル</returns>
 	XMFLOAT3 GetUp() {
-		return eye; 
+		return eye;
 	}
 
 public:	//セッター

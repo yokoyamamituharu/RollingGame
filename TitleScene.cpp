@@ -9,7 +9,7 @@ TitleScene::TitleScene()
 
 TitleScene::~TitleScene()
 {
-	safe_delete(sprite);
+	safe_delete(titleSprite);
 	safe_delete(black);
 }
 
@@ -17,12 +17,12 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	sprite = Sprite::Create(5, { 0,0 });
+	titleSprite = Sprite::Create(5, { 0,0 });
 	black = Sprite::Create(7, { 0,0 });
 	blackOutFlag = false;
 	blackOutAlpha = 0.0f;
 	blackInAlpha = 1.0f;
-	black->SetAlpha(blackOutAlpha);	
+	black->SetAlpha(blackOutAlpha);
 
 	sceneEffect[0] = Sprite::Create(21, { 0,0 });
 	sceneEffect[1] = Sprite::Create(22, { 0,0 });
@@ -32,13 +32,17 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 
 	camera = Camera::Create();
 	ObjectObj::SetCamera(camera);
-	titleObj = ObjectObj::Create(ModelManager::GetModel("title"));
+	titleObj = ObjectObj::Create(ModelManager::GetModel("enemy"));
+	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
+
+	scene = new SceneLoader();
+	scene->Initialize("title");
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
 	//ShowCursor(true);
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE)||InputMouse::GetInstance()->PushMouse(M_LEFT)) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) || InputMouse::GetInstance()->PushMouse(M_LEFT)) {
 		SceneManager::blackStartFlag = true;
 	}
 	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
@@ -66,22 +70,32 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 			effectFlag = false;
 		}
 	}
+
+	titleObj->VecSetPosition({ float(Input::GetInstance()->PushKey(DIK_D))/2.0f - float(Input::GetInstance()->PushKey(DIK_A)) / 2.0f,
+		float(Input::GetInstance()->PushKey(DIK_Q)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_E)) / 2.0f,
+		float(Input::GetInstance()->PushKey(DIK_W)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_S)) / 2.0f });
 	titleObj->Update();
+	tenQ->Update();
+
+	scene->Update();
 }
 
 void TitleScene::Draw()
 {
-	Sprite::PreDraw(dxCommon->GetCmdList());
-	//sprite->Draw();
-	//black->Draw();	
-	//if (effectFlag == true) {
-	//	sceneEffect[effectIndex]->Draw();
-	//}	
-	Sprite::PostDraw();
-
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	titleObj->Draw();
+	tenQ->Draw();
+	scene->Draw();
 	ObjectObj::PostDraw();
+
+	Sprite::PreDraw(dxCommon->GetCmdList());
+	//titleSprite->Draw();
+	black->Draw();	
+	if (effectFlag == true) {
+		sceneEffect[effectIndex]->Draw();
+	}	
+	Sprite::PostDraw();
+	
 }
 
 int TitleScene::BlackOut()

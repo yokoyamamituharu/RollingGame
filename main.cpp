@@ -39,7 +39,6 @@ using namespace DirectX;
 
 #include "FPSLock.h"
 
-#include "ParticleManager.h"
 #include "Bullet.h"
 
 #include "safe_delete.h"
@@ -85,51 +84,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	ObjectObj::StaticInitialize(dxCommon->GetDev(), gameCamera);
 	//FBX		
 	FbxLoader::GetInstance()->Initialize(dxCommon->GetDev());
-	ObjectFBX::StaticInitialize(dxCommon->GetDev(), gameCamera);
-	ParticleManager::StaticInitialize(dxCommon->GetDev(), WinApp::window_width, WinApp::window_height);
+	ObjectFBX::StaticInitialize(dxCommon->GetDev(), gameCamera);	
 
 	//-----変数宣言-----//
 	SceneManager* sceneManager = new SceneManager;	
 	sceneManager->Initialize(dxCommon);
 	
-	ParticleManager* particleMan = ParticleManager::Create();
 	//FPSロック
 	FPSLock fpsLock;	
 	while (true)  // ゲームループ
 	{
-		//if (input->TriggerKey(DIK_SPACE)) {
-		//	//パーティクルの追加
-		//	for (int i = 0; i < 8; i++)
-		//	{
-		//		//X,Y,Z全てで[-5.0f,-5.0f]でランダムに分布
-		//		const float rnd_pos = 10.0f;
-		//		XMFLOAT3 pos{};
-		//		//pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		//		//pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		//		//pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
-		//		pos.x = 0;
-		//		pos.y = 0;
-		//		pos.z = 0;
-		//		//X,Y,Z全て[-0.0f,+0.05f]でランダムに分布
-		//		const float rnd_vel = 0.1f;
-		//		XMFLOAT3 vel{};
-		//		//vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-		//		//vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-		//		//vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f * 5;
-		//		int rndVel = 3.0f;
-		//		vel.x = rand() % (rndVel * 2) - rndVel;
-		//		vel.y = rand() % (rndVel * 2) - rndVel;
-		//		vel.z = rand() % (rndVel * 2) - rndVel;
-		//		//重力に見立ててYのみ[-0.001f,0]でランダムに分布
-		//		XMFLOAT3 acc{};
-		//		const float rnd_acc = 0.001f;
-		//		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
-
-		//		//追加
-		//		particleMan->Add(60, pos, vel, acc, 10.0f, 5.0f);
-		//	}
-		//}
-		//particleMan->Update();
 
 		//fpsLock.Update();
 
@@ -152,9 +116,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		//-----描画処理-----//
 		//ポストエフェクトの準備
 		//postEffect->PreDrawScene(dxCommon->GetCmdList());
-		//ParticleManager::PreDraw(dxCommon->GetCmdList());
-		//particleMan->Draw();
-		//ParticleManager::PostDraw();
 		//sceneManager->Draw();
 		//postEffect->PosDrawScene(dxCommon->GetCmdList());
 
@@ -179,8 +140,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	safe_delete(sceneManager);
 	//ポストエフェクトの開放
 	//safe_delete(postEffect);
-	//パーティクルマネージャーの開放
-	//safe_delete(particleMan);
 	//入力の解放
 	//safe_delete(mouse);
 	//カメラの開放

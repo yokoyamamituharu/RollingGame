@@ -7,10 +7,9 @@
 #include <d3dx12.h>
 #include <forward_list>
 #include "ObjectObj.h"
+#include "ParticleTube.h"
 
-/// <summary>
-/// 3Dオブジェクト
-/// </summary>
+
 class Particle
 {
 private: // エイリアス
@@ -23,37 +22,11 @@ private: // エイリアス
 	using XMMATRIX = DirectX::XMMATRIX;
 
 public: // サブクラス
-	//パーティクル1粒
-	struct ParticleTubu
-	{
-		//DirectX::を省略
-		using XMFLOAT3 = DirectX::XMFLOAT3;
-
-		//座標
-		XMFLOAT3 position = {};
-		//速度
-		XMFLOAT3 velocity = {};
-		//スケールの変化
-		float startScale = 0.0f;
-		float endScale = 0.0f;
-		//現在のフレーム
-		int frame = 0;
-		//終了フレーム
-		int end_frame = 0;
-
-		//スケール
-		float scale = 1.0f;
-		//初期値
-		//float s_scale = 1.0f;
-		//最終値
-		//float e_scale = 1.0f;
-		ObjectObj* obj = nullptr;
-	};
+	
 
 public:
-	static Particle* GetIns();
 
-	void Add(ParticleTubu* tubu);
+	void Add(std::unique_ptr<ParticleTubu> tubu);
 
 	void Initialize();
 
@@ -63,11 +36,9 @@ public:
 
 private: // メンバ変数
 
-
-
 public:
 	//パーティクル配列
-	std::forward_list<ParticleTubu> particles;
+	std::list<std::unique_ptr<ParticleTubu>> particles;
 
 };
 

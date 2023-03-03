@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include "DirectXCommon.h"
 #include "ObjectOBJ.h"
-
+#include "SceneLoader.h"
 
 class TitleScene
 {
@@ -36,7 +36,7 @@ public:
 	int BlackIn();
 
 private:
-	Sprite* sprite = nullptr;
+	Sprite* titleSprite = nullptr;
 	Sprite* black = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	float blackOutAlpha;
@@ -50,6 +50,11 @@ private:
 	bool effectFlag = false;
 
 	ObjectObj* titleObj = nullptr;
+	ObjectObj* tenQ = nullptr;
+	SceneLoader* scene = nullptr;
+
+
+
 	Camera* camera;
 };
 

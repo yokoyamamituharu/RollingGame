@@ -24,6 +24,7 @@ void GameCamera::Update()
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
 		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
+		matRot *= XMMatrixRotationX(0.8f * InputMouse::GetInstance()->MoveMouseVector('y') / 1000);
 		//InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
 	//キーでカメラ操作
@@ -32,6 +33,13 @@ void GameCamera::Update()
 	}
 	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 		matRot *= XMMatrixRotationY(-0.02f);
+	}
+
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
+		matRot *= XMMatrixRotationX(0.02f);
+	}
+	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+		matRot *= XMMatrixRotationX(-0.02f);
 	}
 
 	//if (Input::GetInstance()->TriggerKey(DIK_C)) {
@@ -55,9 +63,11 @@ void GameCamera::Update()
 	movement *= XMVECTOR{ -1, -1, -1 };
 	SetEye(playerObj->GetPosition() + (movement * 20));
 	eye.y += 7;	
-	target = playerObj->GetPosition();
+	target = playerObj->GetPosition();	
 	target.y += 3;
 
+
+	//target = eye + (movement * 20);
 	//ビュー行列の更新
 	UpdateViewMatrix();
 	// ビュープロジェクションの合成

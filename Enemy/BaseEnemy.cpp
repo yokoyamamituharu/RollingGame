@@ -16,8 +16,9 @@ int BaseEnemy::isAction = 1;
 void BaseEnemy::ParticleCreate()
 {
 	for (int i = 0; i < 5; i++) {
-		Particle::ParticleTubu* tubu = new Particle::ParticleTubu;
-		tubu->obj = ObjectObj::Create(ModelManager::GetModel("particle"));
+		std::unique_ptr<ParticleTubu> tubu = std::make_unique<ParticleTubu>();
+		tubu->obj = std::make_unique<ObjectObj>();
+		tubu->obj->Initialize(ModelManager::GetModel("particle"));
 		tubu->obj->SetScale({ 5,5,5 });
 		tubu->end_frame = rand() % 5 + 30;
 		tubu->position = object->GetPosition();
@@ -27,7 +28,7 @@ void BaseEnemy::ParticleCreate()
 		tubu->velocity.x = rand() % (rndVel * 2) - rndVel;
 		tubu->velocity.y = rand() % (rndVel * 2) - rndVel;
 		tubu->velocity.z = rand() % (rndVel * 2) - rndVel;
-		Particle::GetIns()->Add(tubu);
+		//Particle::GetIns()->Add(std::move(tubu));
 	}
 }
 

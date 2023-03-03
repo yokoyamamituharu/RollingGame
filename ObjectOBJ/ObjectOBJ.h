@@ -182,6 +182,8 @@ public: // メンバ関数
 	void SetPosY(float y) { this->position.y = y; }
 	void SetPosZ(float z) { this->position.z = z; }
 
+	void SetName(std::string name) { objectName = name; }
+
 	//指定した値分オブジェクトの座標を移動させる
 	void VecSetPosition(XMFLOAT3 scalar)
 	{
@@ -245,6 +247,7 @@ protected: // メンバ変数
 	//モデルデータ
 	Model* modelData;
 
+	std::string objectName = "NONE";
 public:
 	// コライダー
 	BaseCollider* collider = nullptr;

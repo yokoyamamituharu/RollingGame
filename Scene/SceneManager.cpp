@@ -34,7 +34,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	//スプライトマネージャーの読み込み
 	SpriteManager::GetIns()->Initialize();
 
-	particleMan = Particle::GetIns();
+	particleMan = new Particle();
 
 	//各シーンの生成
 	titleScene = new TitleScene;
@@ -58,7 +58,6 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	sceneEffect[3] = Sprite::Create(24, { 0,0 });
 	sceneEffect[4] = Sprite::Create(25, { 0,0 });
 
-	//particlManager = ParticleManager
 }
 
 void SceneManager::Update()
@@ -117,6 +116,8 @@ void SceneManager::Update()
 	//	color = color + XMFLOAT3{ 0.05, 0.05, 0.05 };
 	//	post->SetColor(color);
 	//}
+
+	particleMan->Update();
 
 	if (blackStartFlag == true) {
 		blackTime -= 0.05;
@@ -226,9 +227,7 @@ void SceneManager::Update()
 	//		effectTime = 0;
 	//		effectFlag = false;
 	//	}
-	//}
-
-	particleMan->Update();
+	//}	
 }
 
 void SceneManager::Draw()
