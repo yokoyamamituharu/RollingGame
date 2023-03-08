@@ -214,4 +214,7 @@ public:
 	XMFLOAT2 route[3];
 	//int targetIndex = 1;
 
+	ObjectObj* yazirusi = nullptr;
+
+	bool yazirusiFlag = true;
 };

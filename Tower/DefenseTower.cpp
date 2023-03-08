@@ -57,7 +57,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 				attackFlag = false;
 			}
 		}
-	}	
+	}
 	if (targetEnemy.lock() == nullptr) {
 		attackFlag = false;
 	}
@@ -73,7 +73,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 			DirectX::XMFLOAT3 targetpos = targetEnemy.lock()->object->GetPosition();
 			targetpos.y = 0;
 			std::unique_ptr<Bullet> newBullet = std::make_unique<Bullet>();
-			newBullet->Initialize(object->GetPosition(),targetpos, true);
+			newBullet->Initialize({ object->GetPosition().x,8.0f,object->GetPosition().z }, targetpos, true);
 			bullets.push_back(std::move(newBullet));
 			interval = maxInterval;
 		}
@@ -88,7 +88,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 		if (targetEnemy.expired() == false) {
 			if (5.0f >= Kyori(bullet->object->GetPosition(), targetEnemy.lock()->object->GetPosition())) {
 				targetEnemy.lock()->DamageOut(1);
-				if (targetEnemy.lock()->GetHp()<=0) {
+				if (targetEnemy.lock()->GetHp() <= 0) {
 					//Player::breakEnemy += 1;
 				}
 				bullet->Dead();
@@ -98,7 +98,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 	}
 
 	//ƒ^[ƒQƒbƒg‚Ì”jŠü‚ÌðŒ
-	if (targetEnemy.expired() ==false) {
+	if (targetEnemy.expired() == false) {
 		if (Kyori(object->GetPosition(), targetEnemy.lock()->object->GetPosition()) > 100.0f ||
 			targetEnemy.lock()->GetHp() <= 0) {
 			targetEnemy.reset();

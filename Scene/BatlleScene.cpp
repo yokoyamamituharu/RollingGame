@@ -179,26 +179,45 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 					player->Damage(1);
 				}
 			}
+
+			Sphere* SphereA = dynamic_cast<Sphere*>(enemy->object->collider);
+			if (SphereA != nullptr) {//コライダーをもっているか確認
+				//プレイヤーの前に敵がいるかチェックするためのレイを用意
+				Ray ray;
+				ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, 2.0f, player->object->GetPosition().z));
+				ray.dir = { 0,0,1,0 };
+				//プレイヤーのY軸の回転をもとにベクトルを計算しレイの方向をそれにする
+				float x = cos(player->object->GetRotation().y * 3.141592 / 180);
+				float y = sin(player->object->GetRotation().y * 3.141592 / 180);
+				ray.dir = { -x,0,y,0 };
+				if (Collision::CheckRay2Sphere(ray, *SphereA)&&player->isSphere) {
+					enemy->yazirusiFlag = true;
+				}
+				else {
+					enemy->yazirusiFlag = false;
+				}
+			}
+
 			enemy->SetPlayer(player);
 			enemy->UpdateIn();
 
 
-			if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && player->GetRes() && player->GetCrow() == false && enemy->GetDead() == false) {
-				Sphere* SphereA = dynamic_cast<Sphere*>(enemy->object->collider);
-				if (SphereA != nullptr) {//コライダーをもっているか確認
-					//プレイヤーの前に敵がいるかチェックするためのレイを用意
-					Ray ray;
-					ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, 2.0f, player->object->GetPosition().z));
-					ray.dir = { 0,0,1,0 };
-					//プレイヤーのY軸の回転をもとにベクトルを計算しレイの方向をそれにする
-					float x = cos(player->object->GetRotation().y * 3.141592 / 180);
-					float y = sin(player->object->GetRotation().y * 3.141592 / 180);
-					ray.dir = { -x,0,y,0 };
-					if (Collision::CheckRay2Sphere(ray, *SphereA)) {
-						//player->HitCrowAttack(enemy->object->GetPosition());
-					}
-				}
-			}
+			//if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && player->GetRes() && player->GetCrow() == false && enemy->GetDead() == false) {
+			//	Sphere* SphereA = dynamic_cast<Sphere*>(enemy->object->collider);
+			//	if (SphereA != nullptr) {//コライダーをもっているか確認
+			//		//プレイヤーの前に敵がいるかチェックするためのレイを用意
+			//		Ray ray;
+			//		ray.start = XMLoadFloat3(&XMFLOAT3(player->object->GetPosition().x, 2.0f, player->object->GetPosition().z));
+			//		ray.dir = { 0,0,1,0 };
+			//		//プレイヤーのY軸の回転をもとにベクトルを計算しレイの方向をそれにする
+			//		float x = cos(player->object->GetRotation().y * 3.141592 / 180);
+			//		float y = sin(player->object->GetRotation().y * 3.141592 / 180);
+			//		ray.dir = { -x,0,y,0 };
+			//		if (Collision::CheckRay2Sphere(ray, *SphereA)) {
+			//			//player->HitCrowAttack(enemy->object->GetPosition());
+			//		}
+			//	}
+			//}
 		}
 
 		//キルコマンド

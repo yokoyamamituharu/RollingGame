@@ -56,7 +56,8 @@ void YowaiEnemy::InitializeOut(bool isTarget, XMFLOAT2 route[])
 		//ƒŠƒXƒg‚É“o˜^
 		enemies.push_back(std::move(newEnemyZako));
 	}
-
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 10,10,10 });
 	//HP‚ðŒvŽZ
 	outmaxHp = enemies.size();
 	outhp = outmaxHp;
@@ -83,4 +84,6 @@ void YowaiEnemy::InitializeIn()
 	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 	inhp = 1;
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 10,10,10 });
 }

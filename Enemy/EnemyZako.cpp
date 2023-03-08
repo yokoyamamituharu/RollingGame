@@ -69,7 +69,8 @@ void EnemyZako::InitializeOut(bool isTarget, XMFLOAT2 route[])
 			enemies.push_back(std::move(newBaseEnemy));
 		}
 	}
-
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 10,10,10 });
 	//HP‚ðŒvŽZ
 	outmaxHp = enemies.size();
 	outhp = outmaxHp;
@@ -95,6 +96,7 @@ void EnemyZako::InitializeIn()
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
-
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 10,10,10 });
 	inhp = 5;
 }

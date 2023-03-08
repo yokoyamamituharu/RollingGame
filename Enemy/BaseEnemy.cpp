@@ -109,6 +109,9 @@ void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 		}
 	}
 
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 3,3,3 });
+
 	//HPを計算
 	outmaxHp = enemies.size();
 	outhp = outmaxHp;
@@ -126,14 +129,17 @@ void BaseEnemy::InitializeIn()
 	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
 	shadowObj->SetScale({ 10,1,10 });
 
+	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
+	yazirusi->SetScale({ 3,3,3 });
+
 	//座標のセット
 	float x = rand() % 200 - 100;
 	float z = rand() % 200 - 100;
 	object->SetPosition({ x,groundInPos,z });
 	//サイズのセット
 	object->SetScale({ 4.0f,4.0f, 4.0f });
-	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
-	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	inhp = 5;
 }
@@ -156,7 +162,7 @@ void BaseEnemy::UpdateOut()
 			float speed = 0.15;
 			//目的地に向かって直進	
 
-			XMFLOAT3 pos = object->GetPosition() + targetVec * 1;
+			XMFLOAT3 pos = object->GetPosition() + targetVec * 0.5;
 			object->SetPosition(pos);
 			//目的地を超えていたら
 			if (Collision::CheckExceed(
@@ -214,11 +220,16 @@ void BaseEnemy::UpdateOut()
 			SetDead();
 		}
 	}
+
+	yazirusi->SetPosition(object->GetPosition());
+	yazirusi->SetPosY(12.0f);
 	//オブジェクトの更新
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
 	shadowObj->SetPosY(groundOutPos - 6);
 	shadowObj->Update();
+	yazirusi->Update();
+
 }
 
 void BaseEnemy::UpdateIn()
@@ -337,17 +348,24 @@ void BaseEnemy::UpdateIn()
 		object->SetPosition(oldPos);
 	}	
 
+	yazirusi->SetPosition(object->GetPosition());
+	yazirusi->SetPosY(12.0f);
+
 	//オブジェクトの更新
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
 	shadowObj->SetPosY(-6 - 4);
 	shadowObj->Update();
+	yazirusi->Update();
 }
 
 void BaseEnemy::Draw()
 {
 	object->Draw();
 	shadowObj->Draw();
+	if (yazirusiFlag&& isFiled == FIELD_IN) {
+		yazirusi->Draw();
+	}
 }
 
 
