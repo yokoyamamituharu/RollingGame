@@ -294,3 +294,44 @@ float Collision::CheckDistance(const DirectX::XMFLOAT2 pos1, const DirectX::XMFL
 
 	return distance;
 }
+
+bool Collision::CheckExceed(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2, const DirectX::XMFLOAT3 pos3)
+{
+	bool x = false, y = false, z = false;
+
+	//X軸の判定
+	if (pos1.x < pos3.x) {
+		if (pos3.x <= pos2.x) {
+			x = true;
+		}
+	}
+	else {
+		if (pos3.x >= pos2.x) {
+			x = true;
+		}
+	}
+	//Y軸の判定
+	if (pos1.y < pos3.y) {
+		if (pos3.y <= pos2.y) {
+			y = true;
+		}
+	}
+	else {
+		if (pos3.y >= pos2.y) {
+			y = true;
+		}
+	}
+	//Z軸の判定
+	if (pos1.z < pos3.z) {
+		if (pos3.z <= pos2.z) {
+			z = true;
+		}
+	}
+	else {
+		if (pos3.z >= pos2.z) {
+			z = true;
+		}
+	}
+
+	return x && y && z;
+}

@@ -154,39 +154,57 @@ void BaseEnemy::UpdateOut()
 	if (isAction > 0 && GetDead() == false) {
 		if (isTarget == true) {
 			float speed = 0.15;
-			//目的地に向かって直進			
-			//XMFLOAT3 pos = object->GetPosition() - targetVec * 1;
-			//object->SetPosition(pos);
-			if (targetIndex == 1) {
-				if (targetPos1.z > 0) {
-					object->VecSetPosition(XMFLOAT3{ 0,0,speed });
-					if (object->GetPosition().z >= oldPos.z + targetPos1.z) {
-						targetIndex = 2;
-						oldPos = object->GetPosition();
-					}
+			//目的地に向かって直進	
+
+			XMFLOAT3 pos = object->GetPosition() + targetVec * 1;
+			object->SetPosition(pos);
+			//目的地を超えていたら
+			if (Collision::CheckExceed(
+				{ route[targetIndex - 1].x,groundOutPos,  route[targetIndex - 1].y },
+				object->GetPosition(),
+				{ route[targetIndex].x,groundOutPos,  route[targetIndex].y })) {
+				targetIndex++;
+				if (targetIndex >= 3) {
+					targetIndex = 2;
 				}
-				if (targetPos1.z < 0) {
-					object->VecSetPosition(XMFLOAT3{ 0,0,-speed });
-					if (object->GetPosition().z <= oldPos.z + targetPos1.z) {
-						targetIndex = 2;
-						oldPos = object->GetPosition();
-					}
-				}
+				//移動する方向を計算する
+				XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
+				targetVec = XMLoadFloat3(&XMFLOAT3{ route[targetIndex].x, groundOutPos,route[targetIndex].y }) - pos1;
+				targetVec = XMVector3Normalize(targetVec);
+				targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 			}
-			else if (targetIndex == 2) {
-				if (targetPos2.x > 0) {
-					object->VecSetPosition(XMFLOAT3{ speed,0,0 });
-					if (object->GetPosition().x >= targetPos2.x) {
-						targetIndex = 2;
-					}
-				}
-				if (targetPos2.x < 0) {
-					object->VecSetPosition(XMFLOAT3{ -speed,0,0 });
-					if (object->GetPosition().x <= targetPos2.x) {
-						targetIndex = 2;
-					}
-				}
-			}
+
+
+			//if (targetIndex == 1) {
+			//	if (targetPos1.z > 0) {
+			//		object->VecSetPosition(XMFLOAT3{ 0,0,speed });
+			//		if (object->GetPosition().z >= oldPos.z + targetPos1.z) {
+			//			targetIndex = 2;
+			//			oldPos = object->GetPosition();
+			//		}
+			//	}
+			//	if (targetPos1.z < 0) {
+			//		object->VecSetPosition(XMFLOAT3{ 0,0,-speed });
+			//		if (object->GetPosition().z <= oldPos.z + targetPos1.z) {
+			//			targetIndex = 2;
+			//			oldPos = object->GetPosition();
+			//		}
+			//	}
+			//}
+			//else if (targetIndex == 2) {
+			//	if (targetPos2.x > 0) {
+			//		object->VecSetPosition(XMFLOAT3{ speed,0,0 });
+			//		if (object->GetPosition().x >= targetPos2.x) {
+			//			targetIndex = 2;
+			//		}
+			//	}
+			//	if (targetPos2.x < 0) {
+			//		object->VecSetPosition(XMFLOAT3{ -speed,0,0 });
+			//		if (object->GetPosition().x <= targetPos2.x) {
+			//			targetIndex = 2;
+			//		}
+			//	}
+			//}
 		}
 		for (std::unique_ptr<BaseEnemy>& enemy : enemies) {
 			//enemy->SetDead();

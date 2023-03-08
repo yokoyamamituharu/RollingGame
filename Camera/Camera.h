@@ -129,7 +129,7 @@ public:	//セッター
 	//void SetMatProjection(XMMATRIX mat) { matProjection = mat; }
 
 public:	//メンバ変数
-	XMMATRIX matRot;
+	XMMATRIX matRot = {};
 	// 視点座標
 	XMFLOAT3 eye = { 0,0,-50 };
 	// 注視点座標
@@ -138,17 +138,14 @@ public:	//メンバ変数
 	XMFLOAT3 up = { 0,1,0 };
 protected: //メンバ変数
 	// ビュー行列
-	XMMATRIX matView;
+	XMMATRIX matView = {};
 	// 射影行列
-	XMMATRIX matProjection;
+	XMMATRIX matProjection = {};
 	//ビュー射影行列
-	XMMATRIX matViewProjection;
+	XMMATRIX matViewProjection = {};
 
-
-
-
-	int window_width;
-	int window_height;
+	int window_width = 0;
+	int window_height = 0;
 
 	XMMATRIX* parent = nullptr;
 };

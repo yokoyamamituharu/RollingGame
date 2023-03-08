@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include "safe_delete.h"
 
+//#include <D3dx9math.h>
+
 TitleScene::TitleScene()
 {
 }
@@ -12,6 +14,35 @@ TitleScene::~TitleScene()
 	safe_delete(titleSprite);
 	safe_delete(black);
 }
+
+//void a(VECTOR4* pOut, VECTOR4* pV, DirectX::XMMATRIX* pM)
+//{
+//	float vx, vy, vz, vw;
+//	VECTOR4 vec;
+//	float* pF1, * pF2, * pF3, * pF4;
+//
+//	vx = pV->x;
+//	vy = pV->y;
+//	vz = pV->z;
+//	vw = pV->w;
+//
+//	pF1 = pM->m[0];
+//	pF2 = pM->m[1];
+//	pF3 = pM->m[2];
+//	pF4 = pM->m[3];
+//	vec.x = vx * (*pF1) + vy * (*pF2) + vz * (*pF3) + vw * (*pF4);
+//	pF1++; pF2++; pF3++; pF4++;
+//
+//	vec.y = vx * (*pF1) + vy * (*pF2) + vz * (*pF3) + vw * (*pF4);
+//	pF1++; pF2++; pF3++; pF4++;
+//
+//	vec.z = vx * (*pF1) + vy * (*pF2) + vz * (*pF3) + vw * (*pF4);
+//	pF1++; pF2++; pF3++; pF4++;
+//
+//	vec.w = vx * (*pF1) + vy * (*pF2) + vz * (*pF3) + vw * (*pF4);
+//
+//	*pOut = vec;
+//}
 
 void TitleScene::Initialize(DirectXCommon* dxCommon)
 {
@@ -78,6 +109,12 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 	tenQ->Update();
 
 	scene->Update();
+
+	XMMATRIX mat = DirectX::XMMatrixIdentity();
+	mat = DirectX::XMMatrixMultiply(mat, XMMatrixRotationX(XMConvertToRadians(100.0f)));
+	mat = DirectX::XMMatrixMultiply(mat, XMMatrixRotationY(XMConvertToRadians(100.0f)));
+	XMVECTOR target;
+
 }
 
 void TitleScene::Draw()

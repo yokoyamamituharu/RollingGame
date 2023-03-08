@@ -94,4 +94,6 @@ public:
 	static float CheckDistance(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2);
 
 	static float CheckDistance(const DirectX::XMFLOAT2 pos1, const DirectX::XMFLOAT2 pos2);
+
+	static bool CheckExceed(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT3 pos2,const DirectX::XMFLOAT3 pos3);
 };

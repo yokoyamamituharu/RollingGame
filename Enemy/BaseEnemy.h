@@ -211,4 +211,7 @@ protected:	//ƒƒ“ƒo•Ï”
 public:
 	bool tikai = false;
 
+	XMFLOAT2 route[3];
+	//int targetIndex = 1;
+
 };

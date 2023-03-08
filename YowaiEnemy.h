@@ -16,7 +16,7 @@ public:
 	YowaiEnemy();
 	~YowaiEnemy();
 
-	void InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 })override;
+	void InitializeOut(bool isTarget, XMFLOAT2 route[]);
 
 	void InitializeIn()override;
 };

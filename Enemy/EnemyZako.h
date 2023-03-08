@@ -25,7 +25,7 @@ public:	//メンバ関数
 	//デストラクタ
 	~EnemyZako();
 
-	virtual void InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
+	virtual void InitializeOut(bool isTarget,XMFLOAT2 route[]);
 
 	virtual void InitializeIn();
 

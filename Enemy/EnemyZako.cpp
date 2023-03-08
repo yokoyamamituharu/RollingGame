@@ -17,7 +17,7 @@ EnemyZako::~EnemyZako()
 {
 }
 
-void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
+void EnemyZako::InitializeOut(bool isTarget, XMFLOAT2 route[])
 {
 	this->isFiled = FIELD_OUT;
 	this->isTarget = isTarget;
@@ -25,10 +25,14 @@ void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 	this->targetPos2 = targetPos2;
 	targetIndex = 1;
 
+	for (int i = 0; i < 3; i++) {
+		this->route[i] = route[i];
+	}
+
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(ModelManager::GetModel("enemy"));
-	object->SetPosition(pos);
+	object->SetPosition({ route[0].x, groundOutPos,route[0].y });
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	oldPos = object->GetPosition();
 
@@ -40,7 +44,8 @@ void EnemyZako::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 	if (isTarget == true) {
 		//移動する方向を計算する
 		XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
-		targetVec = pos1 - XMLoadFloat3(&targetPos1);
+		XMVECTOR pos2 = XMLoadFloat3(&XMFLOAT3{ route[1].x, groundOutPos,route[1].y });
+		targetVec = pos2 - pos1;
 		targetVec = XMVector3Normalize(targetVec);
 		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 	}

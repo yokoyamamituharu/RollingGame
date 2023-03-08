@@ -9,6 +9,7 @@
 #include "Useful.h"
 #include "SphereCollider.h"
 #include "YowaiEnemy.h"
+#include "Route.h"
 
 DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
 DirectX::XMFLOAT3 initEye = { 0,20,-25 };
@@ -128,6 +129,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	scene->Initialize("level");
 	playerSprte = Sprite::Create(31, { 0,0 });
 	towerSprte = Sprite::Create(32, { 0,0 });
+
+	Route* route = Route::GetIns();
+	route->Set();
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -212,12 +216,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				if (dasu[index].basyo == 1) {
 					//ƒ^ƒ[‚ª‚ ‚é•û
 					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->InitializeOut({ suana->GetPosition().x,BaseEnemy::groundOutPos,suana->GetPosition().z }, true, XMFLOAT3{ 0, 0, -100 }, XMFLOAT3{ -100,0,0 });
+					newEnemy->InitializeOut(true,Route::GetRoute(1));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
 					std::shared_ptr<YowaiEnemy> newEnemy = std::make_shared<YowaiEnemy>();
-					newEnemy->InitializeOut({ suana2->GetPosition().x,BaseEnemy::groundOutPos,suana2->GetPosition().z }, true, XMFLOAT3{ 0, 0, +100 }, XMFLOAT3{ +100,0,0 });
+					newEnemy->InitializeOut(true, Route::GetRoute(2));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;
