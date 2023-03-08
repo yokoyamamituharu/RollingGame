@@ -240,6 +240,8 @@ void BaseEnemy::UpdateIn()
 		return;
 	}
 
+	oldPos = object->GetPosition();
+
 	//移動処理
 	//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
 	if (attackFlag == false && stopFlag == false) {
@@ -330,6 +332,10 @@ void BaseEnemy::UpdateIn()
 
 	if (maeburiFlag == true)PreliminaryOperation();
 	if (stopFlag == true)Stop();
+
+	if (Collision::CheckDistance(object->GetPosition(), { 0,0,0 }) > 125.0f) {
+		object->SetPosition(oldPos);
+	}	
 
 	//オブジェクトの更新
 	object->Update();

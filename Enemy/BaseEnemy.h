@@ -181,7 +181,7 @@ protected:	//ƒƒ“ƒo•Ï”
 	XMFLOAT3 atodekesuROta = { 0,0,0 };
 	int num1 = 0;
 	int num2 = 0;
-	XMFLOAT3 move;
+	//XMFLOAT3 move;
 
 
 	float m_Radius;		// ”¼Œa(•`‰æ—p)
