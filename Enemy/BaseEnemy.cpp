@@ -9,9 +9,9 @@ using namespace DirectX;
 #include "YowaiEnemy.h"
 
 /// 静的メンバ変数の実体
-const float BaseEnemy::groundInPos = -4.0f;
-const float BaseEnemy::groundOutPos = 6.0f;
-int BaseEnemy::isAction = 1;
+bool BaseEnemy::isAction = 1;
+const float BaseEnemy::groundPosOut = 6.0f;
+const float BaseEnemy::groundPosIn = -4.0f;
 
 void BaseEnemy::ParticleCreate()
 {
@@ -32,13 +32,9 @@ void BaseEnemy::ParticleCreate()
 	}
 }
 
-void BaseEnemy::DamageIn(int damage)
-{
-	inhp -= damage;
-}
-
 BaseEnemy::BaseEnemy()
 {
+	modelName = "enemy";
 }
 
 BaseEnemy::~BaseEnemy()
@@ -46,6 +42,19 @@ BaseEnemy::~BaseEnemy()
 	ParticleCreate();
 	safe_delete(object);
 	enemies.clear();
+}
+
+std::shared_ptr<BaseEnemy> BaseEnemy::Create(bool isTarget, XMFLOAT2 route[])
+{
+	std::shared_ptr<BaseEnemy> enemy = std::make_shared<BaseEnemy>();
+	enemy->InitializeOut(isTarget, route);
+	enemy->CreateEnemy();
+	return enemy;
+}
+
+void BaseEnemy::DamageIn(int damage)
+{
+	inhp -= damage;
 }
 
 void BaseEnemy::DamageOut(int damage)
@@ -61,20 +70,35 @@ void BaseEnemy::DamageOut(int damage)
 	}
 }
 
-void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, XMFLOAT3 targetPos2)
+void BaseEnemy::InitializeOut(bool isTarget, XMFLOAT2 route[])
 {
 	this->isFiled = FIELD_OUT;
 	this->isTarget = isTarget;
-	this->targetPos1 = targetPos1;
-	this->targetPos2 = targetPos2;
 	targetIndex = 1;
+	if (isTarget) {
+		for (int i = 0; i < 3; i++) {
+			this->route[i] = route[i];
+		}
+	}
 
+	//初期処理
+	InitGeneralSetUp();
+
+	//敵を生成
+	//CreateEnemy();
+
+	////HPを計算
+	//outmaxHp = enemies.size();
+	//outhp = outmaxHp;
+}
+
+void BaseEnemy::InitGeneralSetUp()
+{
 	//オブジェクトの作成
 	object = ObjectObj::Create();
-	object->SetModel(ModelManager::GetModel("enemy"));
-	object->SetPosition(pos);
+	object->SetModel(ModelManager::GetModel(modelName));
+	object->SetPosition({ route[0].x, groundPosOut,route[0].y });
 	object->SetScale({ 4.0f,4.0f, 4.0f });
-	oldPos = object->GetPosition();
 
 	//敵の影を作成
 	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
@@ -84,11 +108,14 @@ void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 	if (isTarget == true) {
 		//移動する方向を計算する
 		XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
-		targetVec = pos1 - XMLoadFloat3(&targetPos1);
+		targetVec = XMLoadFloat3(&XMFLOAT3{ route[1].x, groundPosOut,route[1].y }) - pos1;
 		targetVec = XMVector3Normalize(targetVec);
-		targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+		targetVec.m128_f32[1] = 0;//Y軸の移動を0にする
 	}
+}
 
+void BaseEnemy::CreateEnemy()
+{
 	//この敵が中シーンに移動した時に持っている小敵の情報を追加
 	int maxEnemyNum = rand() % 2 + 5;
 	for (int i = 0; i < maxEnemyNum; i++)
@@ -105,13 +132,9 @@ void BaseEnemy::InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1, 
 			std::unique_ptr<YowaiEnemy> newBaseEnemy = std::make_unique<YowaiEnemy>();
 			newBaseEnemy->InitializeIn();
 			//リストに登録
-			//enemies.push_back(std::move(newBaseEnemy));
+			//enemie s.push_back(std::move(newBaseEnemy));
 		}
 	}
-
-	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
-	yazirusi->SetScale({ 3,3,3 });
-
 	//HPを計算
 	outmaxHp = enemies.size();
 	outhp = outmaxHp;
@@ -121,23 +144,23 @@ void BaseEnemy::InitializeIn()
 {
 	this->isFiled = FIELD_IN;
 
-	targetIndex = 1;
 	//オブジェクトの作成
 	object = ObjectObj::Create();
 	object->SetModel(ModelManager::GetModel("enemy"));
 	//影を作成
 	shadowObj = ObjectObj::Create(ModelManager::GetModel("shadow"));
 	shadowObj->SetScale({ 10,1,10 });
-
+	//攻撃進行に居たら表示する矢印
 	yazirusi = ObjectObj::Create(ModelManager::GetModel("yazirusi"));
 	yazirusi->SetScale({ 3,3,3 });
 
 	//座標のセット
 	float x = rand() % 200 - 100;
 	float z = rand() % 200 - 100;
-	object->SetPosition({ x,groundInPos,z });
+	object->SetPosition({ x,groundPosIn,z });
 	//サイズのセット
 	object->SetScale({ 4.0f,4.0f, 4.0f });
+	//コライダーのセット
 	object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
@@ -166,51 +189,19 @@ void BaseEnemy::UpdateOut()
 			object->SetPosition(pos);
 			//目的地を超えていたら
 			if (Collision::CheckExceed(
-				{ route[targetIndex - 1].x,groundOutPos,  route[targetIndex - 1].y },
+				{ route[targetIndex - 1].x,groundPosOut,  route[targetIndex - 1].y },
 				object->GetPosition(),
-				{ route[targetIndex].x,groundOutPos,  route[targetIndex].y })) {
+				{ route[targetIndex].x,groundPosOut,  route[targetIndex].y })) {
 				targetIndex++;
 				if (targetIndex >= 3) {
 					targetIndex = 2;
 				}
 				//移動する方向を計算する
 				XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
-				targetVec = XMLoadFloat3(&XMFLOAT3{ route[targetIndex].x, groundOutPos,route[targetIndex].y }) - pos1;
+				targetVec = XMLoadFloat3(&XMFLOAT3{ route[targetIndex].x, groundPosOut,route[targetIndex].y }) - pos1;
 				targetVec = XMVector3Normalize(targetVec);
 				targetVec.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
 			}
-
-
-			//if (targetIndex == 1) {
-			//	if (targetPos1.z > 0) {
-			//		object->VecSetPosition(XMFLOAT3{ 0,0,speed });
-			//		if (object->GetPosition().z >= oldPos.z + targetPos1.z) {
-			//			targetIndex = 2;
-			//			oldPos = object->GetPosition();
-			//		}
-			//	}
-			//	if (targetPos1.z < 0) {
-			//		object->VecSetPosition(XMFLOAT3{ 0,0,-speed });
-			//		if (object->GetPosition().z <= oldPos.z + targetPos1.z) {
-			//			targetIndex = 2;
-			//			oldPos = object->GetPosition();
-			//		}
-			//	}
-			//}
-			//else if (targetIndex == 2) {
-			//	if (targetPos2.x > 0) {
-			//		object->VecSetPosition(XMFLOAT3{ speed,0,0 });
-			//		if (object->GetPosition().x >= targetPos2.x) {
-			//			targetIndex = 2;
-			//		}
-			//	}
-			//	if (targetPos2.x < 0) {
-			//		object->VecSetPosition(XMFLOAT3{ -speed,0,0 });
-			//		if (object->GetPosition().x <= targetPos2.x) {
-			//			targetIndex = 2;
-			//		}
-			//	}
-			//}
 		}
 		for (std::unique_ptr<BaseEnemy>& enemy : enemies) {
 			//enemy->SetDead();
@@ -221,15 +212,12 @@ void BaseEnemy::UpdateOut()
 		}
 	}
 
-	yazirusi->SetPosition(object->GetPosition());
-	yazirusi->SetPosY(12.0f);
+
 	//オブジェクトの更新
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
-	shadowObj->SetPosY(groundOutPos - 6);
+	shadowObj->SetPosY(groundPosOut - 6);
 	shadowObj->Update();
-	yazirusi->Update();
-
 }
 
 void BaseEnemy::UpdateIn()
@@ -242,7 +230,7 @@ void BaseEnemy::UpdateIn()
 		dead = true;
 	}
 
-	if (isAction < 0) {
+	if (!isAction) {
 		//オブジェクトの更新
 		object->Update();
 		shadowObj->SetPosition(object->GetPosition());
@@ -256,114 +244,125 @@ void BaseEnemy::UpdateIn()
 	//移動処理
 	//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
 	if (attackFlag == false && stopFlag == false) {
-		//プレイヤーの方向を見る
-		ViewpointPlayer(player);
-		//プレイヤーと敵の距離を計算
-		float distance1 = Collision::CheckDistance(object->GetPosition(), player->object->GetPosition());
-
-		//徐々にプレイヤーに近づく処理
-		if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
-			nearFlag = false;
-			//プレイヤーに近づく
-			ApproachPlayer();
-		}
-		//近かったらプレイヤーの周りをまわるようにするための準備
-		else if (nearFlag == false) {
-			nearFlag = true;
-			moveTime = 0;
-
-			rotaTime = rand() % 100 + 100;
-			//回転する回転軸を入れる
-			rollPoint = player->object->GetPosition();
-			//回転するときの中心からの距離を入れる
-			m_Length = distance1;
-			//プレイヤーから敵への角度を求める
-			float x = object->GetPosition().x - player->object->GetPosition().x;
-			float z = object->GetPosition().z - player->object->GetPosition().z;
-			float tan = atan2(z, x);
-			m_Angle = (tan * 180) / 3.14;
-		}
-
-		//プレイヤーのまわりをまわる処理
-		if (nearFlag == true) {
-			float radius = m_Angle * 3.14f / 180.0f;
-			float addx = cos(radius) * m_Length;
-			float addy = sin(radius) * m_Length;
-			float m_PosX = rollPoint.x + addx;
-			float m_PosY = rollPoint.z + addy;
-			m_Angle += 0.5f;
-			object->SetPosition({ m_PosX,object->GetPosition().y,m_PosY });
-
-			//回り始めてから一定時間経つとプレイヤーに突進する
-			moveTime++;
-			if (moveTime > rotaTime) {
-				attackFlag = true;
-				moveTime = 0;
-				maeburiFlag = true;
-
-				//突進する方向を計算する
-				XMVECTOR pos1;
-				pos1.m128_f32[0] = object->GetPosition().x;
-				pos1.m128_f32[1] = object->GetPosition().y;
-				pos1.m128_f32[2] = object->GetPosition().z;
-				XMVECTOR pos2;
-				pos2.m128_f32[0] = player->object->GetPosition().x;
-				pos2.m128_f32[1] = object->GetPosition().y;
-				pos2.m128_f32[2] = player->object->GetPosition().z;
-				attackDirection = pos1 - pos2;
-				attackDirection = XMVector3Normalize(attackDirection);
-				attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
-
-				atodekesuROta = object->GetRotation();
-			}
-		}
+		Move();
 
 	}
 	//攻撃処理
 	else if (attackFlag == true && maeburiFlag == false) {
-		atodekesuROta.z = 90;
-		object->SetRotation(atodekesuROta);
-		//プレイヤーに突進しにいく処理
-		XMVECTOR pos;
-		pos.m128_f32[0] = object->GetPosition().x;
-		pos.m128_f32[1] = object->GetPosition().y;
-		pos.m128_f32[2] = object->GetPosition().z;
-		//突進処理
-		pos -= attackDirection * 1.1;
-		object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
-		//指定した時間突進したら攻撃をやめる
-		attackTime++;
-		if (attackTime > 120) {
-			attackTime = 0;
-			attackFlag = false;
-			nearFlag = false;
-			stopFlag = true;
-		}
+		Attack();
 	}
 
 	if (maeburiFlag == true)PreliminaryOperation();
 	if (stopFlag == true)Stop();
 
+	//敵がエリア外に出ないようにする
 	if (Collision::CheckDistance(object->GetPosition(), { 0,0,0 }) > 125.0f) {
 		object->SetPosition(oldPos);
-	}	
-
-	yazirusi->SetPosition(object->GetPosition());
-	yazirusi->SetPosY(12.0f);
+	}
 
 	//オブジェクトの更新
 	object->Update();
 	shadowObj->SetPosition(object->GetPosition());
 	shadowObj->SetPosY(-6 - 4);
 	shadowObj->Update();
+	yazirusi->SetPosition(object->GetPosition());
+	yazirusi->SetPosY(12.0f);
 	yazirusi->Update();
+}
+
+void BaseEnemy::Move()
+{
+	//プレイヤーの方向を見る
+	ViewpointPlayer(player);
+	//プレイヤーと敵の距離を計算
+	float distance1 = Collision::CheckDistance(object->GetPosition(), player->object->GetPosition());
+
+	//徐々にプレイヤーに近づく処理
+	if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
+		nearFlag = false;
+		//プレイヤーに近づく
+		ApproachPlayer();
+	}
+	//近かったらプレイヤーの周りをまわるようにするための準備
+	else if (nearFlag == false) {
+		nearFlag = true;
+		moveTime = 0;
+
+		rotaTime = rand() % 100 + 100;
+		//回転する回転軸を入れる
+		rollPoint = player->object->GetPosition();
+		//回転するときの中心からの距離を入れる
+		m_Length = distance1;
+		//プレイヤーから敵への角度を求める
+		float x = object->GetPosition().x - player->object->GetPosition().x;
+		float z = object->GetPosition().z - player->object->GetPosition().z;
+		float tan = atan2(z, x);
+		m_Angle = (tan * 180) / 3.14;
+	}
+
+	//プレイヤーのまわりをまわる処理
+	if (nearFlag == true) {
+		float radius = m_Angle * 3.14f / 180.0f;
+		float addx = cos(radius) * m_Length;
+		float addy = sin(radius) * m_Length;
+		float m_PosX = rollPoint.x + addx;
+		float m_PosY = rollPoint.z + addy;
+		m_Angle += 0.5f;
+		object->SetPosition({ m_PosX,object->GetPosition().y,m_PosY });
+
+		//回り始めてから一定時間経つとプレイヤーに突進する
+		moveTime++;
+		if (moveTime > rotaTime) {
+			attackFlag = true;
+			moveTime = 0;
+			maeburiFlag = true;
+
+			//突進する方向を計算する
+			XMVECTOR pos1;
+			pos1.m128_f32[0] = object->GetPosition().x;
+			pos1.m128_f32[1] = object->GetPosition().y;
+			pos1.m128_f32[2] = object->GetPosition().z;
+			XMVECTOR pos2;
+			pos2.m128_f32[0] = player->object->GetPosition().x;
+			pos2.m128_f32[1] = object->GetPosition().y;
+			pos2.m128_f32[2] = player->object->GetPosition().z;
+			attackDirection = pos1 - pos2;
+			attackDirection = XMVector3Normalize(attackDirection);
+			attackDirection.m128_f32[1] = 0;//ここを0にしないとプレイヤーと敵のY座標のずれで敵の突進方向がずれる
+
+			atodekesuROta = object->GetRotation();
+		}
+	}
+}
+
+
+void BaseEnemy::Attack()
+{
+	atodekesuROta.z = 90;
+	object->SetRotation(atodekesuROta);
+	//プレイヤーに突進しにいく処理
+	XMVECTOR pos;
+	pos.m128_f32[0] = object->GetPosition().x;
+	pos.m128_f32[1] = object->GetPosition().y;
+	pos.m128_f32[2] = object->GetPosition().z;
+	//突進処理
+	pos -= attackDirection * 1.1;
+	object->SetPosition({ pos.m128_f32[0],pos.m128_f32[1] ,pos.m128_f32[2] });
+	//指定した時間突進したら攻撃をやめる
+	attackTime++;
+	if (attackTime > 120) {
+		attackTime = 0;
+		attackFlag = false;
+		nearFlag = false;
+		stopFlag = true;
+	}
 }
 
 void BaseEnemy::Draw()
 {
 	object->Draw();
 	shadowObj->Draw();
-	if (yazirusiFlag&& isFiled == FIELD_IN) {
+	if (yazirusiFlag && isFiled == FIELD_IN) {
 		yazirusi->Draw();
 	}
 }

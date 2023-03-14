@@ -25,8 +25,7 @@ public:	//メンバ関数
 	//デストラクタ
 	~EnemyZako();
 
-	virtual void InitializeOut(bool isTarget,XMFLOAT2 route[]);
+	static std::shared_ptr<EnemyZako> Create(bool isTarget, XMFLOAT2 route[] = nullptr);
 
-	virtual void InitializeIn();
-
+	void CreateEnemy()override;
 };

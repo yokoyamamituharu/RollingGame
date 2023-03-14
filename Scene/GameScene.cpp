@@ -215,13 +215,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			if (dasu[index].timer <= 0) {
 				if (dasu[index].basyo == 1) {
 					//ƒ^ƒ[‚ª‚ ‚é•û
-					std::shared_ptr<EnemyZako> newEnemy = std::make_shared<EnemyZako>();
-					newEnemy->InitializeOut(true,Route::GetRoute(1));
+					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true,Route::GetRoute(1));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
-					std::shared_ptr<YowaiEnemy> newEnemy = std::make_shared<YowaiEnemy>();
-					newEnemy->InitializeOut(true, Route::GetRoute(2));
+					std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(2));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;

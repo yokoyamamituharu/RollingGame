@@ -700,6 +700,26 @@ void Player::StopRolling()
 
 void Player::YazirusiUpdate()
 {
+	InputMouse* mouse = InputMouse::GetInstance();
+
+	//クリックを押し始めのウィンドウ座標を保存
+	if (mouse->TorigerMouse(MouseDIK::M_LEFT)) {
+		XMFLOAT2 mousepoint = mouse->GetWindowPos();
+	}
+
+	//クリックを押している間の座標を保存
+	if (mouse->PushMouse(MouseDIK::M_LEFT)) {
+		XMFLOAT2 mousepointnow = mouse->GetWindowPos();
+	}
+
+	//二点から角度を求めて角度を保存
+	XMFLOAT2 m = { 0,0 };
+
+
+
+	//矢印スプライトの回転を上で求めた角度にする
+
+
 	//エフェクトの向きを計算
 	XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
 	ppos2 += attackDirection * 6.0f;
@@ -719,5 +739,4 @@ void Player::YazirusiUpdate()
 	yazirusi->SetPosition(clickTrigerPos);
 	yazirusi->SetScale({ yaziscale ,yaziscale });
 }
-
 

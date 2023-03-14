@@ -4,6 +4,9 @@
 #include "InputMouse.h"
 #include <DirectXMath.h>
 #include "Player.h"
+#include <vector>
+#include "Route.h"
+
 class BaseEnemy
 {
 protected:
@@ -14,27 +17,28 @@ protected:
 	using XMVECTOR = DirectX::XMVECTOR;
 	using XMMATRIX = DirectX::XMMATRIX;
 
-
-public:	//静的メンバ関数
-	//敵を行動させるかさせないか
-	static void Action() {
-		if (Input::GetInstance()->TriggerKey(DIK_E)) {
-			isAction *= -1;
-		}
-	}
-
+public: //サブクラス
+	//どのフィールドに属しているか
 	enum FIELDLOCATION {
 		FIELD_NONE,
 		FIELD_OUT,
 		FIELD_IN
 	};
 
+public:	//静的メンバ関数
+	//敵を行動させるかさせないか
+	static void Action() {
+		if (Input::GetInstance()->TriggerKey(DIK_E)) {
+			isAction = !isAction;
+		}
+	}
+
 public:	//静的メンバ変数
-	//敵の地面となるの座標
-	static const float groundOutPos;
-	static const float groundInPos;
 	//敵の行動させる/させないフラグ
-	static int isAction;
+	static bool isAction;
+	//敵の地面となるの座標
+	static const float groundPosOut;
+	static const float groundPosIn;
 
 public:	//メンバ関数	
 
@@ -43,8 +47,16 @@ public:	//メンバ関数
 
 	//デストラクタ
 	~BaseEnemy();
+	
+	static std::shared_ptr<BaseEnemy> Create(bool isTarget, XMFLOAT2 route[] = nullptr);
 
-	virtual void InitializeOut(XMFLOAT3 pos, bool isTarget, XMFLOAT3 targetPos1 = { 0,0,0 }, XMFLOAT3 targetPos2 = { 0,0,0 });
+	//敵の中の敵を生成する
+	virtual void CreateEnemy();
+
+	//ベースの初期化処理
+	void InitGeneralSetUp();
+
+	void InitializeOut(bool isTarget, XMFLOAT2 route[] = nullptr);
 
 	virtual void InitializeIn();
 
@@ -126,6 +138,9 @@ public:	//セッター、ゲッター
 
 	void ParticleCreate();
 
+	void Attack();
+
+	void Move();
 
 
 public:
@@ -172,9 +187,6 @@ protected:	//メンバ変数
 	/*座標*/
 	//ターゲットに進む方向
 	XMVECTOR targetVec;
-	//ターゲットの場所
-	XMFLOAT3 targetPos1;
-	XMFLOAT3 targetPos2;
 	int targetIndex;//いま何個目のターゲットなのか
 
 	/*その他*/
@@ -217,4 +229,6 @@ public:
 	ObjectObj* yazirusi = nullptr;
 
 	bool yazirusiFlag = true;
+
+	std::string modelName;
 };

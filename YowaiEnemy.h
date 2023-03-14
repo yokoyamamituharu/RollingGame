@@ -16,7 +16,11 @@ public:
 	YowaiEnemy();
 	~YowaiEnemy();
 
-	void InitializeOut(bool isTarget, XMFLOAT2 route[]);
+	void CreateEnemy()override;
+	//void InitIndividualSetUp()override;
+
+	static std::shared_ptr<YowaiEnemy> Create(bool isTarget, XMFLOAT2 route[] = nullptr);
+
 
 	void InitializeIn()override;
 };
