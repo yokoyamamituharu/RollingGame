@@ -300,6 +300,7 @@ void Player::UpdateIn()
 
 void Player::MoveOut()
 {
+	XMFLOAT3 oldpos = object->GetPosition();
 	DirectX::XMVECTOR forvardvec = {};
 	if (isSphere == false) {
 		if (Input::GetInstance()->PushKey(DIK_W)) {
@@ -315,10 +316,18 @@ void Player::MoveOut()
 			forvardvec.m128_f32[0] += 1;
 		}
 	}
+	//forvardvec.m128_f32[2] += 1;
 	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 	const float speed = 1.2f;
 	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
 
+	XMFLOAT3 pos = object->GetPosition() + move;
+
+	//XMFLOAT3 pppos = oldpos - pos;
+	XMFLOAT3 pppos = pos - oldpos;
+	float yziku =(atan2(pppos.x, pppos.z)) * 180.0f / 3.14f +180;
+	//float yziku = atan2(forvardvec.m128_f32[2], forvardvec.m128_f32[1]) * 180.0f / 3.14f + 90.0f;
+	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
 	RollingMoveOut();
 }
 
