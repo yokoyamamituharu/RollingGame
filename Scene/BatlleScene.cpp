@@ -156,6 +156,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 				if (player->attackFlag == true) {
 					//enemy->SetDead();
 					enemy->DamageIn(1);
+					enemy->kazuFlag = true;
 					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
 					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
 					XMVECTOR vec = pos1 - pos2;

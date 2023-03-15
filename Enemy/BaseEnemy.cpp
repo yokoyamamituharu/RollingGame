@@ -242,14 +242,22 @@ void BaseEnemy::UpdateIn()
 	oldPos = object->GetPosition();
 
 	//移動処理
-	//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
-	if (attackFlag == false && stopFlag == false) {
-		Move();
 
+	Reaction();
+	if (kazuFlag == false) {
+		object->SetRotation({ 0,0,0 });
+		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
+		if (attackFlag == false && stopFlag == false) {
+			Move();
+
+		}
+		//攻撃処理
+		else if (attackFlag == true && maeburiFlag == false) {
+			Attack();
+		}
 	}
-	//攻撃処理
-	else if (attackFlag == true && maeburiFlag == false) {
-		Attack();
+	else {
+		object->SetRotation({ 45,0,0 });
 	}
 
 	if (maeburiFlag == true)PreliminaryOperation();
@@ -364,6 +372,21 @@ void BaseEnemy::Draw()
 	shadowObj->Draw();
 	if (yazirusiFlag && isFiled == FIELD_IN) {
 		yazirusi->Draw();
+	}
+}
+
+void BaseEnemy::Reaction()
+{
+	if (kazuFlag) {
+		attackFlag = false;
+		kazuTimer++;
+		if (kazuTimer > 50) {
+			kazuTimer = 0;
+			kazuFlag = false;
+		}
+	}
+	else {
+
 	}
 }
 

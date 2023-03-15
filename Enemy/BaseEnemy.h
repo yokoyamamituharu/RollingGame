@@ -66,6 +66,8 @@ public:	//メンバ関数
 
 	virtual void Draw();
 
+	void Reaction();
+
 protected:
 	//プレイヤーの方を向かせる処理
 	void ViewpointPlayer(Player* player);
@@ -231,4 +233,8 @@ public:
 	bool yazirusiFlag = true;
 
 	std::string modelName;
+
+	bool kazuFlag = false;
+
+	int kazuTimer = 0;
 };

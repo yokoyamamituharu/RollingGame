@@ -718,7 +718,7 @@ void Player::YazirusiUpdate()
 
 
 	//矢印スプライトの回転を上で求めた角度にする
-
+	 
 
 	//エフェクトの向きを計算
 	XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
