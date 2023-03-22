@@ -65,7 +65,7 @@ public: // ƒƒ“ƒoŠÖ”
 	/// </summary>
 	void SetCenterCoursolPos();
 
-	XMFLOAT2 GetScreanWindowCenterPos();
+	static XMFLOAT2 GetScreanWindowCenterPos();
 
 private: // ƒƒ“ƒo•Ï”
 	ComPtr<IDirectInput8> dinput;

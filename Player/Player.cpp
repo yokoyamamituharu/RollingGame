@@ -78,6 +78,7 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 void Player::UpdateOut(Camera* camera)
 {
+	YazirusiUpdate();
 	//外シーンではY座標をとりあえず固定
 	if (object->collider) {
 		object->SetPosY(groundHeight);
@@ -325,7 +326,7 @@ void Player::MoveOut()
 
 	//XMFLOAT3 pppos = oldpos - pos;
 	XMFLOAT3 pppos = pos - oldpos;
-	float yziku =(atan2(pppos.x, pppos.z)) * 180.0f / 3.14f +180;
+	float yziku = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
 	//float yziku = atan2(forvardvec.m128_f32[2], forvardvec.m128_f32[1]) * 180.0f / 3.14f + 90.0f;
 	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
 	RollingMoveOut();
@@ -721,15 +722,7 @@ void Player::YazirusiUpdate()
 		XMFLOAT2 mousepointnow = mouse->GetWindowPos();
 	}
 
-	//二点から角度を求めて角度を保存
-	XMFLOAT2 m = { 0,0 };
-
-
-
 	//矢印スプライトの回転を上で求めた角度にする
-	 
-
-	//エフェクトの向きを計算
 	XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
 	ppos2 += attackDirection * 6.0f;
 	const float direction = 180.0f;
@@ -745,7 +738,7 @@ void Player::YazirusiUpdate()
 	float rotadistance = Collision::CheckDistance(rotapoint, clickTrigerPos);
 	float yaziscale = 1 + rotadistance / 100;
 
-	//yazirusi->SetPosition(InputMouse::GetInstance()->);
+	yazirusi->SetPosition(WinApp::GetWindowSize() / 2);
 	yazirusi->SetScale({ yaziscale ,yaziscale });
 }
 
