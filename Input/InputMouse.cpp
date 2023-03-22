@@ -185,7 +185,7 @@ float InputMouse::MoveMouseVector(char h)
 }
 
 void InputMouse::ShowMouseCursor(bool flag)
-{	
+{
 	int c;
 	if (flag == true) {
 		do {
@@ -201,52 +201,15 @@ void InputMouse::ShowMouseCursor(bool flag)
 
 void InputMouse::SetCenterCoursolPos()
 {
+	//カーソルを固定
+	SetCursorPos(int(GetScreanWindowCenterPos().x), int(GetScreanWindowCenterPos().y));
+}
+
+DirectX::XMFLOAT2 InputMouse::GetScreanWindowCenterPos()
+{
+	//スクリーン座標上のウィンドウ座標を取得しウィンドウの中央の座標を取得
 	RECT rect;
 	GetWindowRect(WinApp::GetInstance()->GetHwnd(), &rect);
-	//ウィンドウの各座標を取得
-	float left = rect.left;
-	float right = rect.right;
-	float top = rect.top;
-	float bottom = rect.bottom;
-	float xCenter, yCenter;
-
-	//横の中心点を計算
-	if (left > 0 && right >= 0 || left <= 0 && right <= 0) {
-		float high, min;
-		if (abs(left) > abs(right)) {
-			high = left;
-			min = right;
-		}
-		else {
-			high = right;
-			min = left;
-		}
-		xCenter = abs(high) - abs(min);
-	}
-	else {
-		xCenter = abs(left) + abs(right);
-	}
-	//縦の中心点を計算
-	if (top > 0 && bottom >= 0 || top <= 0 && bottom <= 0) {
-		float high, min;
-		if (abs(top) > abs(bottom)) {
-			high = top;
-			min = bottom;
-		}
-		else {
-			high = bottom;
-			min = top;
-		}
-		yCenter = abs(high) - abs(min);
-	}
-	else {
-		yCenter = abs(top) + abs(bottom);
-	}
-
-	//カーソルを固定
-	SetCursorPos(left + (xCenter / 2), bottom - (yCenter / 2));
-
-	//short xxx = GET_X_LPARAM(0);
-	//short yyy = GET_Y_LPARAM(0);
+	return XMFLOAT2(rect.left + WinApp::window_width / 2, rect.top + WinApp::window_height / 2);
 }
 

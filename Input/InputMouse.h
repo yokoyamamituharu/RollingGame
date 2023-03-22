@@ -58,12 +58,14 @@ public: // メンバ関数
 	/// カーソルを表示するか否か
 	/// </summary>
 	/// <param name="flag">true=表示 false=非表示</param>
-	void ShowMouseCursor(bool flag);
+	static void ShowMouseCursor(bool flag);
 
 	/// <summary>
 	/// カーソルをウィンドウの中心に固定
 	/// </summary>
 	void SetCenterCoursolPos();
+
+	XMFLOAT2 GetScreanWindowCenterPos();
 
 private: // メンバ変数
 	ComPtr<IDirectInput8> dinput;

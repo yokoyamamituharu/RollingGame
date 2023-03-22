@@ -92,6 +92,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 	//FPSロック
 	FPSLock fpsLock;	
+	InputMouse::ShowMouseCursor(false);
+
 	while (true)  // ゲームループ
 	{
 

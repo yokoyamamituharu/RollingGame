@@ -745,7 +745,7 @@ void Player::YazirusiUpdate()
 	float rotadistance = Collision::CheckDistance(rotapoint, clickTrigerPos);
 	float yaziscale = 1 + rotadistance / 100;
 
-	yazirusi->SetPosition(clickTrigerPos);
+	//yazirusi->SetPosition(InputMouse::GetInstance()->);
 	yazirusi->SetScale({ yaziscale ,yaziscale });
 }
 
