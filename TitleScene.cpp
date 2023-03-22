@@ -67,7 +67,7 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
 
 	scene = new SceneLoader();
-	//scene->Initialize("title");
+	scene->Initialize("title");
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
@@ -126,7 +126,7 @@ void TitleScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	titleSprite->Draw();
+	//titleSprite->Draw();
 	black->Draw();	
 	if (effectFlag == true) {
 		sceneEffect[effectIndex]->Draw();

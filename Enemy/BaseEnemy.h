@@ -234,7 +234,7 @@ public:
 
 	std::string modelName;
 
-	bool yorokeFlag = false;
+	bool kazuFlag = false;
 
-	int yorokeTimer = 0;
+	int kazuTimer = 0;
 };

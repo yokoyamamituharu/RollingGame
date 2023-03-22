@@ -41,7 +41,7 @@ GameScene::~GameScene()
 	safe_delete(gameCamera);
 	safe_delete(touchGround);
 	safe_delete(subCamera);
-	safe_delete(touchObj);
+
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -76,9 +76,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
-	//touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
-	//touchGround->SetScale({ 10.0f,1.0f,10.0f });
-	//touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
+	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
+	touchGround->SetScale({ 10.0f,1.0f,10.0f });
+	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
 
 
 	tamesi = ObjectObj::Create(ModelManager::GetModel("level"));
@@ -126,17 +126,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	//scene->Initialize("level");
+	scene->Initialize("level");
 	playerSprte = Sprite::Create(31, { 0,0 });
 	towerSprte = Sprite::Create(32, { 0,0 });
 
 	Route* route = Route::GetIns();
 	route->Set();
-	
-	objects.push_back(std::move(ObjectObj::CreateS(ModelManager::GetModel("tenQ"), {}, {}, { 5,5,5 })));//天球
-	objects.push_back(std::move(ObjectObj::CreateS(ModelManager::GetModel("ground"), {}, {}, { 100,1,100 })));//地面
-
-	touchObj = TouchableObject::Create(ModelManager::GetModel("kabe"),{0,5,-10},{},{5,1,5});
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -163,31 +158,54 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
+		//spriteBG->SetSize({ 2, 2 });
+		XMFLOAT2 postSize = miniMapPost->GetSize();
+		postSize.x += 0.1;
+		postSize.y += 0.1;
+		miniMapPost->SetSize(postSize);
+	}
+	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+		//spriteBG->SetSize({ 100, 100 });
+		//miniMapPost->SetSize({ 100,100 });
+		XMFLOAT2 postSize = miniMapPost->GetSize();
+		postSize.x -= 0.1;
+		postSize.y -= 0.1;
+		miniMapPost->SetSize(postSize);
+	}
+
 	//敵を行動させるかさせないかのトルグスイッチ
 	//EnemyZako::Action();
 
-	for (int i = 0; i < 2; i++) {
 
-		std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
-		particle->obj = std::make_unique<ObjectObj>();
-		particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));
-		int scale = rand() % 20 + 1;
-		particle->startScale = rand() % 4 + 1;
-		particle->obj->SetScale({ float(scale),float(scale),float(scale) });
-		particle->obj->SetRotation({ 0,0,0 });
-		//プレイヤーの足元に生成
-		particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
+	//if (Input::GetInstance()->PushKey(DIK_E)) {
+		for (int i = 0; i < 2; i++) {
 
-		particle->end_frame = rand() % 5 + 10;
-		//int rndVel = 3.0f;
-		//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
-		//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
-		//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
-		//tubu->velocity.x = 0;
-		//tubu->velocity.y = 0;
-		//tubu->velocity.z = -rand() % (rndVel * 2);
-		//Particle::GetIns()->Add(std::move(particle));
-	}
+			std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+			particle->obj = std::make_unique<ObjectObj>();
+			particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));
+			int scale = rand() % 20 + 1;
+			particle->startScale = rand() % 4 + 1;
+			particle->obj->SetScale({ float(scale),float(scale),float(scale) });
+			particle->obj->SetRotation({ 0,0,0 });
+			//プレイヤーの足元に生成
+			particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
+
+			particle->end_frame = rand() % 5 + 10;
+			//int rndVel = 3.0f;
+			//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+			//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+			//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+			//tubu->velocity.x = 0;
+			//tubu->velocity.y = 0;
+			//tubu->velocity.z = -rand() % (rndVel * 2);
+			//Particle::GetIns()->Add(std::move(particle));
+		}
+	//}
+
+
+
+
 
 
 	//敵生成処理
@@ -197,7 +215,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			if (dasu[index].timer <= 0) {
 				if (dasu[index].basyo == 1) {
 					//タワーがある方
-					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(1));
+					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true,Route::GetRoute(1));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
@@ -230,18 +248,18 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		//if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, { 0,0,0 }, { 10,10,10 })) {
-		//	//当たったら負け
-		//	sceneNo = SceneManager::SCENE_END;
-		//}
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, { 0,0,0 }, { 10,10,10 })) {
+			//当たったら負け
+			//sceneNo = SceneManager::SCENE_END;
+		}
 
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
-			//if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 30) {
-			//	enemy->tikai = true;
-			//	isTikai = true;
-			//	tikaiStack.push_back(true);
-			//}
+			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 30) {
+				enemy->tikai = true;
+				isTikai = true;
+				tikaiStack.push_back(true);
+			}
 		}
 	}
 
@@ -265,21 +283,22 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//プレイヤーとシーンオブジェクトの当たり判定
+	player->MoveOut();
+	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
+	//	player->move = { 0,0,0 };
+	//}	
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	defenseTower->Update(enemiesG);
 	suana->Update();
 	suana2->Update();
 	scene->Update();
-	//touchGround->Update();
+	touchGround->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
-	}
-	for (std::unique_ptr<ObjectObj>& obj : objects) {
-		obj->Update();
 	}
 
 	gameCamera->Update();
@@ -287,7 +306,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	player->object->Update();
 	player->shadowObj->Update();
 	tamesi->Update();
-	touchObj->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -304,6 +322,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	subCamera->SetTarget(player->object->GetPosition());
 	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
 	PostReserve();	//ミニマップの描画前処理
+
+	//collisionManager->CheckAllCollisions();
+	//if (collisionManager->GetPlayerTikei()) {
+	//	player->StopRolling();
+	//}
 }
 
 void GameScene::Draw()
@@ -326,10 +349,6 @@ void GameScene::Draw()
 	defenseTower->Draw();
 	player->Draw();
 	//tamesi->Draw();
-	for (std::unique_ptr<ObjectObj>& obj : objects) {
-		obj->Draw();
-	}
-	touchObj->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

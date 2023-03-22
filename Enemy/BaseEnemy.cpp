@@ -161,8 +161,8 @@ void BaseEnemy::InitializeIn()
 	//サイズのセット
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	//コライダーのセット
-	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
-	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	inhp = 5;
 }
@@ -182,13 +182,16 @@ void BaseEnemy::UpdateOut()
 
 	if (isAction > 0 && GetDead() == false) {
 		if (isTarget == true) {
+			float speed = 0.15;
 			//目的地に向かって直進	
-			const float speed = 0.15;
-			XMFLOAT3 pos = object->GetPosition() + targetVec * speed;
+
+			XMFLOAT3 pos = object->GetPosition() + targetVec * 0.5;
 			object->SetPosition(pos);
 			//目的地を超えていたら
-			if (Collision::CheckExceed({ route[targetIndex - 1].x,groundPosOut,  route[targetIndex - 1].y },
-				object->GetPosition(), { route[targetIndex].x,groundPosOut,  route[targetIndex].y })) {
+			if (Collision::CheckExceed(
+				{ route[targetIndex - 1].x,groundPosOut,  route[targetIndex - 1].y },
+				object->GetPosition(),
+				{ route[targetIndex].x,groundPosOut,  route[targetIndex].y })) {
 				targetIndex++;
 				if (targetIndex >= 3) {
 					targetIndex = 2;
@@ -241,7 +244,7 @@ void BaseEnemy::UpdateIn()
 	//移動処理
 
 	Reaction();
-	if (yorokeFlag == false) {
+	if (kazuFlag == false) {
 		object->SetRotation({ 0,0,0 });
 		//プレイヤーから遠かったら近づき、近かったらプレイヤーの周りをまわる
 		if (attackFlag == false && stopFlag == false) {
@@ -374,12 +377,12 @@ void BaseEnemy::Draw()
 
 void BaseEnemy::Reaction()
 {
-	if (yorokeFlag) {
+	if (kazuFlag) {
 		attackFlag = false;
-		yorokeTimer++;
-		if (yorokeTimer > 50) {
-			yorokeTimer = 0;
-			yorokeFlag = false;
+		kazuTimer++;
+		if (kazuTimer > 50) {
+			kazuTimer = 0;
+			kazuFlag = false;
 		}
 	}
 	else {
