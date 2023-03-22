@@ -62,8 +62,8 @@ void YowaiEnemy::InitializeIn()
 	//サイズのセット
 	object->SetScale({ 4.0f,4.0f, 4.0f });
 	//コライダーのセット
-	object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
-	object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
+	//object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
+	//object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
 	inhp = 1;
 }

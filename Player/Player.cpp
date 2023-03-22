@@ -74,6 +74,8 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 	yazirusi = Sprite::Create(30, { 0,0 });
 	yazirusi->SetAnchorPoint({ 0.5f,0.5f });
+	object->SetPosition({ 0.0f,4.0f,-15.0f });
+
 }
 
 void Player::UpdateOut(Camera* camera)
@@ -91,13 +93,12 @@ void Player::UpdateOut(Camera* camera)
 		}
 	}
 
-
+	MoveOut();
+	RollingMoveOut();
 	object->SetPosition({
 		object->GetPosition().x + move.x,
 		object->GetPosition().y + move.y,
 		object->GetPosition().z + move.z });
-	//MoveOut();
-	Res();
 
 
 	//押した瞬間に中心点を決定
@@ -155,10 +156,10 @@ void Player::UpdateOut(Camera* camera)
 			// 地面判定しきい値
 			const float threshold = cosf(XMConvertToRadians(30.0f));
 
-			if (-threshold < cos && cos < threshold) {
+			//if (-threshold < cos && cos < threshold) {
 				sphere->center += info.reject;
 				move += info.reject;
-			}
+			//}
 
 			return true;
 		}
@@ -300,35 +301,41 @@ void Player::UpdateIn()
 
 void Player::MoveOut()
 {
-	XMFLOAT3 oldpos = object->GetPosition();
-	DirectX::XMVECTOR forvardvec = {};
-	if (isSphere == false) {
-		if (Input::GetInstance()->PushKey(DIK_W)) {
-			forvardvec.m128_f32[2] += 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_S)) {
-			forvardvec.m128_f32[2] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_A)) {
-			forvardvec.m128_f32[0] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_D)) {
-			forvardvec.m128_f32[0] += 1;
-		}
+	move = { 0.0f,0.0f,0.0f };
+	if (isSphere) { return; }
+	if (!Input::GetInstance()->PushKey(DIK_W) && !Input::GetInstance()->PushKey(DIK_S) &&
+		!Input::GetInstance()->PushKey(DIK_A) && !Input::GetInstance()->PushKey(DIK_D)) {
+		return;
 	}
-	//forvardvec.m128_f32[2] += 1;
+
+	XMFLOAT3 oldpos = object->GetPosition();
+	XMVECTOR forvardvec = {};
+	//移動キーの取得
+	if (Input::GetInstance()->PushKey(DIK_W)) {
+		forvardvec.m128_f32[2] += 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_S)) {
+		forvardvec.m128_f32[2] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_A)) {
+		forvardvec.m128_f32[0] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_D)) {
+		forvardvec.m128_f32[0] += 1;
+	}
+
+	//カメラの向ている方を軸としてベクトルを計算
 	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	const float speed = 1.2f;
+	float speed = 0.5f;
+	if (Input::GetInstance()->PushKey(DIK_LSHIFT)) { speed = 1.2f; }
+	if (Input::GetInstance()->PushKey(DIK_LCONTROL)) { speed = 0.1f; }
 	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
 
+	//プレイヤーを進行方向に向ける
 	XMFLOAT3 pos = object->GetPosition() + move;
-
-	//XMFLOAT3 pppos = oldpos - pos;
 	XMFLOAT3 pppos = pos - oldpos;
-	float yziku =(atan2(pppos.x, pppos.z)) * 180.0f / 3.14f +180;
-	//float yziku = atan2(forvardvec.m128_f32[2], forvardvec.m128_f32[1]) * 180.0f / 3.14f + 90.0f;
+	float yziku = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
 	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
-	RollingMoveOut();
 }
 
 void Player::RollingMoveOut()
@@ -727,7 +734,7 @@ void Player::YazirusiUpdate()
 
 
 	//矢印スプライトの回転を上で求めた角度にする
-	 
+
 
 	//エフェクトの向きを計算
 	XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());

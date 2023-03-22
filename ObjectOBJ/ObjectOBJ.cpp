@@ -67,7 +67,7 @@ void ObjectObj::PostDraw()
 	ObjectObj::commandList = nullptr;
 }
 
-ObjectObj* ObjectObj::Create(Model* model,XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
+ObjectObj* ObjectObj::Create(Model* model, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	ObjectObj* objectObj = new ObjectObj;
@@ -80,7 +80,19 @@ ObjectObj* ObjectObj::Create(Model* model,XMFLOAT3 position, XMFLOAT3 rotation, 
 		delete objectObj;
 		assert(0);
 		return nullptr;
-	}	
+	}
+
+	objectObj->SetPosition(position);
+	objectObj->SetRotation(rotation);
+	objectObj->SetScale(scale);
+
+	return objectObj;
+}
+
+std::unique_ptr<ObjectObj> ObjectObj::CreateS(Model* model, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
+{
+	std::unique_ptr<ObjectObj> objectObj = std::make_unique<ObjectObj>();
+	objectObj->Initialize(model);
 
 	objectObj->SetPosition(position);
 	objectObj->SetRotation(rotation);

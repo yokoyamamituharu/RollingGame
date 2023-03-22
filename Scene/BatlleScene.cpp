@@ -156,7 +156,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 				if (player->attackFlag == true) {
 					//enemy->SetDead();
 					enemy->DamageIn(1);
-					enemy->kazuFlag = true;
+					enemy->yorokeFlag = true;
 					XMVECTOR pos1 = XMLoadFloat3(&player->object->GetPosition());
 					XMVECTOR pos2 = XMLoadFloat3(&enemy->object->GetPosition());
 					XMVECTOR vec = pos1 - pos2;
@@ -224,7 +224,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 		//キルコマンド
 		if (Input::GetInstance()->TriggerKey(DIK_K)) {
 			for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
-				enemy->DamageIn(10000);
+				//enemy->DamageIn(10000);
 			}
 		}
 
@@ -270,7 +270,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 	player->object->Update();
 	player->shadowObj->Update();
 
-	const int maxEnemy = 6;
+	const int maxEnemy = 7;
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 }

@@ -94,6 +94,8 @@ public: // 静的メンバ関数
 	/// <returns></returns>
 	static ObjectObj* Create(Model* model = nullptr, XMFLOAT3 position = { 0,0,0 }, XMFLOAT3 rotation = { 0,0,0 }, XMFLOAT3 scale = { 1,1,1 });
 
+	static std::unique_ptr<ObjectObj> CreateS(Model* model = nullptr, XMFLOAT3 position = { 0,0,0 }, XMFLOAT3 rotation = { 0,0,0 }, XMFLOAT3 scale = { 1,1,1 });
+
 	static void SetCamera(Camera* camera) { ObjectObj::camera = camera; }
 
 protected: // 静的メンバ変数

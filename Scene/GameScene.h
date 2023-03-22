@@ -85,10 +85,11 @@ private: // メンバ変数
 	//std::map<std::string, ObjectObj*> objects;
 	//敵
 	std::list<std::shared_ptr<BaseEnemy>>enemiesG;
-	TouchableObject* touchGround = nullptr;
-	
+	TouchableObject* touchGround = nullptr;	
 	ObjectObj* tamesi = nullptr;
-
+	//デバッグ用オブジェクト
+	std::list<std::unique_ptr<ObjectObj>>objects;
+	TouchableObject* touchObj = nullptr;
 
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;

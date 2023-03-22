@@ -2,7 +2,7 @@
 #include "MeshCollider.h"
 #include "CollisionAttribute.h"
 
-TouchableObject * TouchableObject::Create(Model * model)
+TouchableObject * TouchableObject::Create(Model * model, XMFLOAT3 position, XMFLOAT3 rotation, XMFLOAT3 scale)
 {
 	// オブジェクトのインスタンスを生成
 	TouchableObject* instance = new TouchableObject();
@@ -15,6 +15,10 @@ TouchableObject * TouchableObject::Create(Model * model)
 		delete instance;
 		assert(0);
 	}
+
+	instance->SetPosition(position);
+	instance->SetRotation(rotation);
+	instance->SetScale(scale);
 
 	return instance;
 }
