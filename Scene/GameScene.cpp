@@ -283,10 +283,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//プレイヤーとシーンオブジェクトの当たり判定
-	player->MoveOut();
-	//if (scene->Collision(player->object->GetPosition() + player->move, { 2.5,5,1 })) {
-	//	player->move = { 0,0,0 };
-	//}	
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	defenseTower->Update(enemiesG);

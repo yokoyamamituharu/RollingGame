@@ -92,13 +92,7 @@ void Player::UpdateOut(Camera* camera)
 		}
 	}
 
-
-	object->SetPosition({
-		object->GetPosition().x + move.x,
-		object->GetPosition().y + move.y,
-		object->GetPosition().z + move.z });
-	//MoveOut();
-	Res();
+	MoveOut();
 
 
 	//押した瞬間に中心点を決定
@@ -301,35 +295,44 @@ void Player::UpdateIn()
 
 void Player::MoveOut()
 {
-	XMFLOAT3 oldpos = object->GetPosition();
-	DirectX::XMVECTOR forvardvec = {};
-	if (isSphere == false) {
-		if (Input::GetInstance()->PushKey(DIK_W)) {
-			forvardvec.m128_f32[2] += 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_S)) {
-			forvardvec.m128_f32[2] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_A)) {
-			forvardvec.m128_f32[0] -= 1;
-		}
-		if (Input::GetInstance()->PushKey(DIK_D)) {
-			forvardvec.m128_f32[0] += 1;
-		}
-	}
-	//forvardvec.m128_f32[2] += 1;
-	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-	const float speed = 1.2f;
-	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
-
-	XMFLOAT3 pos = object->GetPosition() + move;
-
-	//XMFLOAT3 pppos = oldpos - pos;
-	XMFLOAT3 pppos = pos - oldpos;
-	float yziku = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
-	//float yziku = atan2(forvardvec.m128_f32[2], forvardvec.m128_f32[1]) * 180.0f / 3.14f + 90.0f;
-	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
 	RollingMoveOut();
+
+	if (!isSphere == false) return;
+	if (!Input::GetInstance()->PushKey(DIK_W) && !Input::GetInstance()->PushKey(DIK_S) &&
+		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)) {
+		return;
+	}
+
+	XMFLOAT3 oldpos = object->GetPosition();
+	XMVECTOR forwardvec = {};
+	if (Input::GetInstance()->PushKey(DIK_W)) {
+		forwardvec.m128_f32[2] += 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_S)) {
+		forwardvec.m128_f32[2] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_A)) {
+		forwardvec.m128_f32[0] -= 1;
+	}
+	if (Input::GetInstance()->PushKey(DIK_D)) {
+		forwardvec.m128_f32[0] += 1;
+	}
+	//単位ベクトルを求めベクトルの大きさを1にする
+	float normal = sqrt(forwardvec.m128_f32[0] * forwardvec.m128_f32[0] + forwardvec.m128_f32[2] * forwardvec.m128_f32[2]);
+	XMVECTOR normalVec = forwardvec / normal;
+	//カメラの回転行列を考慮して前方を決定する
+	forwardvec = XMVector3TransformNormal(normalVec, camera->matRot);
+	//位置の更新
+	const float speed = 0.2f;
+	move = { forwardvec.m128_f32[0] * speed,forwardvec.m128_f32[1] * speed,forwardvec.m128_f32[2] * speed };
+	object->SetPosition(object->GetPosition() + move);
+
+	//オブジェクトを進行方向に向ける
+	XMFLOAT3 pos = object->GetPosition() + move;
+	XMFLOAT3 pppos = pos - oldpos;
+	//移動前と移動後の位置から向きを計算
+	float yziku = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
+	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
 }
 
 void Player::RollingMoveOut()
@@ -382,26 +385,26 @@ void Player::RollingMoveOut()
 void Player::MoveIn()
 {
 	if (crawAttackFlag == true) { return; }
-	DirectX::XMVECTOR forvardvec = {};
+	DirectX::XMVECTOR forwardvec = {};
 
 	if (isSphere == false) {
 		if (Input::GetInstance()->PushKey(DIK_W)) {
-			forvardvec.m128_f32[2] += 1;
+			forwardvec.m128_f32[2] += 1;
 		}
 		if (Input::GetInstance()->PushKey(DIK_S)) {
-			forvardvec.m128_f32[2] -= 1;
+			forwardvec.m128_f32[2] -= 1;
 		}
 		if (Input::GetInstance()->PushKey(DIK_A)) {
-			forvardvec.m128_f32[0] -= 1;
+			forwardvec.m128_f32[0] -= 1;
 		}
 		if (Input::GetInstance()->PushKey(DIK_D)) {
-			forvardvec.m128_f32[0] += 1;
+			forwardvec.m128_f32[0] += 1;
 		}
 	}
 
-	forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
+	forwardvec = XMVector3TransformNormal(forwardvec, camera->matRot);
 	float speed = 1.2f;
-	move = { forvardvec.m128_f32[0] * speed,forvardvec.m128_f32[1] * speed,forvardvec.m128_f32[2] * speed };
+	move = { forwardvec.m128_f32[0] * speed,forwardvec.m128_f32[1] * speed,forwardvec.m128_f32[2] * speed };
 
 	RollingMoveIn();
 }
