@@ -78,7 +78,7 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 void Player::UpdateOut(Camera* camera)
 {
-	YazirusiUpdate();
+	ArrowSymbolUpdate();
 	//外シーンではY座標をとりあえず固定
 	if (object->collider) {
 		object->SetPosY(groundHeight);
@@ -93,7 +93,7 @@ void Player::UpdateOut(Camera* camera)
 	}
 
 	MoveOut();
-
+	move = {0,0,0};
 
 	//押した瞬間に中心点を決定
 	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && isShoot == false) {
@@ -297,6 +297,7 @@ void Player::MoveOut()
 {
 	RollingMoveOut();
 
+	//早期リターン
 	if (!isSphere == false) return;
 	if (!Input::GetInstance()->PushKey(DIK_W) && !Input::GetInstance()->PushKey(DIK_S) &&
 		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)) {
@@ -317,13 +318,15 @@ void Player::MoveOut()
 	if (Input::GetInstance()->PushKey(DIK_D)) {
 		forwardvec.m128_f32[0] += 1;
 	}
+	//移動量が0なら終了
+	if (forwardvec.m128_f32[0] == 0 && forwardvec.m128_f32[2] == 0) return;
 	//単位ベクトルを求めベクトルの大きさを1にする
 	float normal = sqrt(forwardvec.m128_f32[0] * forwardvec.m128_f32[0] + forwardvec.m128_f32[2] * forwardvec.m128_f32[2]);
 	XMVECTOR normalVec = forwardvec / normal;
 	//カメラの回転行列を考慮して前方を決定する
 	forwardvec = XMVector3TransformNormal(normalVec, camera->matRot);
 	//位置の更新
-	const float speed = 0.2f;
+	const float speed = 0.8f;
 	move = { forwardvec.m128_f32[0] * speed,forwardvec.m128_f32[1] * speed,forwardvec.m128_f32[2] * speed };
 	object->SetPosition(object->GetPosition() + move);
 
@@ -365,7 +368,7 @@ void Player::RollingMoveOut()
 		forvardvec.m128_f32[2] += 3;
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
-
+		object->SetPosition(object->GetPosition() + move);
 		rollingTime++;
 		if (rollingTime >= 120) {
 			isShoot = false;
@@ -711,7 +714,7 @@ void Player::StopRolling()
 	rollingTime = 0;
 }
 
-void Player::YazirusiUpdate()
+void Player::ArrowSymbolUpdate()
 {
 	InputMouse* mouse = InputMouse::GetInstance();
 
@@ -736,6 +739,11 @@ void Player::YazirusiUpdate()
 	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
 		yazirusiScale = { 1,1 };
 	}
+
+	//ベクトルの長さを求める
+	//ベクトルを最大長さ分かける
+	//ベクトルをその矢印の中心に足す
+	//
 
 	XMFLOAT2 rotapoint = InputMouse::GetInstance()->GetScreanPos();
 	float rotadistance = Collision::CheckDistance(rotapoint, clickTrigerPos);

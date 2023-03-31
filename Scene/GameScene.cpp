@@ -77,14 +77,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	suana2->SetScale({ 10.0f,10.0f,10.0f });
 	suana2->SetRotation({ 0,-90,0 });
 	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
-	touchGround->SetScale({ 10.0f,1.0f,10.0f });
-	touchGround->SetPosition({ 0.0f,-15.0f,0.0f });
+	touchGround->SetScale({ 30.0f,1.0f,30.0f });
+	touchGround->SetPosition({ 800.0f,0.0f,800.0f });
 
+	tenq = ObjectObj::Create(ModelManager::GetModel("tenQ"), {}, {}, { 20,20,20 });
 
-	tamesi = ObjectObj::Create(ModelManager::GetModel("level"));
-	tamesi->SetPosition({ 0.0f,0.0f,0.0f });
-	tamesi->SetScale({ 1.0f,1.0f,1.0f });
-	tamesi->SetRotation({ 0,0,0 });
+	stage1 = TouchableObject::Create(ModelManager::GetModel("stage_1"));
+	stage2 = TouchableObject::Create(ModelManager::GetModel("stage_2"));
+	stage3 = TouchableObject::Create(ModelManager::GetModel("stage_3"));
+	stage4 = TouchableObject::Create(ModelManager::GetModel("stage_4"));
+	stage5 = TouchableObject::Create(ModelManager::GetModel("stage_5"));
+	stage6 = TouchableObject::Create(ModelManager::GetModel("stage_6"));
+	stage7 = TouchableObject::Create(ModelManager::GetModel("stage_7"));
+	stage8 = TouchableObject::Create(ModelManager::GetModel("stage_8"));
+	stage9 = TouchableObject::Create(ModelManager::GetModel("stage_9"));
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -94,6 +100,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
 	player->SetHp(5);
+	player->object->SetPosition({ 850,Player::groundHeight,850 });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -109,7 +116,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	dasu[7] = { 180,2 };
 	dasu[8] = { 40,1 };
 	dasu[9] = { 80,1 };
-
 
 	//ミニマップ用カメラの生成
 	subCamera = Camera::Create();
@@ -130,8 +136,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	playerSprte = Sprite::Create(31, { 0,0 });
 	towerSprte = Sprite::Create(32, { 0,0 });
 
-	Route* route = Route::GetIns();
-	route->Set();
+	Route::GetIns()->Set();	
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -148,65 +153,53 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
-		if (poseFlag == false) { poseFlag = true; }
-		else { poseFlag = false; }
+		poseFlag = !poseFlag;
 	}
 
-	if (poseFlag == true) {
-		return;
-	}
+	if (poseFlag == true) return;
 
 	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
-	if (Input::GetInstance()->PushKey(DIK_UP)) {
-		//spriteBG->SetSize({ 2, 2 });
-		XMFLOAT2 postSize = miniMapPost->GetSize();
-		postSize.x += 0.1;
-		postSize.y += 0.1;
-		miniMapPost->SetSize(postSize);
+	if (Input::GetInstance()->TriggerKey(DIK_N)) {
+		baguFlag = !baguFlag;
+		baguTimer = 0;
 	}
-	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
-		//spriteBG->SetSize({ 100, 100 });
-		//miniMapPost->SetSize({ 100,100 });
-		XMFLOAT2 postSize = miniMapPost->GetSize();
-		postSize.x -= 0.1;
-		postSize.y -= 0.1;
-		miniMapPost->SetSize(postSize);
-	}
-
-	//敵を行動させるかさせないかのトルグスイッチ
-	//EnemyZako::Action();
-
-
-	//if (Input::GetInstance()->PushKey(DIK_E)) {
-		for (int i = 0; i < 2; i++) {
-
-			std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
-			particle->obj = std::make_unique<ObjectObj>();
-			particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));
-			int scale = rand() % 20 + 1;
-			particle->startScale = rand() % 4 + 1;
-			particle->obj->SetScale({ float(scale),float(scale),float(scale) });
-			particle->obj->SetRotation({ 0,0,0 });
-			//プレイヤーの足元に生成
-			particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
-
-			particle->end_frame = rand() % 5 + 10;
-			//int rndVel = 3.0f;
-			//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
-			//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
-			//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
-			//tubu->velocity.x = 0;
-			//tubu->velocity.y = 0;
-			//tubu->velocity.z = -rand() % (rndVel * 2);
-			//Particle::GetIns()->Add(std::move(particle));
+	if (baguFlag) {
+		baguTimer++;
+		if (baguTimer < 15) {
+			player->object->VecSetPosition({float(rand() % 3),0,0});
 		}
-	//}
+		else if (baguTimer < 30) {
+			player->object->VecSetPosition({ -float(rand() % 3),0,0 });
+		}
+		else {
+			baguTimer = 0;
+		}
+	}
 
+	//土煙
+	for (int i = 0; i < 2; i++) {
 
+		std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+		particle->obj = std::make_unique<ObjectObj>();
+		particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));
+		int scale = rand() % 20 + 1;
+		particle->startScale = rand() % 4 + 1;
+		particle->obj->SetScale({ float(scale),float(scale),float(scale) });
+		particle->obj->SetRotation({ 0,0,0 });
+		//プレイヤーの足元に生成
+		particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
 
-
-
+		particle->end_frame = rand() % 5 + 10;
+		//int rndVel = 3.0f;
+		//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+		//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+		//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+		//tubu->velocity.x = 0;
+		//tubu->velocity.y = 0;
+		//tubu->velocity.z = -rand() % (rndVel * 2);
+		//Particle::GetIns()->Add(std::move(particle));
+	}
 
 	//敵生成処理
 	if (index <= 6) {
@@ -215,7 +208,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			if (dasu[index].timer <= 0) {
 				if (dasu[index].basyo == 1) {
 					//タワーがある方
-					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true,Route::GetRoute(1));
+					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(1));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
@@ -290,18 +283,27 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	suana2->Update();
 	scene->Update();
 	touchGround->Update();
+	tenq->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
+	stage1->Update();
+	stage2->Update();
+	stage3->Update();
+	stage4->Update();
+	stage5->Update();
+	stage6->Update();
+	stage7->Update();
+	stage8->Update();
+	stage9->Update();
 
 	gameCamera->Update();
 	gameCamera->UpdateView();
 	player->object->Update();
 	player->shadowObj->Update();
-	tamesi->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -309,27 +311,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//キャンバスにプレイヤーの情報をセット
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
-
-	//ミニマップ用オブジェクトの更新
-	copyPlayer->Update(player->object, subCamera);
-	//copyGround->Update(ground, subCamera);
-	//copyCastle->Update(scene->GetObjectObj("castle"), subCamera);
-	copyDefenseTower->Update(defenseTower->GetObjectObj(), subCamera);
-	subCamera->SetTarget(player->object->GetPosition());
-	subCamera->SetEye({ player->object->GetPosition().x + 1,player->object->GetPosition().y + 100, player->object->GetPosition().z });
-	PostReserve();	//ミニマップの描画前処理
-
-	//collisionManager->CheckAllCollisions();
-	//if (collisionManager->GetPlayerTikei()) {
-	//	player->StopRolling();
-	//}
 }
 
 void GameScene::Draw()
 {
 	if (Input::GetInstance()->TriggerKey(DIK_M)) {
-		if (mapFlag == true) { mapFlag = false; }
-		else { mapFlag = true; }
+		mapFlag = !mapFlag;
 	}
 	if (mapFlag == true) {
 		PostDraw();	//ミニマップの描画
@@ -339,12 +326,22 @@ void GameScene::Draw()
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->Draw();
 	}
-	scene->Draw();
+	//scene->Draw();
 	suana->Draw();
 	suana2->Draw();
 	defenseTower->Draw();
 	player->Draw();
-	//tamesi->Draw();
+	stage1->Draw();
+	stage2->Draw();
+	stage3->Draw();
+	stage4->Draw();
+	stage5->Draw();
+	stage6->Draw();
+	stage7->Draw();
+	stage8->Draw();
+	stage9->Draw();
+	touchGround->Draw();
+	tenq->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

@@ -1,0 +1,12 @@
+# Blender 3.3.1 MTL File: 'level.blend'
+# www.blender.org
+
+newmtl マテリアル
+Ns 518.664246
+Ka 0.541284 0.541284 0.541284
+Ks 0.573394 0.573394 0.573394
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd tex.png

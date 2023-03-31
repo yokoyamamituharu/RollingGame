@@ -34,6 +34,16 @@ void ModelManager::SetModelName()
 	modelname.push_back("effect_2");
 	modelname.push_back("effect_3");
 	modelname.push_back("effect_4");
+
+	modelname.push_back("stage_1");
+	modelname.push_back("stage_2");
+	modelname.push_back("stage_3");
+	modelname.push_back("stage_4");
+	modelname.push_back("stage_5");
+	modelname.push_back("stage_6");
+	modelname.push_back("stage_7");
+	modelname.push_back("stage_8");
+	modelname.push_back("stage_9");
 }
 
 void ModelManager::Initialize()

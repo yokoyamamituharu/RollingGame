@@ -13,8 +13,6 @@
 #include "EnemyZako.h"
 #include "DefenseTower.h"
 #include "BatlleScene.h"
-class BattleScene;
-class SceneManeger;
 #include <vector>
 #include "PostEffect.h"
 #include "Canvas.h"
@@ -22,6 +20,8 @@ class SceneManeger;
 #include "SceneLoader.h"
 #include "CollisionManager.h"
 #include "TouchableObject.h"
+class SceneManeger;
+class BattleScene;
 
 class GameScene
 {
@@ -86,9 +86,18 @@ private: // メンバ変数
 	//敵
 	std::list<std::shared_ptr<BaseEnemy>>enemiesG;
 	TouchableObject* touchGround = nullptr;
-	
-	ObjectObj* tamesi = nullptr;
 
+	TouchableObject* stage1 = nullptr;
+	TouchableObject* stage2 = nullptr;
+	TouchableObject* stage3 = nullptr;
+	TouchableObject* stage4 = nullptr;
+	TouchableObject* stage5 = nullptr;
+	TouchableObject* stage6 = nullptr;
+	TouchableObject* stage7 = nullptr;
+	TouchableObject* stage8 = nullptr;
+	TouchableObject* stage9 = nullptr;
+
+	ObjectObj* tenq = nullptr;
 
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;
@@ -122,5 +131,8 @@ private: // メンバ変数
 
 	Sprite* playerSprte = nullptr;
 	Sprite* towerSprte = nullptr;
+
+	int baguTimer = 0;
+	bool baguFlag = false;
 };
 

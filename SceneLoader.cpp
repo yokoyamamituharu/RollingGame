@@ -183,7 +183,7 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 				assert(0);
 			}
 
-			//JSONもおじ列から解凍したデータ
+			//JSON文字列から解凍したデータ
 			nlohmann::json deserialized;
 
 			//解凍
