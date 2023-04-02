@@ -131,8 +131,5 @@ private: // ƒƒ“ƒo•Ï”
 
 	Sprite* playerSprte = nullptr;
 	Sprite* towerSprte = nullptr;
-
-	int baguTimer = 0;
-	bool baguFlag = false;
 };
 

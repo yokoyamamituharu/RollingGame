@@ -47,7 +47,7 @@ public:
 	void Draw();
 
 	void SetEnemies(std::shared_ptr<BaseEnemy>& enemy) {
-		enemies = std::move(enemy);
+		enemies = enemy;
 	}
 
 private: // ƒƒ“ƒo•Ï”        
@@ -67,7 +67,7 @@ private: // ƒƒ“ƒo•Ï”
 	Sprite* mousePosS = nullptr;
 
 	float hitSize = 1.0f;
-	XMFLOAT2 hitSizeB = { 1.0f ,1.0f};
+	XMFLOAT2 hitSizeB = { 1.0f ,1.0f };
 
 	bool hitStopFlag = false;
 	int hitStopTime = 0;

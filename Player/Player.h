@@ -28,10 +28,6 @@ public:
 	void MoveIn();
 	void RollingMoveOut();
 	void RollingMoveIn();
-	void MoveVector(DirectX::XMFLOAT3 vec)
-	{
-		//object->SetPosition(object->GetPosition() + vec);
-	}
 
 	void Res(bool flag = false, XMFLOAT3 vec = { 0,0,0 });
 

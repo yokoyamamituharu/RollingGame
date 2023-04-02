@@ -155,27 +155,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
 		poseFlag = !poseFlag;
 	}
-
 	if (poseFlag == true) return;
 
 	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
-	if (Input::GetInstance()->TriggerKey(DIK_N)) {
-		baguFlag = !baguFlag;
-		baguTimer = 0;
-	}
-	if (baguFlag) {
-		baguTimer++;
-		if (baguTimer < 15) {
-			player->object->VecSetPosition({float(rand() % 3),0,0});
-		}
-		else if (baguTimer < 30) {
-			player->object->VecSetPosition({ -float(rand() % 3),0,0 });
-		}
-		else {
-			baguTimer = 0;
-		}
-	}
 
 	//土煙
 	for (int i = 0; i < 2; i++) {
@@ -229,7 +212,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			if (enemy->GetDead() == false) {
 				//バトルシーンに行く処理
 				batlleScene->SetEnemies(enemy);
-				enemiesG.remove(enemy);
+				//enemiesG.remove(enemy);
 				player->outPos = player->object->GetPosition();
 				player->StopOut();
 				//プレイヤーを原点に発生させる

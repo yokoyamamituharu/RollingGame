@@ -146,7 +146,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 
 	//“G‚Ìî•ñ‚ðŠOƒV[ƒ“‚©‚çŽæ“¾‚Å‚«‚Ä‚¢‚½‚çˆ—
-	if (enemies != 0) {
+	if (enemies != nullptr) {
 		//Ž€–S”»’è‚ª‚ ‚Á‚½‚çƒGƒlƒ~[‚ðÁ‚·
 		enemies->GetEnemies().remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
@@ -233,7 +233,8 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 		if (enemies->GetEnemies().size() == 0) {
 			player->StopIn();
 			player->breakEnemy++;	//“G‚ÌŒ‚”j”‚ð‘‚â‚·
-			enemies.reset();
+			enemies->SetDead();
+			//enemies.reset();			
 			hitFlag = false;
 			hitNum = 0;
 			hitSize = 1.0f;
@@ -270,7 +271,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 	player->object->Update();
 	player->shadowObj->Update();
 
-	const int maxEnemy = 6;
+	const int maxEnemy = 7;
 	canvas->SetEnemy(maxEnemy, player->breakEnemy);
 	canvas->SetHp(player->GetMaxHp(), player->GetHp());
 }

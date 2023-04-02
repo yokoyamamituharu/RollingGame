@@ -81,7 +81,7 @@ void Player::UpdateOut(Camera* camera)
 	ArrowSymbolUpdate();
 	//外シーンではY座標をとりあえず固定
 	if (object->collider) {
-		object->SetPosY(groundHeight);
+		//object->SetPosY(groundHeight);
 	}
 
 	if (muteki == true) {
@@ -148,7 +148,7 @@ void Player::UpdateOut(Camera* camera)
 			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
 
 			// 地面判定しきい値
-			const float threshold = cosf(XMConvertToRadians(30.0f));
+			const float threshold = cosf(XMConvertToRadians(60.0f));
 
 			if (-threshold < cos && cos < threshold) {
 				sphere->center += info.reject;
@@ -186,28 +186,28 @@ void Player::UpdateOut(Camera* camera)
 
 	position = object->GetPosition();
 	// 接地状態
-	//if (onGround) {
-	//	// スムーズに坂を下る為の吸着距離
-	//	const float adsDistance = 0.2f;
-	//	// 接地を維持
-	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
-	//		onGround = true;
-	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-	//	}
-	//	// 地面がないので落下
-	//	else {
-	//		onGround = false;
-	//		fallV = {};
-	//	}
-	//}
-	//// 落下状態
-	//else if (fallV.m128_f32[1] <= 0.0f) {
-	//	if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
-	//		// 着地
-	//		onGround = true;
-	//		position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
-	//	}
-	//}
+	if (onGround) {
+		// スムーズに坂を下る為の吸着距離
+		const float adsDistance = 0.4f;
+		// 接地を維持
+		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f + adsDistance)) {
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+		}
+		// 地面がないので落下
+		else {
+			onGround = false;
+			fallV = {};
+		}
+	}
+	// 落下状態
+	else if (fallV.m128_f32[1] <= 0.0f) {
+		if (CollisionManager::GetInstance()->Raycast(ray, COLLISION_ATTR_LANDSHAPE, &raycastHit, sphereCollider->GetRadius() * 2.0f)) {
+			// 着地
+			onGround = true;
+			position.y -= (raycastHit.distance - sphereCollider->GetRadius() * 2.0f);
+		}
+	}
 	object->SetPosition(position);
 	// 行列の更新など
 	object->Update();
@@ -300,7 +300,7 @@ void Player::MoveOut()
 	//早期リターン
 	if (!isSphere == false) return;
 	if (!Input::GetInstance()->PushKey(DIK_W) && !Input::GetInstance()->PushKey(DIK_S) &&
-		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)) {
+		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)&& !Input::GetInstance()->PushKey(DIK_Y)) {
 		return;
 	}
 
@@ -318,6 +318,11 @@ void Player::MoveOut()
 	if (Input::GetInstance()->PushKey(DIK_D)) {
 		forwardvec.m128_f32[0] += 1;
 	}
+
+	if (Input::GetInstance()->PushKey(DIK_Y)) {
+		forwardvec.m128_f32[2] += 1;
+	}
+
 	//移動量が0なら終了
 	if (forwardvec.m128_f32[0] == 0 && forwardvec.m128_f32[2] == 0) return;
 	//単位ベクトルを求めベクトルの大きさを1にする
