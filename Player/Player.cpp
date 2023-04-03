@@ -52,7 +52,7 @@ void Player::Initialize(Camera* camera, int InOrOut)
 	object->SetRotation({ 0.0f,90.0f,0.0f });
 	object->SetScale({ 1.0f,1.0f,1.0f });
 	if (InOrOut == 1) {
-		object->SetCollider(new SphereCollider({ 0,0,0 }, 6.0f));
+		object->SetCollider(new SphereCollider({ 0,2,0 }, 6.0f));
 		object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 	}
 
@@ -93,7 +93,10 @@ void Player::UpdateOut(Camera* camera)
 	}
 
 	MoveOut();
-	move = {0,0,0};
+	move = { 0,0,0 };
+	if (!onGround) {
+		object->VecSetPosition({ 0, -0.5f, 0 });
+	}
 
 	//押した瞬間に中心点を決定
 	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && isShoot == false) {
@@ -148,7 +151,7 @@ void Player::UpdateOut(Camera* camera)
 			float cos = XMVector3Dot(rejectDir, up).m128_f32[0];
 
 			// 地面判定しきい値
-			const float threshold = cosf(XMConvertToRadians(60.0f));
+			const float threshold = cosf(XMConvertToRadians(30.0f));
 
 			if (-threshold < cos && cos < threshold) {
 				sphere->center += info.reject;
@@ -319,10 +322,6 @@ void Player::MoveOut()
 		forwardvec.m128_f32[0] += 1;
 	}
 
-	if (Input::GetInstance()->PushKey(DIK_Y)) {
-		forwardvec.m128_f32[2] += 1;
-	}
-
 	//移動量が0なら終了
 	if (forwardvec.m128_f32[0] == 0 && forwardvec.m128_f32[2] == 0) return;
 	//単位ベクトルを求めベクトルの大きさを1にする
@@ -331,7 +330,10 @@ void Player::MoveOut()
 	//カメラの回転行列を考慮して前方を決定する
 	forwardvec = XMVector3TransformNormal(normalVec, camera->matRot);
 	//位置の更新
-	const float speed = 0.8f;
+	float speed = 0.8f;
+	if (Input::GetInstance()->PushKey(DIK_LSHIFT)) {
+		speed = 2.0f;
+	}
 	move = { forwardvec.m128_f32[0] * speed,forwardvec.m128_f32[1] * speed,forwardvec.m128_f32[2] * speed };
 	object->SetPosition(object->GetPosition() + move);
 
@@ -370,7 +372,12 @@ void Player::RollingMoveOut()
 
 	if (isShoot == true) {
 		XMVECTOR forvardvec = {};
-		forvardvec.m128_f32[2] += 3;
+		if (Input::GetInstance()->PushKey(DIK_LSHIFT)) {
+			forvardvec.m128_f32[2] += 4.0;
+		}
+		else {
+			forvardvec.m128_f32[2] += 2.0;
+		}
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
 		object->SetPosition(object->GetPosition() + move);

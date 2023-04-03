@@ -41,10 +41,10 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	titleScene->Initialize(dxCommon);
 	endScene = new EndScene;
 	endScene->Initialize(dxCommon);
-	gameScene = new GameScene;
-	gameScene->Initialize(dxCommon);
-	batlleScene = new BatlleScene;
-	batlleScene->Initialize(dxCommon);
+	//gameScene = new GameScene;
+	//gameScene->Initialize(dxCommon);
+	//batlleScene = new BatlleScene;
+	//batlleScene->Initialize(dxCommon);
 
 	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;

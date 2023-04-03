@@ -97,6 +97,11 @@ private: // メンバ変数
 	TouchableObject* stage8 = nullptr;
 	TouchableObject* stage9 = nullptr;
 
+	TouchableObject* kabe1 = nullptr;
+	TouchableObject* kabe2 = nullptr;
+	TouchableObject* kabe3 = nullptr;
+	TouchableObject* kabe4 = nullptr;
+
 	ObjectObj* tenq = nullptr;
 
 	//ミニマップ用オブジェクト

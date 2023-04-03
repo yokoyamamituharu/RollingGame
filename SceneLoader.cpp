@@ -93,6 +93,12 @@ void SceneLoader::Initialize(const std::string& fileName)
 			//回転角
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rotation);
+			if (objectData.fileName == "stage_1" || objectData.fileName == "stage_2" ||  objectData.fileName == "stage_3" ||
+				objectData.fileName == "stage_4" || objectData.fileName == "stage_5" || objectData.fileName == "stage_6" ||
+				objectData.fileName == "stage_7" || objectData.fileName == "stage_8" || objectData.fileName == "stage_9")
+			{
+				rot.y += 90;
+			}
 			newObject->SetRotation(rot);
 			//スケーリング
 			DirectX::XMFLOAT3 scale;

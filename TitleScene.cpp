@@ -13,6 +13,7 @@ TitleScene::~TitleScene()
 {
 	safe_delete(titleSprite);
 	safe_delete(black);
+	safe_delete(scene);
 }
 
 //void a(VECTOR4* pOut, VECTOR4* pV, DirectX::XMMATRIX* pM)
@@ -102,9 +103,9 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 		}
 	}
 
-	titleObj->VecSetPosition({ float(Input::GetInstance()->PushKey(DIK_D))/2.0f - float(Input::GetInstance()->PushKey(DIK_A)) / 2.0f,
-		float(Input::GetInstance()->PushKey(DIK_Q)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_E)) / 2.0f,
-		float(Input::GetInstance()->PushKey(DIK_W)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_S)) / 2.0f });
+	//titleObj->VecSetPosition({ float(Input::GetInstance()->PushKey(DIK_D))/2.0f - float(Input::GetInstance()->PushKey(DIK_A)) / 2.0f,
+	//	float(Input::GetInstance()->PushKey(DIK_Q)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_E)) / 2.0f,
+	//	float(Input::GetInstance()->PushKey(DIK_W)) / 2.0f - float(Input::GetInstance()->PushKey(DIK_S)) / 2.0f });
 	titleObj->Update();
 	tenQ->Update();
 

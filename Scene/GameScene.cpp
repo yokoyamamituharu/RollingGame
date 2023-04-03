@@ -82,15 +82,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	tenq = ObjectObj::Create(ModelManager::GetModel("tenQ"), {}, {}, { 20,20,20 });
 
-	stage1 = TouchableObject::Create(ModelManager::GetModel("stage_1"));
-	stage2 = TouchableObject::Create(ModelManager::GetModel("stage_2"));
-	stage3 = TouchableObject::Create(ModelManager::GetModel("stage_3"));
-	stage4 = TouchableObject::Create(ModelManager::GetModel("stage_4"));
-	stage5 = TouchableObject::Create(ModelManager::GetModel("stage_5"));
-	stage6 = TouchableObject::Create(ModelManager::GetModel("stage_6"));
-	stage7 = TouchableObject::Create(ModelManager::GetModel("stage_7"));
-	stage8 = TouchableObject::Create(ModelManager::GetModel("stage_8"));
-	stage9 = TouchableObject::Create(ModelManager::GetModel("stage_9"));
+	//stage1 = TouchableObject::Create(ModelManager::GetModel("stage_1"));
+	//stage2 = TouchableObject::Create(ModelManager::GetModel("stage_2"));
+	//stage3 = TouchableObject::Create(ModelManager::GetModel("stage_3"));
+	//stage4 = TouchableObject::Create(ModelManager::GetModel("stage_4"));
+	//stage5 = TouchableObject::Create(ModelManager::GetModel("stage_5"));
+	//stage6 = TouchableObject::Create(ModelManager::GetModel("stage_6"));
+	//stage7 = TouchableObject::Create(ModelManager::GetModel("stage_7"));
+	//stage8 = TouchableObject::Create(ModelManager::GetModel("stage_8"));
+	//stage9 = TouchableObject::Create(ModelManager::GetModel("stage_9"));
+
+	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+
+	kabe1->SetPosition({ 100,0,-100 });	
+	kabe2->SetPosition({ -1000,0,-100 });
+	kabe3->SetPosition({ -100,0,-1000 });
+	kabe3->SetRotation({ 0,90,0 });
+	kabe4->SetPosition({ -100,0,00 });
+	kabe4->SetRotation({ 0,90,0 });
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -100,7 +112,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
 	player->SetHp(5);
-	player->object->SetPosition({ 850,Player::groundHeight,850 });
+	player->object->SetPosition({ -822,Player::groundHeight,-884 });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -136,7 +148,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	playerSprte = Sprite::Create(31, { 0,0 });
 	towerSprte = Sprite::Create(32, { 0,0 });
 
-	Route::GetIns()->Set();	
+	Route::GetIns()->Set();
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -266,22 +278,26 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	suana2->Update();
 	scene->Update();
 	touchGround->Update();
-	tenq->Update();
+	//tenq->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-	stage1->Update();
-	stage2->Update();
-	stage3->Update();
-	stage4->Update();
-	stage5->Update();
-	stage6->Update();
-	stage7->Update();
-	stage8->Update();
-	stage9->Update();
+	//stage1->Update();
+	//stage2->Update();
+	//stage3->Update();
+	//stage4->Update();
+	//stage5->Update();
+	//stage6->Update();
+	//stage7->Update();
+	//stage8->Update();
+	//stage9->Update();
+	kabe1->Update();
+	kabe2->Update();
+	kabe3->Update();
+	kabe4->Update();
 
 	gameCamera->Update();
 	gameCamera->UpdateView();
@@ -309,22 +325,26 @@ void GameScene::Draw()
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->Draw();
 	}
-	//scene->Draw();
-	suana->Draw();
-	suana2->Draw();
-	defenseTower->Draw();
+	scene->Draw();
+	//suana->Draw();
+	//suana2->Draw();
+	//defenseTower->Draw();
 	player->Draw();
-	stage1->Draw();
-	stage2->Draw();
-	stage3->Draw();
-	stage4->Draw();
-	stage5->Draw();
-	stage6->Draw();
-	stage7->Draw();
-	stage8->Draw();
-	stage9->Draw();
-	touchGround->Draw();
-	tenq->Draw();
+	//stage1->Draw();
+	//stage2->Draw();
+	//stage3->Draw();
+	//stage4->Draw();
+	//stage5->Draw();
+	//stage6->Draw();
+	//stage7->Draw();
+	//stage8->Draw();
+	//stage9->Draw();
+	//touchGround->Draw();
+	//tenq->Draw();
+	kabe1->Draw();
+	kabe2->Draw();
+	kabe3->Draw();
+	kabe4->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
