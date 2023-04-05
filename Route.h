@@ -19,7 +19,7 @@ public:
 	static XMFLOAT2* GetRoute(const int index);
 
 public:
-	static XMFLOAT2 route[3][3];
+	static XMFLOAT2 route[5][3];
 
 };
 

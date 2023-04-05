@@ -127,7 +127,7 @@ void TitleScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//titleSprite->Draw();
+	titleSprite->Draw();
 	black->Draw();	
 	if (effectFlag == true) {
 		sceneEffect[effectIndex]->Draw();

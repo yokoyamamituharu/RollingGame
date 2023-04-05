@@ -62,7 +62,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
-	tikaiSprite = Sprite::Create(29, { 300,600 });
+	tikaiSprite = Sprite::Create(29, { 300,-50 });
 
 
 	collisionManager = CollisionManager::GetInstance();
@@ -79,18 +79,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
 	touchGround->SetScale({ 30.0f,1.0f,30.0f });
 	touchGround->SetPosition({ 800.0f,0.0f,800.0f });
-
-	tenq = ObjectObj::Create(ModelManager::GetModel("tenQ"), {}, {}, { 20,20,20 });
-
-	//stage1 = TouchableObject::Create(ModelManager::GetModel("stage_1"));
-	//stage2 = TouchableObject::Create(ModelManager::GetModel("stage_2"));
-	//stage3 = TouchableObject::Create(ModelManager::GetModel("stage_3"));
-	//stage4 = TouchableObject::Create(ModelManager::GetModel("stage_4"));
-	//stage5 = TouchableObject::Create(ModelManager::GetModel("stage_5"));
-	//stage6 = TouchableObject::Create(ModelManager::GetModel("stage_6"));
-	//stage7 = TouchableObject::Create(ModelManager::GetModel("stage_7"));
-	//stage8 = TouchableObject::Create(ModelManager::GetModel("stage_8"));
-	//stage9 = TouchableObject::Create(ModelManager::GetModel("stage_9"));
 
 	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
@@ -203,11 +191,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			if (dasu[index].timer <= 0) {
 				if (dasu[index].basyo == 1) {
 					//タワーがある方
-					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(1));
+					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				if (dasu[index].basyo == 2) {
-					std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(2));
+					std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
 					enemiesG.push_back(std::move(newEnemy));
 				}
 				index++;
@@ -236,14 +224,14 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			}
 		}
 		//敵と城の当たり判定
-		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, { 0,0,0 }, { 10,10,10 })) {
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
 			//当たったら負け
-			//sceneNo = SceneManager::SCENE_END;
+			sceneNo = SceneManager::SCENE_END;
 		}
 
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
-			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 30) {
+			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
 				enemy->tikai = true;
 				isTikai = true;
 				tikaiStack.push_back(true);
@@ -278,22 +266,12 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	suana2->Update();
 	scene->Update();
 	touchGround->Update();
-	//tenq->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-	//stage1->Update();
-	//stage2->Update();
-	//stage3->Update();
-	//stage4->Update();
-	//stage5->Update();
-	//stage6->Update();
-	//stage7->Update();
-	//stage8->Update();
-	//stage9->Update();
 	kabe1->Update();
 	kabe2->Update();
 	kabe3->Update();
@@ -340,7 +318,6 @@ void GameScene::Draw()
 	//stage8->Draw();
 	//stage9->Draw();
 	//touchGround->Draw();
-	//tenq->Draw();
 	kabe1->Draw();
 	kabe2->Draw();
 	kabe3->Draw();

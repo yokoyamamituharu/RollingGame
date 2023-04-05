@@ -13,7 +13,7 @@
 #include "EnemyZako.h"
 #include "Canvas.h"
 #include "BattleCamera.h"
-
+#include "Particle.h"
 #include <vector>
 class GameScene;
 
@@ -83,4 +83,6 @@ private: // ƒƒ“ƒo•Ï”
 
 	//ƒJƒƒ‰
 	BattleCamera* battleCamera = nullptr;
+
+	Particle* particle = nullptr;
 };

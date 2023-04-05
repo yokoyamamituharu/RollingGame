@@ -1,6 +1,6 @@
 #include "Route.h"
 
-DirectX::XMFLOAT2 Route::route[3][3];
+DirectX::XMFLOAT2 Route::route[5][3];
 
 Route* Route::GetIns()
 {
@@ -21,6 +21,14 @@ void Route::Set()
 	route[2][0] = { -100,-100 };
 	route[2][1] = { -100,0 };
 	route[2][2] = { 0,0 };
+
+	route[3][0] = { -554,-973 };
+	route[3][1] = { -554,-880 };
+	route[3][2] = { -900,-955 };
+
+	route[4][0] = { -794,-64 };
+	route[4][1] = { -764,172 };
+	route[4][2] = { -900,-955 };
 }
 
 DirectX::XMFLOAT2* Route::GetRoute(const int index)

@@ -26,6 +26,13 @@ void BattleCamera::Update()
 		if (isSetMousePoint == true)  isSetMousePoint = false;
 		else  isSetMousePoint = true;
 	}
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		isSetMousePoint = false;
+	}
+	else {
+		isSetMousePoint = true;
+	}
+
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
 		InputMouse::GetInstance()->SetCenterCoursolPos();

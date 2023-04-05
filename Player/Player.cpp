@@ -221,6 +221,7 @@ void Player::UpdateOut(Camera* camera)
 
 void Player::UpdateIn()
 {
+	ArrowSymbolUpdate();
 	if (muteki == true) {
 		mutekiTime++;
 		if (mutekiTime > 60) {
@@ -246,43 +247,6 @@ void Player::UpdateIn()
 	//CrowAttack();
 	//オブジェクトのアップデート
 	//object->Update();
-
-	//押した瞬間に中心点を決定
-	if (InputMouse::GetInstance()->TorigerMouse(MouseDIK::M_LEFT) && isShoot == false) {
-		clickTrigerPos = InputMouse::GetInstance()->GetScreanPos();
-	}
-	//中心点から向きを計算して保存
-	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT) && isShoot == false) {
-		isSphere = true;
-		XMFLOAT2 releasePos = InputMouse::GetInstance()->GetScreanPos();
-		XMVECTOR pos1, pos2;
-		pos1.m128_f32[0] = clickTrigerPos.x;
-		pos1.m128_f32[1] = 0.0f;
-		pos1.m128_f32[2] = -clickTrigerPos.y;
-		pos2.m128_f32[0] = releasePos.x;
-		pos2.m128_f32[1] = 0.0;
-		pos2.m128_f32[2] = -releasePos.y;
-		attackDirection = pos1 - pos2;
-		attackDirection = XMVector3Normalize(attackDirection);
-		attackDirection.m128_f32[1] = 0;	//攻撃方向
-
-		//エフェクトの向きを計算
-		XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
-		ppos2 += attackDirection * 6.0f;
-		const float direction = 180.0f;
-		XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
-		float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
-		yazirusi->SetRotation(angleToPlayer);
-		if (InputMouse::GetInstance()->MoveMouseVector('y') > 0) {
-			yazirusiScale.x += 0.1f;
-			yazirusiScale.y += 0.3f;
-		}
-	}
-	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
-		yazirusiScale = { 1,1 };
-	}
-	yazirusi->SetPosition(InputMouse::GetInstance()->GetWindowPos());
-	yazirusi->SetScale(yazirusiScale);
 
 	//影の更新
 	shadowObj->SetPosition(object->GetPosition());

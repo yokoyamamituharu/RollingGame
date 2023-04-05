@@ -20,6 +20,13 @@ void GameCamera::Update()
 	if (Input::GetInstance()->TriggerKey(DIK_F2)) {
 		isSetMousePoint = !isSetMousePoint;
 	}
+	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+		isSetMousePoint = false;
+	}
+	else {
+		isSetMousePoint = true;
+	}
+
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
 		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector('x') / 1000);
