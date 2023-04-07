@@ -37,7 +37,7 @@ bool Sprite::StaticInitialize(ID3D12Device* device, int window_width, int window
 
 	// 頂点シェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"SpriteVS.hlsl",	// シェーダファイル名
+		L"Resources/shaders/SpriteVS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
@@ -61,7 +61,7 @@ bool Sprite::StaticInitialize(ID3D12Device* device, int window_width, int window
 
 	// ピクセルシェーダの読み込みとコンパイル
 	result = D3DCompileFromFile(
-		L"SpritePS.hlsl",	// シェーダファイル名
+		L"Resources/shaders/SpritePS.hlsl",	// シェーダファイル名
 		nullptr,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
 		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定

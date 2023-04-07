@@ -150,7 +150,6 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 
 	//“y‰Œ
 	for (int i = 0; i < 2; i++) {
-
 		std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
 		particle->obj = std::make_unique<ObjectObj>();
 		particle->obj->Initialize(ModelManager::GetModel("cloudBurst"));

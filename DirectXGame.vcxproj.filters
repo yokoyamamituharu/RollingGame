@@ -90,12 +90,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPS.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="BasicVS.hlsl">
-      <Filter>シェーダーファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\FBXPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
@@ -123,12 +117,6 @@
     <FxCompile Include="Resources\shaders\PostEffectTestVS_NONE.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="SpritePS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="SpriteVS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\shaders\ParticlePS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
@@ -141,11 +129,14 @@
     <FxCompile Include="Resources\shaders\PostEffectTestPS_RadiationBlur.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\shaders\SpriteVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SpritePS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Basic.hlsli">
-      <Filter>シェーダーファイル</Filter>
-    </None>
     <None Include="Resources\shaders\FBX.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
@@ -158,7 +149,7 @@
     <None Include="Resources\shaders\PostEffectTest_NONE.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
-    <None Include="Sprite.hlsli">
+    <None Include="Resources\shaders\Sprite.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
