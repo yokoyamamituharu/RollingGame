@@ -59,7 +59,7 @@ public:
 	Player* GetPlayer() { return player; }
 
 private: // メンバ変数
-	/*ポインタ*/
+	/*---ポインタ---*/
 	DirectXCommon* dxCommon = nullptr;	
 
 	CollisionManager* collisionManager = nullptr;
@@ -73,9 +73,6 @@ private: // メンバ変数
 	//3Dオブジェクト
 	//ゲームシーン用オブジェクト
 	SceneLoader* scene = nullptr;
-	//巣穴
-	ObjectObj* suana = nullptr;
-	ObjectObj* suana2 = nullptr;
 	//タワー
 	DefenseTower* defenseTower = nullptr;
 	//プレイヤー
@@ -85,7 +82,6 @@ private: // メンバ変数
 	//std::map<std::string, ObjectObj*> objects;
 	//敵
 	std::list<std::shared_ptr<BaseEnemy>>enemiesG;
-	TouchableObject* touchGround = nullptr;
 
 	TouchableObject* kabe1 = nullptr;
 	TouchableObject* kabe2 = nullptr;
@@ -103,11 +99,17 @@ private: // メンバ変数
 	PostEffect* miniMapPost = nullptr;
 	bool mapFlag = false;	
 
-	//敵を出す時間と場所
+	//巣穴の場所
+	enum nestHole {
+		HOLE1 = 1,
+		HOLE2 = 2
+	};
+	//敵を出すまでの時間と場所
 	struct Dasu {
 		int timer;
-		int basyo;
+		int hole;
 	};
+
 	static const int maxEnemy = 7;	
 	std::map<int,Dasu>dasu;
 	int index = 0;

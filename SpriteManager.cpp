@@ -52,7 +52,7 @@ void SpriteManager::Initialize()
 	Sprite::LoadTexture(27, L"Resources/num/hit.png");
 	Sprite::LoadTexture(28, L"Resources/mousepos.png");
 	Sprite::LoadTexture(29, L"Resources/tikai.png");
-	Sprite::LoadTexture(30, L"Resources/yazirusi.png");
+	Sprite::LoadTexture(30, L"Resources/arrowSymbol.png");
 	Sprite::LoadTexture(31, L"Resources/Sprite-0001.png");
 	Sprite::LoadTexture(32, L"Resources/Sprite-0002.png");
 }

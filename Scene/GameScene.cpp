@@ -28,8 +28,6 @@ GameScene::~GameScene()
 	safe_delete(miniMapPost);
 	//3Dオブジェクト解放
 	safe_delete(scene);
-	safe_delete(suana);
-	safe_delete(suana2);
 	safe_delete(defenseTower);
 	safe_delete(player);
 	safe_delete(copyGround);
@@ -39,9 +37,7 @@ GameScene::~GameScene()
 	enemiesG.clear();
 	dasu.clear();
 	safe_delete(gameCamera);
-	safe_delete(touchGround);
 	safe_delete(subCamera);
-
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -68,24 +64,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	collisionManager = CollisionManager::GetInstance();
 
 	//3Dオブジェクトの生成
-	suana = ObjectObj::Create(ModelManager::GetModel("suana"));
-	suana->SetPosition({ 100.0f,0.0f,100.0f });
-	suana->SetScale({ 10.0f,10.0f,10.0f });
-	suana->SetRotation({ 0,0,0 });
-	suana2 = ObjectObj::Create(ModelManager::GetModel("suana"));
-	suana2->SetPosition({ -100.0f,0.0f,-100.0f });
-	suana2->SetScale({ 10.0f,10.0f,10.0f });
-	suana2->SetRotation({ 0,-90,0 });
-	touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
-	touchGround->SetScale({ 30.0f,1.0f,30.0f });
-	touchGround->SetPosition({ 800.0f,0.0f,800.0f });
+	//touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
+	//touchGround->SetScale({ 30.0f,1.0f,30.0f });
+	//touchGround->SetPosition({ 800.0f,0.0f,800.0f });
 
 	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 
-	kabe1->SetPosition({ 100,0,-100 });	
+	kabe1->SetPosition({ 100,0,-100 });
 	kabe2->SetPosition({ -1000,0,-100 });
 	kabe3->SetPosition({ -100,0,-1000 });
 	kabe3->SetRotation({ 0,90,0 });
@@ -146,16 +134,16 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		return;
 	}
 
+	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
+		poseFlag = !poseFlag;
+	}
+	if (poseFlag == true) return;
+
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		if (enemy->GetHp() <= 0) {
 			Player::breakEnemy += 1;
 		}
 	}
-
-	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
-		poseFlag = !poseFlag;
-	}
-	if (poseFlag == true) return;
 
 	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
 
@@ -185,22 +173,20 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	}
 
 	//敵生成処理
-	if (index <= 6) {
+	if (index < maxEnemy) {
 		dasu[index].timer--;
 		while (dasu[index].timer <= 0) {
-			if (dasu[index].timer <= 0) {
-				if (dasu[index].basyo == 1) {
-					//タワーがある方
-					std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
-					enemiesG.push_back(std::move(newEnemy));
-				}
-				if (dasu[index].basyo == 2) {
-					std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
-					enemiesG.push_back(std::move(newEnemy));
-				}
-				index++;
+			if (dasu[index].hole == HOLE1) {
+				//タワーがある方
+				std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
+				enemiesG.push_back(std::move(newEnemy));
 			}
-			if (index >= 6) {
+			if (dasu[index].hole == HOLE2) {
+				std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
+				enemiesG.push_back(std::move(newEnemy));
+			}
+			index++;
+			if (index >= maxEnemy) {
 				break;
 			}
 		}
@@ -262,10 +248,8 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	defenseTower->Update(enemiesG);
-	suana->Update();
-	suana2->Update();
 	scene->Update();
-	touchGround->Update();
+	//touchGround->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
 	}
@@ -304,20 +288,8 @@ void GameScene::Draw()
 		enemy->Draw();
 	}
 	scene->Draw();
-	//suana->Draw();
-	//suana2->Draw();
 	//defenseTower->Draw();
 	player->Draw();
-	//stage1->Draw();
-	//stage2->Draw();
-	//stage3->Draw();
-	//stage4->Draw();
-	//stage5->Draw();
-	//stage6->Draw();
-	//stage7->Draw();
-	//stage8->Draw();
-	//stage9->Draw();
-	//touchGround->Draw();
 	kabe1->Draw();
 	kabe2->Draw();
 	kabe3->Draw();
@@ -334,7 +306,7 @@ void GameScene::Draw()
 		tikaiSprite->Draw();
 	}
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-		player->yazirusi->Draw();
+		player->arrowSymbolSprite->Draw();
 	}
 
 	Sprite::PostDraw();

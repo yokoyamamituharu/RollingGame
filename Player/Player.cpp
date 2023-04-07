@@ -72,13 +72,14 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 	breakEnemy = 0;
 
-	yazirusi = Sprite::Create(30, { 0,0 });
-	yazirusi->SetAnchorPoint({ 0.5f,0.5f });
+	arrowSymbolSprite = Sprite::Create(30, { 0,0 });
+	arrowSymbolSprite->SetAnchorPoint({ 0.5f,0.5f });
 }
 
 void Player::UpdateOut(Camera* camera)
 {
 	ArrowSymbolUpdate();
+	arrowSymbolSprite->SetRotation(0);
 	//外シーンではY座標をとりあえず固定
 	if (object->collider) {
 		//object->SetPosY(groundHeight);
@@ -267,7 +268,7 @@ void Player::MoveOut()
 	//早期リターン
 	if (!isSphere == false) return;
 	if (!Input::GetInstance()->PushKey(DIK_W) && !Input::GetInstance()->PushKey(DIK_S) &&
-		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)&& !Input::GetInstance()->PushKey(DIK_Y)) {
+		!Input::GetInstance()->PushKey(DIK_D) && !Input::GetInstance()->PushKey(DIK_A)) {
 		return;
 	}
 
@@ -305,8 +306,8 @@ void Player::MoveOut()
 	XMFLOAT3 pos = object->GetPosition() + move;
 	XMFLOAT3 pppos = pos - oldpos;
 	//移動前と移動後の位置から向きを計算
-	float yziku = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
-	object->SetRotation({ object->GetRotation().x,yziku ,object->GetRotation().z });
+	float rotate = (atan2(pppos.x, pppos.z)) * 180.0f / 3.14f + 180;
+	object->SetRotation({ object->GetRotation().x,rotate ,object->GetRotation().z });
 }
 
 void Player::RollingMoveOut()
@@ -705,15 +706,15 @@ void Player::ArrowSymbolUpdate()
 	}
 
 	//矢印スプライトの回転を上で求めた角度にする
-	XMVECTOR ppos1 = XMLoadFloat2(&yazirusi->GetPosition()), ppos2 = XMLoadFloat2(&yazirusi->GetPosition());
+	XMVECTOR ppos1 = XMLoadFloat2(&arrowSymbolSprite->GetPosition()), ppos2 = XMLoadFloat2(&arrowSymbolSprite->GetPosition());
 	ppos2 += attackDirection * 6.0f;
 	const float direction = 180.0f;
 	XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);
 	float angleToPlayer = (atan2(distance.x, distance.z)) * 180.0f / 3.14f + direction;
-	yazirusi->SetRotation(angleToPlayer);
+	arrowSymbolSprite->SetRotation(angleToPlayer);
 
 	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT)) {
-		yazirusiScale = { 1,1 };
+		arrowSymbolScale = { 1,1 };
 	}
 
 	//ベクトルの長さを求める
@@ -725,7 +726,7 @@ void Player::ArrowSymbolUpdate()
 	float rotadistance = Collision::CheckDistance(rotapoint, clickTrigerPos);
 	float yaziscale = 1 + rotadistance / 100;
 
-	yazirusi->SetPosition(WinApp::GetWindowSize() / 2);
-	yazirusi->SetScale({ yaziscale ,yaziscale });
+	arrowSymbolSprite->SetPosition(WinApp::GetWindowSize() / 2);
+	arrowSymbolSprite->SetScale({ yaziscale ,yaziscale });
 }
 

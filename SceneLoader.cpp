@@ -66,50 +66,30 @@ void SceneLoader::Initialize(const std::string& fileName)
 		//if (it != models.end()) { model = it->second; }
 		model = ModelManager::GetModel(objectData.fileName);
 
-		if (objectData.fileName == "ground") {
-			//ƒ‚ƒfƒ‹‚ðŽw’è‚µ‚Ä3DƒIƒuƒWƒFƒNƒg‚ð¶¬
-			ObjectObj* newObject = ObjectObj::Create(model);
-			//À•W
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMStoreFloat3(&pos, objectData.translation);
-			newObject->SetPosition(pos);
-			//‰ñ“]Šp
-			DirectX::XMFLOAT3 rot;
-			DirectX::XMStoreFloat3(&rot, objectData.rotation);
-			newObject->SetRotation(rot);
-			//ƒXƒP[ƒŠƒ“ƒO
-			DirectX::XMFLOAT3 scale;
-			DirectX::XMStoreFloat3(&scale, objectData.scaling);
-			newObject->SetScale(scale);
-			//”z—ñ‚É“o˜^
-			notTouchObjects.push_back(newObject);
+		TouchableObject* newObject = TouchableObject::Create(model);
+		//À•W
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.translation);
+		newObject->SetPosition(pos);
+		//‰ñ“]Šp
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rotation);
+		if (objectData.fileName == "stage_1" || objectData.fileName == "stage_2" || objectData.fileName == "stage_3" ||
+			objectData.fileName == "stage_4" || objectData.fileName == "stage_5" || objectData.fileName == "stage_6" ||
+			objectData.fileName == "stage_7" || objectData.fileName == "stage_8" || objectData.fileName == "stage_9")
+		{
+			rot.y += 90;
 		}
-		else {
-			TouchableObject* newObject = TouchableObject::Create(model);
-			//À•W
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMStoreFloat3(&pos, objectData.translation);
-			newObject->SetPosition(pos);
-			//‰ñ“]Šp
-			DirectX::XMFLOAT3 rot;
-			DirectX::XMStoreFloat3(&rot, objectData.rotation);
-			if (objectData.fileName == "stage_1" || objectData.fileName == "stage_2" ||  objectData.fileName == "stage_3" ||
-				objectData.fileName == "stage_4" || objectData.fileName == "stage_5" || objectData.fileName == "stage_6" ||
-				objectData.fileName == "stage_7" || objectData.fileName == "stage_8" || objectData.fileName == "stage_9")
-			{
-				rot.y += 90;
-			}
-			newObject->SetRotation(rot);
-			//ƒXƒP[ƒŠƒ“ƒO
-			DirectX::XMFLOAT3 scale;
-			DirectX::XMStoreFloat3(&scale, objectData.scaling);
-			newObject->SetScale(scale);
-			//–¼‘O‚ð“o˜^
-			newObject->SetName(objectData.fileName);
-			//”z—ñ‚É“o˜^
-			//touchObjects.insert(objectData.fileName,);
-			touchObjects[objectData.objectName] = newObject;
-		}
+		newObject->SetRotation(rot);
+		//ƒXƒP[ƒŠƒ“ƒO
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale, objectData.scaling);
+		newObject->SetScale(scale);
+		//–¼‘O‚ð“o˜^
+		newObject->SetName(objectData.fileName);
+		//”z—ñ‚É“o˜^
+		//touchObjects.insert(objectData.fileName,);
+		touchObjects[objectData.objectName] = newObject;
 	}
 
 }
@@ -231,5 +211,5 @@ void SceneLoader::Draw()
 
 ObjectObj* SceneLoader::GetObjectObj(const std::string& objectName)
 {
-	return touchObjects[objectName];	
+	return touchObjects[objectName];
 }

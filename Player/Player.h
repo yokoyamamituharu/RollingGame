@@ -149,8 +149,8 @@ public:
 
 	int roolTime = 0;
 
-	Sprite* yazirusi = nullptr;
-	XMFLOAT2 yazirusiScale = { 1,1 };
+	Sprite* arrowSymbolSprite = nullptr;
+	XMFLOAT2 arrowSymbolScale = { 1,1 };
 
 	bool garigariFlag = false;
 };

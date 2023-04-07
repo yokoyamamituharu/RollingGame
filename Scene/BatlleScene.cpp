@@ -358,7 +358,7 @@ void BatlleScene::Draw()
 	}
 	//mousePosS->Draw();
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-		player->yazirusi->Draw();
+		player->arrowSymbolSprite->Draw();
 	}
 	Sprite::PostDraw();
 }
