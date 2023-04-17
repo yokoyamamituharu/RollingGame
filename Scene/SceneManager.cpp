@@ -15,6 +15,10 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
+	for (int i = 0; i < 5; i++){
+		safe_delete(sceneEffect[i]);
+	}
+	safe_delete(post);
 	safe_delete(titleScene);
 	safe_delete(endScene);
 	safe_delete(gameScene);
@@ -33,9 +37,6 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	ModelManager::GetIns()->Initialize();
 	//スプライトマネージャーの読み込み
 	SpriteManager::GetIns()->Initialize();
-
-	particleMan = new Particle();
-
 	//各シーンの生成
 	titleScene = new TitleScene;
 	titleScene->Initialize(dxCommon);
@@ -116,8 +117,6 @@ void SceneManager::Update()
 	//	color = color + XMFLOAT3{ 0.05, 0.05, 0.05 };
 	//	post->SetColor(color);
 	//}
-
-	particleMan->Update();
 
 	if (blackStartFlag == true) {
 		blackTime -= 0.05;
@@ -208,7 +207,6 @@ void SceneManager::Update()
 	}
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	//if (sceneNo == SCENE_BATTLE || sceneNo == SCENE_KATI) {
-		particleMan->Draw();
 	//}
 	ObjectObj::PostDraw();
 	post->PosDrawScene(dxCommon->GetCmdList());

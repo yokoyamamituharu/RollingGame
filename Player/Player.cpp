@@ -21,7 +21,13 @@ Player::Player()
 
 Player::~Player()
 {
+	safe_delete(arrowSymbolSprite);
 	safe_delete(object);
+	safe_delete(shadowObj);
+	for (int i = 0; i < 4; i++) {
+		safe_delete(waveright[i]);
+		safe_delete(waveleft[i]);
+	}
 }
 
 Player* Player::Create(Camera* camera, int InOrOut)

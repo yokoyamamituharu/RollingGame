@@ -39,8 +39,10 @@ BaseEnemy::BaseEnemy()
 
 BaseEnemy::~BaseEnemy()
 {
-	ParticleCreate();
+	//ParticleCreate();
 	safe_delete(object);
+	safe_delete(shadowObj);
+	safe_delete(yazirusi);
 	enemies.clear();
 }
 

@@ -55,6 +55,9 @@ public:
 	//ゲームシーンのポストエフェクトを描画
 	void PostDraw();
 
+	//敵生成処理
+	void SpownEnemy();
+
 public:
 	Player* GetPlayer() { return player; }
 
@@ -126,5 +129,7 @@ private: // メンバ変数
 
 	Sprite* playerSprte = nullptr;
 	Sprite* towerSprte = nullptr;
+
+	Particle* particleM = nullptr;
 };
 

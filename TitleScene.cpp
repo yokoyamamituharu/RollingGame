@@ -13,7 +13,13 @@ TitleScene::~TitleScene()
 {
 	safe_delete(titleSprite);
 	safe_delete(black);
+	for (int i = 0; i < 5; i++) {
+		safe_delete(sceneEffect[i]);
+	}
 	safe_delete(scene);
+	safe_delete(titleObj);
+	safe_delete(tenQ);
+	safe_delete(camera);
 }
 
 //void a(VECTOR4* pOut, VECTOR4* pV, DirectX::XMMATRIX* pM)

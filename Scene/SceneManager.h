@@ -35,13 +35,9 @@ public:
 	TitleScene* titleScene = nullptr;
 	EndScene* endScene = nullptr;
 
-
-	Particle* particleMan = nullptr;
-
 	int sceneNo = SCENE_NONE;
 
 	bool initFlag = 0;
-
 	DirectXCommon* dxCommon = nullptr;
 	Camera* camera = nullptr;
 	PostEffect* post;

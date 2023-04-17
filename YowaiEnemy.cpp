@@ -14,6 +14,11 @@ YowaiEnemy::YowaiEnemy()
 
 YowaiEnemy::~YowaiEnemy()
 {
+	//ParticleCreate();
+	safe_delete(object);
+	safe_delete(shadowObj);
+	safe_delete(yazirusi);
+	enemies.clear();
 }
 
 void YowaiEnemy::CreateEnemy()

@@ -25,11 +25,20 @@ GameScene::~GameScene()
 	safe_delete(canvas);
 	safe_delete(spriteBG);
 	safe_delete(clearsprite);
+	safe_delete(pose);
+	safe_delete(tikaiSprite);
+	safe_delete(playerSprte);
+	safe_delete(towerSprte);
 	safe_delete(miniMapPost);
 	//3Dオブジェクト解放
+	safe_delete(particleM);
 	safe_delete(scene);
 	safe_delete(defenseTower);
 	safe_delete(player);
+	safe_delete(kabe1);
+	safe_delete(kabe2);
+	safe_delete(kabe3);
+	safe_delete(kabe4);
 	safe_delete(copyGround);
 	safe_delete(copyCastle);
 	safe_delete(copyDefenseTower);
@@ -64,10 +73,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	collisionManager = CollisionManager::GetInstance();
 
 	//3Dオブジェクトの生成
-	//touchGround = TouchableObject::Create(ModelManager::GetModel("ground"));
-	//touchGround->SetScale({ 30.0f,1.0f,30.0f });
-	//touchGround->SetPosition({ 800.0f,0.0f,800.0f });
-
 	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
@@ -125,6 +130,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	towerSprte = Sprite::Create(32, { 0,0 });
 
 	Route::GetIns()->Set();
+
+	particleM = new Particle;
+	particleM->Initialize();
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -145,8 +153,27 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 	}
 
+	//死亡フラグが立っている敵を消す
+	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
+		if (enemy->GetDead()) {
+			for (int i = 0; i < 5; i++) {
+				std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+				particle->obj = std::make_unique<ObjectObj>();
+				particle->obj->Initialize(ModelManager::GetModel("particle"));
+				particle->obj->SetScale({ 5,5,5 });
+				particle->end_frame = rand() % 5 + 30;
+				particle->position = enemy->object->GetPosition();
+				//tubu->scale = { 10,10,10 };
+				//const float rnd_vel = 0.1f;
+				int rndVel = 3.0f;
+				particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+				particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+				particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+				particleM->Add(std::move(particle));
+			}
+		}
+	}
 	enemiesG.remove_if([](std::shared_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
-
 
 	//土煙
 	for (int i = 0; i < 2; i++) {
@@ -159,61 +186,33 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		particle->obj->SetRotation({ 0,0,0 });
 		//プレイヤーの足元に生成
 		particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
-
 		particle->end_frame = rand() % 5 + 10;
-		//int rndVel = 3.0f;
-		//particle->velocity.x = rand() % (rndVel * 2) - rndVel;
-		//particle->velocity.y = rand() % (rndVel * 2) - rndVel;
-		//particle->velocity.z = rand() % (rndVel * 2) - rndVel;
-		//tubu->velocity.x = 0;
-		//tubu->velocity.y = 0;
-		//tubu->velocity.z = -rand() % (rndVel * 2);
-		//Particle::GetIns()->Add(std::move(particle));
+		particleM->Add(std::move(particle));
 	}
 
 	//敵生成処理
-	if (index < maxEnemy) {
-		dasu[index].timer--;
-		while (dasu[index].timer <= 0) {
-			if (dasu[index].hole == HOLE1) {
-				//タワーがある方
-				std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
-				enemiesG.push_back(std::move(newEnemy));
-			}
-			if (dasu[index].hole == HOLE2) {
-				std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
-				enemiesG.push_back(std::move(newEnemy));
-			}
-			index++;
-			if (index >= maxEnemy) {
-				break;
-			}
-		}
-	}
+	SpownEnemy();
 
-	//敵とプレイヤーの当たり判定
+	//敵の当たり判定
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
+		//死亡しているエネミーだった場合スキップ
+		if (enemy->GetDead() == true) {
+			continue;
+		}
+		//敵とプレイヤー
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
-			if (enemy->GetDead() == false) {
-				//バトルシーンに行く処理
-				batlleScene->SetEnemies(enemy);
-				//enemiesG.remove(enemy);
-				player->outPos = player->object->GetPosition();
-				player->StopOut();
-				//プレイヤーを原点に発生させる
-				//player->object->SetPosition({ 0,-6,0 });
-				SceneManager::hitEnemyToPlayer = true;
-				SceneManager::BattleInit = true;
-				//sceneNo = SceneManager::SCENE_BATTLE;
-				break;
-			}
+			//バトルシーンに行く処理
+			batlleScene->SetEnemies(enemy);
+			//enemiesG.remove(enemy);
+			player->outPos = player->object->GetPosition();
+			player->StopOut();
+			//プレイヤーを原点に発生させる
+			//player->object->SetPosition({ 0,-6,0 });
+			SceneManager::hitEnemyToPlayer = true;
+			SceneManager::BattleInit = true;
+			//sceneNo = SceneManager::SCENE_BATTLE;
+			break;
 		}
-		//敵と城の当たり判定
-		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
-			//当たったら負け
-			sceneNo = SceneManager::SCENE_END;
-		}
-
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
 			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
@@ -221,6 +220,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 				isTikai = true;
 				tikaiStack.push_back(true);
 			}
+		}
+		//敵と城
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
+			//当たったら負け
+			sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
@@ -251,6 +255,23 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//touchGround->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
+		if (enemy->GetDead()) {
+			for (int i = 0; i < 5; i++) {
+				std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+				particle->obj = std::make_unique<ObjectObj>();
+				particle->obj->Initialize(ModelManager::GetModel("particle"));
+				particle->obj->SetScale({ 5,5,5 });
+				particle->end_frame = rand() % 5 + 30;
+				particle->position = enemy->object->GetPosition();
+				//tubu->scale = { 10,10,10 };
+				//const float rnd_vel = 0.1f;
+				int rndVel = 3.0f;
+				particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+				particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+				particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+				particleM->Add(std::move(particle));
+			}
+		}
 	}
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
@@ -264,6 +285,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	gameCamera->UpdateView();
 	player->object->Update();
 	player->shadowObj->Update();
+	particleM->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -293,6 +315,7 @@ void GameScene::Draw()
 	kabe2->Draw();
 	kabe3->Draw();
 	kabe4->Draw();
+	particleM->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
@@ -302,7 +325,7 @@ void GameScene::Draw()
 		pose->Draw();
 	}
 	if (isTikai) {
-		tikaiSprite->Draw();
+		//tikaiSprite->Draw();
 	}
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		player->arrowSymbolSprite->Draw();
@@ -338,4 +361,26 @@ void GameScene::PostReserve()
 void GameScene::PostDraw()
 {
 	miniMapPost->Draw(dxCommon->GetCmdList());
+}
+
+void GameScene::SpownEnemy()
+{
+	if (index < maxEnemy) {
+		dasu[index].timer--;
+		while (dasu[index].timer <= 0) {
+			if (dasu[index].hole == HOLE1) {
+				//タワーがある方
+				std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
+				enemiesG.push_back(std::move(newEnemy));
+			}
+			if (dasu[index].hole == HOLE2) {
+				std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
+				enemiesG.push_back(std::move(newEnemy));
+			}
+			index++;
+			if (index >= maxEnemy) {
+				break;
+			}
+		}
+	}
 }

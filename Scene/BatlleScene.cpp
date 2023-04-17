@@ -20,12 +20,19 @@ BatlleScene::~BatlleScene()
 	//スプライト解放
 	safe_delete(canvas);
 	safe_delete(torisetu);
+	for (int i = 0; i < 10; i++) {
+		safe_delete(hitNum1[i]);
+		safe_delete(hitNum2[i]);
+	}
+	safe_delete(hitSprite);
+	safe_delete(mousePosS);
 
 	//3Dオブジェクト解放
 	safe_delete(tenQ);
 	safe_delete(ground);
 	safe_delete(player);
 	safe_delete(area);
+	safe_delete(particleM);
 	enemies.reset();
 	safe_delete(battleCamera);
 }
@@ -108,6 +115,8 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	//enemy3->object->SetPosition({ 20,-4.0f,0 });
 	//enemy3->object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	//enemies->GetEnemies().push_back(std::move(enemy3));
+	particleM = new Particle();
+	particleM->Initialize();
 }
 
 void BatlleScene::Update(int& sceneNo, GameScene* gameScene)
@@ -148,10 +157,27 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 	//敵の情報を外シーンから取得できていたら処理
 	if (enemies != nullptr) {
 		//死亡判定があったらエネミーを消す
-		enemies->GetEnemies().remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
-
 		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
-			//敵とプレイヤーのローリング攻撃の当たり判定
+			if (enemy->GetDead()) {
+				for (int i = 0; i < 5; i++) {
+					std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+					particle->obj = std::make_unique<ObjectObj>();
+					particle->obj->Initialize(ModelManager::GetModel("particle"));
+					particle->obj->SetScale({ 5,5,5 });
+					particle->end_frame = rand() % 5 + 30;
+					particle->position = enemy->object->GetPosition();
+					//tubu->scale = { 10,10,10 };
+					//const float rnd_vel = 0.1f;
+					int rndVel = 3.0f;
+					particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+					particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+					particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+					particleM->Add(std::move(particle));
+				}
+			}
+		}
+		enemies->GetEnemies().remove_if([](std::unique_ptr<BaseEnemy>& enemy) {return enemy->GetDead(); });
+		for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {			
 			if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, player->object->GetPosition(), { 5,5,5 })) {
 				if (player->attackFlag == true) {
 					//enemy->SetDead();
@@ -191,7 +217,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 				float x = cos(player->object->GetRotation().y * 3.141592 / 180);
 				float y = sin(player->object->GetRotation().y * 3.141592 / 180);
 				ray.dir = { -x,0,y,0 };
-				if (Collision::CheckRay2Sphere(ray, *SphereA)&&player->isSphere) {
+				if (Collision::CheckRay2Sphere(ray, *SphereA) && player->isSphere) {
 					enemy->yazirusiFlag = true;
 				}
 				else {
@@ -252,7 +278,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 
 
 
-
+	particleM->Update();
 	ground->Update();
 	tenQ->Update();
 	area->Update();
@@ -345,6 +371,7 @@ void BatlleScene::Draw()
 			enemy->Draw();
 		}
 	}
+	particleM->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

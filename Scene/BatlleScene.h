@@ -81,8 +81,8 @@ private: // ƒƒ“ƒo•Ï”
 	std::shared_ptr<BaseEnemy>enemies;
 	ObjectObj* area = nullptr;
 
+	Particle *particleM = nullptr;
+
 	//ƒJƒƒ‰
 	BattleCamera* battleCamera = nullptr;
-
-	Particle* particle = nullptr;
 };

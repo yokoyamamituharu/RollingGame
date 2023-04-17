@@ -16,6 +16,11 @@ EnemyZako::EnemyZako()
 
 EnemyZako::~EnemyZako()
 {
+	//ParticleCreate();
+	safe_delete(object);
+	safe_delete(shadowObj);
+	safe_delete(yazirusi);
+	enemies.clear();
 }
 
 std::shared_ptr<EnemyZako> EnemyZako::Create(bool isTarget, XMFLOAT2 route[])
