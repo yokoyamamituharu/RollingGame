@@ -61,13 +61,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	ObjectObj::SetCamera(gameCamera);
 
 	//スプライトの生成
-	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
-	clearsprite = Sprite::Create(2, { 100.0f,100.0f });
-	pose = Sprite::Create(26, { 0,0 });
+	spriteBG = Sprite::Create(SpriteManager::torisetu, { 0.0f,0.0f });	
+	pose = Sprite::Create(SpriteManager::pose, { 0,0 });
 	//キャンバスの生成処理
 	canvas = new Canvas();
 	canvas->Initialize();
-	tikaiSprite = Sprite::Create(29, { 300,-50 });
+	tikaiSprite = Sprite::Create(SpriteManager::tikai, { 300,-50 });
 
 
 	collisionManager = CollisionManager::GetInstance();
@@ -126,8 +125,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	scene = new SceneLoader;
 	scene->Initialize("level");
-	playerSprte = Sprite::Create(31, { 0,0 });
-	towerSprte = Sprite::Create(32, { 0,0 });
+	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
+	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
 	Route::GetIns()->Set();
 

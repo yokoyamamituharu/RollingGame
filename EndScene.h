@@ -15,7 +15,7 @@ public:
 	void Draw(int& sceneNo);
 
 private:
-	Sprite* sprite = nullptr;
+	Sprite* maleSprite = nullptr;
 	Sprite* katisprite = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 };

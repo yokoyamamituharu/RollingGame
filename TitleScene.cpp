@@ -55,18 +55,18 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	titleSprite = Sprite::Create(5, { 0,0 });
-	black = Sprite::Create(7, { 0,0 });
+	titleSprite = Sprite::Create(SpriteManager::title, { 0,0 });
+	black = Sprite::Create(SpriteManager::black, { 0,0 });
 	blackOutFlag = false;
 	blackOutAlpha = 0.0f;
 	blackInAlpha = 1.0f;
 	black->SetAlpha(blackOutAlpha);
 
-	sceneEffect[0] = Sprite::Create(21, { 0,0 });
-	sceneEffect[1] = Sprite::Create(22, { 0,0 });
-	sceneEffect[2] = Sprite::Create(23, { 0,0 });
-	sceneEffect[3] = Sprite::Create(24, { 0,0 });
-	sceneEffect[4] = Sprite::Create(25, { 0,0 });
+	sceneEffect[0] = Sprite::Create(SpriteManager::effect_1, { 0,0 });
+	sceneEffect[1] = Sprite::Create(SpriteManager::effect_2, { 0,0 });
+	sceneEffect[2] = Sprite::Create(SpriteManager::effect_3, { 0,0 });
+	sceneEffect[3] = Sprite::Create(SpriteManager::effect_4, { 0,0 });
+	sceneEffect[4] = Sprite::Create(SpriteManager::effect_5, { 0,0 });
 
 	camera = Camera::Create();
 	ObjectObj::SetCamera(camera);

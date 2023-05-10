@@ -36,7 +36,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	//モデルマネージャーの読み込み
 	ModelManager::GetIns()->Initialize();
 	//スプライトマネージャーの読み込み
-	SpriteManager::GetIns()->Initialize();
+	SpriteManager::StaticInitialize();
 	//各シーンの生成
 	titleScene = new TitleScene;
 	titleScene->Initialize(dxCommon);
@@ -53,11 +53,11 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	post = new PostEffect;
 	post->Initialize();
 
-	sceneEffect[0] = Sprite::Create(21, { 0,0 });
-	sceneEffect[1] = Sprite::Create(22, { 0,0 });
-	sceneEffect[2] = Sprite::Create(23, { 0,0 });
-	sceneEffect[3] = Sprite::Create(24, { 0,0 });
-	sceneEffect[4] = Sprite::Create(25, { 0,0 });
+	sceneEffect[0] = Sprite::Create(SpriteManager::effect_1, { 0,0 });
+	sceneEffect[1] = Sprite::Create(SpriteManager::effect_2, { 0,0 });
+	sceneEffect[2] = Sprite::Create(SpriteManager::effect_3, { 0,0 });
+	sceneEffect[3] = Sprite::Create(SpriteManager::effect_4, { 0,0 });
+	sceneEffect[4] = Sprite::Create(SpriteManager::effect_5, { 0,0 });
 
 }
 

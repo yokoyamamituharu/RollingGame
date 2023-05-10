@@ -1,4 +1,5 @@
 #include "SpriteManager.h"
+#include "Sprite.h"
 
 SpriteManager::SpriteManager()
 {
@@ -8,51 +9,44 @@ SpriteManager::~SpriteManager()
 {
 }
 
-SpriteManager* SpriteManager::GetIns()
-{
-	static SpriteManager instance;
-	return &instance;
-}
-
-void SpriteManager::Initialize()
+void SpriteManager::StaticInitialize()
 {
 	//スプライト共通テクスチャ読み込み
-	Sprite::LoadTexture(0, L"Resources/texture.png");
-	Sprite::LoadTexture(1, L"Resources/torisetu.png");
-	Sprite::LoadTexture(2, L"Resources/clear.png");
-	Sprite::LoadTexture(3, L"Resources/hp.png");
-	Sprite::LoadTexture(4, L"Resources/damageHp.png");
+	Sprite::LoadTexture(texture, L"Resources/texture/texture.png");
+	Sprite::LoadTexture(torisetu, L"Resources/texture/UI/torisetu.png");
+	Sprite::LoadTexture(hp, L"Resources/texture/UI/hp.png");
+	Sprite::LoadTexture(damageHp, L"Resources/texture/UI/damageHp.png");
 	//背景
-	Sprite::LoadTexture(5, L"Resources/title.png");
-	Sprite::LoadTexture(6, L"Resources/end.png");
-	Sprite::LoadTexture(7, L"Resources/black.png");
-	Sprite::LoadTexture(8, L"Resources/kati.png");
+	Sprite::LoadTexture(title, L"Resources/texture/title.png");
+	Sprite::LoadTexture(make, L"Resources/texture/make.png");
+	Sprite::LoadTexture(black, L"Resources/texture/EFFECT/black.png");
+	Sprite::LoadTexture(kati, L"Resources/texture/kati.png");
 
-	Sprite::LoadTexture(9, L"Resources/num/slash.png");
-	Sprite::LoadTexture(10, L"Resources/num/0.png");
-	Sprite::LoadTexture(11, L"Resources/num/1.png");
-	Sprite::LoadTexture(12, L"Resources/num/2.png");
-	Sprite::LoadTexture(13, L"Resources/num/3.png");
-	Sprite::LoadTexture(14, L"Resources/num/4.png");
-	Sprite::LoadTexture(15, L"Resources/num/5.png");
-	Sprite::LoadTexture(16, L"Resources/num/6.png");
-	Sprite::LoadTexture(17, L"Resources/num/7.png");
-	Sprite::LoadTexture(18, L"Resources/num/8.png");
-	Sprite::LoadTexture(19, L"Resources/num/9.png");
+	Sprite::LoadTexture(slash, L"Resources/texture/num/slash.png");
+	Sprite::LoadTexture(num0, L"Resources/texture/num/0.png");
+	Sprite::LoadTexture(num1, L"Resources/texture/num/1.png");
+	Sprite::LoadTexture(num2, L"Resources/texture/num/2.png");
+	Sprite::LoadTexture(num3, L"Resources/texture/num/3.png");
+	Sprite::LoadTexture(num4, L"Resources/texture/num/4.png");
+	Sprite::LoadTexture(num5, L"Resources/texture/num/5.png");
+	Sprite::LoadTexture(num6, L"Resources/texture/num/6.png");
+	Sprite::LoadTexture(num7, L"Resources/texture/num/7.png");
+	Sprite::LoadTexture(num8, L"Resources/texture/num/8.png");
+	Sprite::LoadTexture(num9, L"Resources/texture/num/9.png");
 
 	//シーン遷移エフェクト
-	Sprite::LoadTexture(21, L"Resources/efect_1.png");
-	Sprite::LoadTexture(22, L"Resources/efect_2.png");
-	Sprite::LoadTexture(23, L"Resources/efect_3.png");
-	Sprite::LoadTexture(24, L"Resources/efect_4.png");
-	Sprite::LoadTexture(25, L"Resources/efect_5.png");
+	Sprite::LoadTexture(effect_1, L"Resources/texture/EFFECT/efect_1.png");
+	Sprite::LoadTexture(effect_2, L"Resources/texture/EFFECT/efect_2.png");
+	Sprite::LoadTexture(effect_3, L"Resources/texture/EFFECT/efect_3.png");
+	Sprite::LoadTexture(effect_4, L"Resources/texture/EFFECT/efect_4.png");
+	Sprite::LoadTexture(effect_5, L"Resources/texture/EFFECT/efect_5.png");
 
 	//UI
-	Sprite::LoadTexture(26, L"Resources/pose.png");
-	Sprite::LoadTexture(27, L"Resources/num/hit.png");
-	Sprite::LoadTexture(28, L"Resources/mousepos.png");
-	Sprite::LoadTexture(29, L"Resources/tikai.png");
-	Sprite::LoadTexture(30, L"Resources/arrowSymbol.png");
-	Sprite::LoadTexture(31, L"Resources/Sprite-0001.png");
-	Sprite::LoadTexture(32, L"Resources/Sprite-0002.png");
+	Sprite::LoadTexture(pose, L"Resources/texture/UI/pose.png");
+	Sprite::LoadTexture(hit, L"Resources/texture/num/hit.png");
+	Sprite::LoadTexture(mousepos, L"Resources/texture/UI/mousepos.png");
+	Sprite::LoadTexture(tikai, L"Resources/texture/UI/tikai.png");
+	Sprite::LoadTexture(arrowSymbol, L"Resources/texture/UI/arrowSymbol.png");
+	Sprite::LoadTexture(sprite_0001, L"Resources/texture/UI/Sprite-0001.png");
+	Sprite::LoadTexture(sprite_0002, L"Resources/texture/UI/Sprite-0002.png");
 }

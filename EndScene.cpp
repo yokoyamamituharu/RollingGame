@@ -9,7 +9,7 @@ EndScene::EndScene()
 
 EndScene::~EndScene()
 {
-	safe_delete(sprite);
+	safe_delete(maleSprite);
 	safe_delete(katisprite);
 }
 
@@ -17,8 +17,8 @@ void EndScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	sprite = Sprite::Create(6, { 0,0 });
-	katisprite = Sprite::Create(8, { 0,0 });
+	maleSprite = Sprite::Create(SpriteManager::end, { 0,0 });
+	katisprite = Sprite::Create(SpriteManager::kati, { 0,0 });
 }
 
 void EndScene::Update(int& sceneNo)
@@ -36,7 +36,7 @@ void EndScene::Draw(int& sceneNo)
 		katisprite->Draw();
 	}
 	else{
-		sprite->Draw();
+		maleSprite->Draw();
 	}
 	
 	Sprite::PostDraw();

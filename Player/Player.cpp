@@ -78,7 +78,7 @@ void Player::Initialize(Camera* camera, int InOrOut)
 
 	breakEnemy = 0;
 
-	arrowSymbolSprite = Sprite::Create(30, { 0,0 });
+	arrowSymbolSprite = Sprite::Create(SpriteManager::arrowSymbol, { 0,0 });
 	arrowSymbolSprite->SetAnchorPoint({ 0.5f,0.5f });
 }
 

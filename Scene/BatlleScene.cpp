@@ -45,7 +45,7 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	battleCamera = BattleCamera::Create();
 
 	player = Player::Create(battleCamera, 2);
-	torisetu = Sprite::Create(1, { 0.0f,0.0f });
+	torisetu = Sprite::Create(SpriteManager::torisetu, { 0.0f,0.0f });
 	battleCamera->SetPlayer(player->object);
 	battleCamera->SetPlayer(player);
 
@@ -53,20 +53,20 @@ void BatlleScene::Initialize(DirectXCommon* dxCommon)
 	float height = 100;
 	float width = 200;
 	for (int i = 0; i < 10; i++) {
-		hitNum2[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 1),height });
-		hitNum1[i] = Sprite::Create(10 + i, { width + float(intervalWidth * 2),height });
+		hitNum2[i] = Sprite::Create(SpriteManager::num0 + i, { width + float(intervalWidth * 1),height });
+		hitNum1[i] = Sprite::Create(SpriteManager::num0 + i, { width + float(intervalWidth * 2),height });
 		hitNum2[i]->SetScale({ 1.6,1.6 });
 		hitNum1[i]->SetScale({ 1.6,1.6 });
 		hitNum2[i]->SetColor({ 0.9,0.9,0.9 });
 		hitNum1[i]->SetColor({ 0.9,0.9,0.9 });
 	}
-	hitSprite = Sprite::Create(27, { width + float(intervalWidth * 3) ,height });
+	hitSprite = Sprite::Create(SpriteManager::hit, { width + float(intervalWidth * 3) ,height });
 	hitSizeB = hitNum1[0]->GetSize();
 
 	hitStopFlag = false;
 	hitStopTime = 0;
 
-	mousePosS = Sprite::Create(29, { 0,0 });
+	mousePosS = Sprite::Create(SpriteManager::mousepos, { 0,0 });
 
 	ground = ObjectObj::Create(ModelManager::GetModel("battlegrund"));
 	ground->SetScale({ 1000.0f,1.0f,1000.0f });
