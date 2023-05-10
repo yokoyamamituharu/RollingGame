@@ -224,7 +224,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//“G‚Æé
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
 			//“–‚½‚Á‚½‚ç•‰‚¯
-			sceneNo = SceneManager::SCENE_END;
+			//sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
@@ -325,7 +325,7 @@ void GameScene::Draw()
 		pose->Draw();
 	}
 	if (isTikai) {
-		//tikaiSprite->Draw();
+		tikaiSprite->Draw();
 	}
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		player->arrowSymbolSprite->Draw();

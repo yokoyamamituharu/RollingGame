@@ -48,11 +48,24 @@ public: // メンバ関数
 
 	bool IsMoveMouse(char h);
 
+	/// <summary>
+	/// スクリーン上でのカーソルの座標
+	/// </summary>
+	/// <returns></returns>
 	XMFLOAT2 GetScreanPos();
 
+	/// <summary>
+	/// ウィンドウの中でのカーソルの座標
+	/// </summary>
+	/// <returns></returns>
 	XMFLOAT2 GetWindowPos();
 
-	float MoveMouseVector(char h);
+	/// <summary>
+	/// 前回のフレームからのカーソルの移動量
+	/// </summary>
+	/// <param name="h"></param>
+	/// <returns></returns>
+	XMFLOAT2 MoveMouseVector();
 
 	/// <summary>
 	/// カーソルを表示するか否か

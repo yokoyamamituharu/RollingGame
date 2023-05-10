@@ -107,7 +107,7 @@ void BaseEnemy::InitGeneralSetUp()
 	shadowObj->SetScale({ 10,1,10 });
 
 	//目的地が設定されていたら
-	if (isTarget == true) {
+	if (isTarget) {
 		//移動する方向を計算する
 		XMVECTOR pos1 = XMLoadFloat3(&object->GetPosition());
 		targetVec = XMLoadFloat3(&XMFLOAT3{ route[1].x, groundPosOut,route[1].y }) - pos1;
@@ -182,8 +182,8 @@ void BaseEnemy::UpdateOut()
 		return;
 	}
 
-	if (isAction > 0 && GetDead() == false) {
-		if (isTarget == true) {
+	if (isAction && !GetDead()) {
+		if (isTarget) {
 			float speed = 0.15;
 			//目的地に向かって直進	
 
@@ -288,13 +288,13 @@ void BaseEnemy::Move()
 	float distance1 = Collision::CheckDistance(object->GetPosition(), player->object->GetPosition());
 
 	//徐々にプレイヤーに近づく処理
-	if (distance1 > 50 && nearFlag == false || distance1 > 100 && nearFlag == true) {
+	if (distance1 > 50 && !nearFlag || distance1 > 100 && nearFlag) {
 		nearFlag = false;
 		//プレイヤーに近づく
 		ApproachPlayer();
 	}
 	//近かったらプレイヤーの周りをまわるようにするための準備
-	else if (nearFlag == false) {
+	else if (!nearFlag) {
 		nearFlag = true;
 		moveTime = 0;
 
@@ -311,7 +311,7 @@ void BaseEnemy::Move()
 	}
 
 	//プレイヤーのまわりをまわる処理
-	if (nearFlag == true) {
+	if (nearFlag) {
 		float radius = m_Angle * 3.14f / 180.0f;
 		float addx = cos(radius) * m_Length;
 		float addy = sin(radius) * m_Length;

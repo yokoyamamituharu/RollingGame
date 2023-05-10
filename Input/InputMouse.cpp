@@ -171,17 +171,9 @@ DirectX::XMFLOAT2 InputMouse::GetWindowPos()
 }
 
 
-float InputMouse::MoveMouseVector(char h)
+DirectX::XMFLOAT2 InputMouse::MoveMouseVector()
 {
-	if (h == 'x')
-	{
-		return mouse.lX;
-	}
-	if (h == 'y')
-	{
-		return mouse.lY;
-	}
-	return 0;
+	return XMFLOAT2({ float(mouse.lX),float(mouse.lY) });
 }
 
 void InputMouse::ShowMouseCursor(bool flag)

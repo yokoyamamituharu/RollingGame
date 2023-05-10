@@ -86,10 +86,6 @@ void Player::UpdateOut(Camera* camera)
 {
 	ArrowSymbolUpdate();
 	arrowSymbolSprite->SetRotation(0);
-	//外シーンではY座標をとりあえず固定
-	if (object->collider) {
-		//object->SetPosY(groundHeight);
-	}
 
 	if (muteki == true) {
 		mutekiTime++;
@@ -137,6 +133,12 @@ void Player::UpdateOut(Camera* camera)
 
 	if (object->collider == nullptr) {
 		return;
+	}
+	if (isSphere || isShoot) {
+		object->SetModel(ModelManager::GetModel("playerSphere"));
+	}
+	else {
+		object->SetModel(ModelManager::GetModel("player"));
 	}
 	object->collider->Update();
 
@@ -278,7 +280,6 @@ void Player::MoveOut()
 		return;
 	}
 
-	XMFLOAT3 oldpos = object->GetPosition();
 	XMVECTOR forwardvec = {};
 	if (Input::GetInstance()->PushKey(DIK_W)) {
 		forwardvec.m128_f32[2] += 1;
@@ -295,6 +296,7 @@ void Player::MoveOut()
 
 	//移動量が0なら終了
 	if (forwardvec.m128_f32[0] == 0 && forwardvec.m128_f32[2] == 0) return;
+	XMFLOAT3 oldpos = object->GetPosition();
 	//単位ベクトルを求めベクトルの大きさを1にする
 	float normal = sqrt(forwardvec.m128_f32[0] * forwardvec.m128_f32[0] + forwardvec.m128_f32[2] * forwardvec.m128_f32[2]);
 	XMVECTOR normalVec = forwardvec / normal;
@@ -318,25 +320,25 @@ void Player::MoveOut()
 
 void Player::RollingMoveOut()
 {
-	//回転移動
-
 	//非球体状態じゃない時にクリックしたら球体状態
 	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
 		isSphere = true;
-
-		XMFLOAT2 windowCenter = { WinApp::window_width / 2,WinApp::window_height / 2 };
-		//回転チャージ
-		if (WinApp::window_height / 2 < InputMouse::GetInstance()->GetWindowPos().y) {
-			rollingPower = InputMouse::GetInstance()->GetWindowPos().y - WinApp::window_height / 2;
-		}
-		else {
-			rollingPower = 0;
-		}
 	}
 	else if (!InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && isShoot == false) {
 		isSphere = false;
 	}
 
+	if (!isSphere) return;
+
+	//回転チャージ
+	if (WinApp::window_height / 2 < InputMouse::GetInstance()->GetWindowPos().y) {
+		rollingPower = InputMouse::GetInstance()->GetWindowPos().y - WinApp::window_height / 2;
+	}
+	else {
+		rollingPower = 0;
+	}
+
+	//クリックを離した時回転力があったら射出フラグを立てる
 	if (InputMouse::GetInstance()->ReleaseMouse(MouseDIK::M_LEFT) && rollingPower > 0) {
 		isShoot = true;
 	}
@@ -350,7 +352,7 @@ void Player::RollingMoveOut()
 			forvardvec.m128_f32[2] += 2.0;
 		}
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
-		move = move + XMVECTOR{ forvardvec.m128_f32[0], forvardvec.m128_f32[1], forvardvec.m128_f32[2] };
+		move = move + forvardvec;
 		object->SetPosition(object->GetPosition() + move);
 		rollingTime++;
 		if (rollingTime >= 120) {
@@ -358,13 +360,6 @@ void Player::RollingMoveOut()
 			rollingTime = 0;
 			rollingPower = 0;
 		}
-	}
-
-	if (isSphere || isShoot) {
-		object->SetModel(ModelManager::GetModel("playerSphere"));
-	}
-	else {
-		object->SetModel(ModelManager::GetModel("player"));
 	}
 }
 
@@ -515,11 +510,21 @@ void Player::RollingMoveIn()
 			if (waveIndex >= 4) {
 				waveIndex = 0;
 			}
+
+			XMVECTOR m = { 4,0,-5 };
+			m = XMVector3TransformNormal(m, object->GetMatRot());
+			XMFLOAT3 pos = m + object->GetPosition();
 			waveright[waveIndex]->SetPosition(object->GetPosition());
-			waveright[waveIndex]->VecSetPosition({ +5,0,0 });
+			waveright[waveIndex]->VecSetPosition(Use::LoadXMVECTOR(m));
+
+			m.m128_f32[0] = -4;
+			m = XMVector3TransformNormal(m, object->GetMatRot());
+			pos = m + object->GetPosition();
 			waveleft[waveIndex]->SetPosition(object->GetPosition());
-			waveleft[waveIndex]->VecSetPosition({ -5,0,0 });
+			waveleft[waveIndex]->VecSetPosition(Use::LoadXMVECTOR(m));
 			waveTime = 0;
+
+
 		}
 		waveTime++;
 	}
