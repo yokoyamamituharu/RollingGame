@@ -2,14 +2,7 @@
 #include "Input.h"
 #include "ModelManager.h"
 #include "safe_delete.h"
-
-float Kyori(XMFLOAT3 pos1, XMFLOAT3 pos2)
-{
-	float distance = sqrtf(((pos1.x - pos2.x) * (pos1.x - pos2.x)) +
-		((pos1.z - pos2.z) * (pos1.z - pos2.z)));
-
-	return distance;
-}
+#include "Collision.h"
 
 DefenseTower* DefenseTower::Create()
 {
@@ -47,7 +40,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 	//ターゲットのエネミーが空（倒されている）だったら新たなターゲットを探す
 	if (targetEnemy.expired()) {
 		for (std::shared_ptr<BaseEnemy>& enemy : enemies) {
-			if (Kyori(object->GetPosition(), enemy->object->GetPosition()) <= 100.0f &&
+			if (Collision::CheckDistance(object->GetPosition(), enemy->object->GetPosition()) <= 100.0f &&
 				enemy->GetHp() > 0) {
 				attackFlag = true;
 				targetEnemy = enemy;
@@ -82,11 +75,12 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 		}
 	}
 
+	//オブジェクトの更新
 	object->Update();
 
 	for (std::unique_ptr<Bullet>& bullet : bullets) {
 		if (targetEnemy.expired() == false) {
-			if (5.0f >= Kyori(bullet->object->GetPosition(), targetEnemy.lock()->object->GetPosition())) {
+			if (5.0f >= Collision::CheckDistance(bullet->object->GetPosition(), targetEnemy.lock()->object->GetPosition())) {
 				targetEnemy.lock()->DamageOut(1);
 				if (targetEnemy.lock()->GetHp() <= 0) {
 					//Player::breakEnemy += 1;
@@ -99,7 +93,7 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 
 	//ターゲットの破棄の条件
 	if (targetEnemy.expired() == false) {
-		if (Kyori(object->GetPosition(), targetEnemy.lock()->object->GetPosition()) > 100.0f ||
+		if (100.0f < Collision::CheckDistance(object->GetPosition(), targetEnemy.lock()->object->GetPosition()) ||
 			targetEnemy.lock()->GetHp() <= 0) {
 			targetEnemy.reset();
 			attackFlag = false;

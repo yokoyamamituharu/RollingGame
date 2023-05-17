@@ -22,6 +22,7 @@ private:
 	//”­ŽË‚³‚ê‚Ä‚¢‚é‚©ƒtƒ‰ƒO
 	bool flag = false;
 	bool dead = false;
-	int timer = 0;
+	const int aliveTime = 60;
+	int timer = aliveTime;
 };
 

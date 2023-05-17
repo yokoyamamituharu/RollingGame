@@ -299,6 +299,7 @@ bool Collision::CheckExceed(const DirectX::XMFLOAT3 pos1, const DirectX::XMFLOAT
 {
 	bool x = false, y = false, z = false;
 
+	//各軸事に進む方向がマイナスかどうか判断して目的地点を超えているかチェックする
 	//X軸の判定
 	if (pos1.x < pos3.x) {
 		if (pos3.x <= pos2.x) {

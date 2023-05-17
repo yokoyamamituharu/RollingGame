@@ -4,9 +4,10 @@
 #include <DirectXMath.h>
 #include "Useful.h"
 #include "safe_delete.h"
-#include "../Collider/Collision.h"
+#include "Collision.h"
 #include "CollisionAttribute.h"
 #include "SphereCollider.h"
+#include "SpriteManager.h"
 
 using namespace DirectX;
 

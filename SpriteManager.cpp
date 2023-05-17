@@ -43,7 +43,7 @@ void SpriteManager::StaticInitialize()
 
 	//UI
 	Sprite::LoadTexture(pose, L"Resources/texture/UI/pose.png");
-	Sprite::LoadTexture(hit, L"Resources/texture/num/hit.png");
+	Sprite::LoadTexture(hit, L"Resources/texture/UI/hit.png");
 	Sprite::LoadTexture(mousepos, L"Resources/texture/UI/mousepos.png");
 	Sprite::LoadTexture(tikai, L"Resources/texture/UI/tikai.png");
 	Sprite::LoadTexture(arrowSymbol, L"Resources/texture/UI/arrowSymbol.png");

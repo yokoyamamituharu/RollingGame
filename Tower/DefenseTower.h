@@ -5,11 +5,17 @@
 #include "EnemyZako.h"
 class DefenseTower
 {
-	enum TowerType {
+	enum class TowerType {
 		NONE_TOWER,
 		HEAVEY_TOWER,
 		LIGHT_TOWER,
 		MIDDLE_TOWER
+	};
+
+	enum class State {
+		none,
+		idle,
+		attack,
 	};
 
 public:
@@ -26,8 +32,10 @@ public:
 private:
 	bool Initialize();
 
-public:
-	int type = NONE_TOWER;
+private:
+	//TowerType type = TowerType::NONE_TOWER;
+	State state = State::none;
+
 	ObjectObj* object = nullptr;
 	bool attackFlag = false;
 	const int maxHp = 10;
@@ -37,6 +45,6 @@ public:
 	const int maxInterval = 120;
 	int interval = maxInterval;
 
-	std::weak_ptr<BaseEnemy> targetEnemy;
+	std::weak_ptr<BaseEnemy> targetEnemy;	
 };
 

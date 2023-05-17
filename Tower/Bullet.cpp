@@ -6,13 +6,13 @@ Bullet* Bullet::Create()
 {
 	//インスタンスを生成
 	Bullet* bullet = new Bullet;
-	
+
 	//初期化
 	if (!bullet->Initialize()) {
 		delete bullet;
 		assert(0);
 		return nullptr;
-	}	
+	}
 	return bullet;
 }
 
@@ -33,9 +33,9 @@ void Bullet::Update()
 	posZ -= distanceZ / speed;
 	object->SetPosition(XMFLOAT3(posX, posY, posZ));
 
-	//時間がきたら消す
-	timer++;
-	if (timer > 60) {
+	//生存時間を過ぎたら消す
+	timer--;
+	if (timer <= 0) {
 		dead = true;
 	}
 
@@ -47,7 +47,7 @@ void Bullet::Draw()
 	object->Draw();
 }
 
-bool Bullet::Initialize(XMFLOAT3 pos,XMFLOAT3 target,bool flag)
+bool Bullet::Initialize(XMFLOAT3 pos, XMFLOAT3 target, bool flag)
 {
 	ModelManager::GetModel("bullet");
 	//オブジェクトの作成
