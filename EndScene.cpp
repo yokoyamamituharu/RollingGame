@@ -17,7 +17,7 @@ void EndScene::Initialize(DirectXCommon* dxCommon)
 {
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
-	maleSprite = Sprite::Create(SpriteManager::end, { 0,0 });
+	maleSprite = Sprite::Create(SpriteManager::make, { 0,0 });
 	katisprite = Sprite::Create(SpriteManager::kati, { 0,0 });
 }
 
