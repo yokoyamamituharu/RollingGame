@@ -59,16 +59,9 @@ bool Model::InitializeDescriptorHeap()
 void Model::CreateModel(const std::string& modelname)
 {
 	//ファイルストリーム
-	std::ifstream file;
-	//.objファイルを開く
-	//file.open("Resources/triangle_tex/triangle_tex.obj");
-	//const string modelname = "triangle_mat";
-	//const string filename = modelname + ".obj";	//"triagnle_mat.obj"
-	//const string directoryPath = "Resources/" + modelname + "/";	//"Resources/triangle_mat/"
-
-	//const string modelname = "Car";
+	std::ifstream file;	
 	const string filename = modelname + ".obj";
-	const string directoryPath = "Resources/" + modelname + "/";
+	const string directoryPath = "Resources/ModelOBJ/" + modelname + "/";
 
 	file.open(directoryPath + filename);
 

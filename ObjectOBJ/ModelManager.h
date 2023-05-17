@@ -5,11 +5,10 @@
 class ModelManager
 {
 public:
-	ModelManager();
-	~ModelManager();
+	ModelManager() = default;
+	~ModelManager() = default;
 
-	static ModelManager* GetIns();	
-	static void Initialize();
+	static void StaticInitialize();
 	static void Finalize();
 
 	static Model* GetModel(std::string name);

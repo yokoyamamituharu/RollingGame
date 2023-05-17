@@ -46,7 +46,7 @@ void ModelManager::SetModelName()
 	modelname.push_back("stage_9");
 }
 
-void ModelManager::Initialize()
+void ModelManager::StaticInitialize()
 {
 	SetModelName();
 
@@ -69,18 +69,3 @@ Model* ModelManager::GetModel(std::string name)
 	}
 	return models[name];
 }
-
-ModelManager::ModelManager()
-{
-}
-
-ModelManager::~ModelManager()
-{
-}
-
-ModelManager* ModelManager::GetIns()
-{
-	static ModelManager instance;
-	return &instance;
-}
-

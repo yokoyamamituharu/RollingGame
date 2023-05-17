@@ -34,7 +34,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	this->camera = camera;
 
 	//モデルマネージャーの読み込み
-	ModelManager::GetIns()->Initialize();
+	ModelManager::StaticInitialize();
 	//スプライトマネージャーの読み込み
 	SpriteManager::StaticInitialize();
 	//各シーンの生成
