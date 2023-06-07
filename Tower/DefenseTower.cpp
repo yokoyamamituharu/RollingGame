@@ -21,6 +21,23 @@ DefenseTower* DefenseTower::Create()
 	return defenseTower;
 }
 
+std::shared_ptr<DefenseTower> DefenseTower::CreateA()
+{
+	//インスタンスを生成
+	std::shared_ptr<DefenseTower> defenseTower = std::make_shared<DefenseTower>();
+
+	//初期化処理
+	if (!defenseTower->Initialize()) {
+		//delete defenseTower;
+		assert(0);
+		return nullptr;
+	}
+
+	defenseTower->object->SetScale({ 7, 7, 7 });
+	defenseTower->object->SetPosition({ 0, 10, 0 });
+	return std::move(defenseTower);
+}
+
 DefenseTower::DefenseTower()
 {
 }
@@ -35,6 +52,17 @@ void DefenseTower::Update(std::list<std::shared_ptr<BaseEnemy>>& enemies)
 	//フラグが立った弾を消す
 	bullets.remove_if([](std::unique_ptr<Bullet>& bullet) {return bullet->GetDead(); });
 
+	if (playerptr) {
+		if (Collision::CheckDistance(object->GetPosition(), playerptr->object->GetPosition()) <= 40.0f)
+			if (state == State::not && Input::GetInstance()->PushKey(DIK_E)) {
+				object->SetModel(ModelManager::GetModel("defenseTower"));
+				state = State::idle;
+			}
+	}
+
+	object->Update();
+
+	if (state == State::not)return;
 
 	//検知範囲に敵が入ったら攻撃開始
 	//ターゲットのエネミーが空（倒されている）だったら新たなターゲットを探す
@@ -117,7 +145,7 @@ bool DefenseTower::Initialize()
 	//タワー用モデルを読み込み
 	//オブジェクトの作成
 	object = ObjectObj::Create();
-	object->SetModel(ModelManager::GetModel("defenseTower"));
-
+	object->SetModel(ModelManager::GetModel("tower1"));
+	state = State::not;
 	return true;
 }

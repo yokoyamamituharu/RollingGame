@@ -20,6 +20,7 @@
 #include "SceneLoader.h"
 #include "CollisionManager.h"
 #include "TouchableObject.h"
+#include "DefenseTower.h"
 class SceneManeger;
 class BattleScene;
 
@@ -86,6 +87,8 @@ private: // ƒƒ“ƒo•Ï”
 	//“G
 	std::list<std::shared_ptr<BaseEnemy>>enemiesG;
 
+	std::list<std::shared_ptr<DefenseTower>>towers;
+
 	TouchableObject* kabe1 = nullptr;
 	TouchableObject* kabe2 = nullptr;
 	TouchableObject* kabe3 = nullptr;
@@ -131,5 +134,9 @@ private: // ƒƒ“ƒo•Ï”
 	Sprite* towerSprte = nullptr;
 
 	Particle* particleM = nullptr;
+
+	DefenseTower* towera = nullptr;
+
+	//n‚Ü‚è
 };
 

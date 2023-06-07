@@ -124,7 +124,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize("level");
+	scene->Initialize("level",&towers);
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
@@ -132,6 +132,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	particleM = new Particle;
 	particleM->Initialize();
+
 }
 
 void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
@@ -223,7 +224,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//“G‚Æé
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
 			//“–‚½‚Á‚½‚ç•‰‚¯
-			//sceneNo = SceneManager::SCENE_END;
+			sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
@@ -280,6 +281,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	kabe3->Update();
 	kabe4->Update();
 
+	for (std::shared_ptr<DefenseTower>& tower : towers) {
+		tower->SetPlayer(player);
+		tower->Update(enemiesG);		
+	}
+
 	gameCamera->Update();
 	gameCamera->UpdateView();
 	player->object->Update();
@@ -306,6 +312,9 @@ void GameScene::Draw()
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->Draw();
+	}
+	for (std::shared_ptr<DefenseTower>& tower : towers) {
+		tower->Draw();
 	}
 	scene->Draw();
 	//defenseTower->Draw();

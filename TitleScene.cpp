@@ -73,8 +73,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	titleObj = ObjectObj::Create(ModelManager::GetModel("enemy"));
 	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
 
+	std::list<std::shared_ptr<DefenseTower>>towers;
 	scene = new SceneLoader();
-	scene->Initialize("title");
+	scene->Initialize("title", &towers);
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)

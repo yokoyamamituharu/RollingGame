@@ -14,12 +14,15 @@ class DefenseTower
 
 	enum class State {
 		none,
+		not,
 		idle,
 		attack,
 	};
 
 public:
 	static DefenseTower* Create();
+
+	static std::shared_ptr<DefenseTower> CreateA();
 
 public:
 	DefenseTower();
@@ -29,6 +32,7 @@ public:
 	void Draw();
 	ObjectObj* GetObjectObj() { return object; }
 
+	void SetPlayer(Player* player) { playerptr = player; }
 private:
 	bool Initialize();
 
@@ -46,5 +50,6 @@ private:
 	int interval = maxInterval;
 
 	std::weak_ptr<BaseEnemy> targetEnemy;	
+	Player* playerptr = nullptr;
 };
 

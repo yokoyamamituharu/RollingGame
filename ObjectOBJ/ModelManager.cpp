@@ -29,6 +29,7 @@ void ModelManager::SetModelName()
 	modelname.push_back("cloudBurst");
 	modelname.push_back("title");
 	modelname.push_back("yazirusi");
+	modelname.push_back("tower1");
 
 	modelname.push_back("effect_1");
 	modelname.push_back("effect_2");
