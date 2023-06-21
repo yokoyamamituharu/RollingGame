@@ -42,12 +42,14 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	titleScene->Initialize(dxCommon);
 	endScene = new EndScene;
 	endScene->Initialize(dxCommon);
+	tScene = new TScene;
+	tScene->Initialize(dxCommon);
 	//gameScene = new GameScene;
 	//gameScene->Initialize(dxCommon);
 	//batlleScene = new BatlleScene;
 	//batlleScene->Initialize(dxCommon);
 
-	sceneNo = SCENE_TITLE;
+	sceneNo = SCENE_T;
 	//sceneNo = SCENE_GAME;
 	//sceneNo = SCENE_BATTLE;
 	post = new PostEffect;
@@ -177,6 +179,9 @@ void SceneManager::Update()
 	GameSceneReset();
 
 	//シーンの更新
+	if (sceneNo == SCENE_T) {
+		tScene->Update(sceneNo);
+	}
 	if (sceneNo == SCENE_TITLE) {
 		titleScene->Update(sceneNo, initFlag);
 	}
@@ -193,6 +198,9 @@ void SceneManager::Update()
 
 	//ポストエフェクト描画前処理
 	post->PreDrawScene(dxCommon->GetCmdList());
+	if (sceneNo == SCENE_T) {
+		tScene->Draw();
+	}
 	if (sceneNo == SCENE_TITLE) {
 		titleScene->Draw();
 	}

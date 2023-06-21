@@ -243,6 +243,7 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Tower\Bullet.h" />
     <ClInclude Include="Tower\DefenseTower.h" />
+    <ClInclude Include="TScene.h" />
     <ClInclude Include="tuyoEnemy.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Useful.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Tower\Bullet.cpp" />
     <ClCompile Include="Tower\DefenseTower.cpp" />
+    <ClCompile Include="TScene.cpp" />
     <ClCompile Include="tuyoEnemy.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Useful.cpp" />

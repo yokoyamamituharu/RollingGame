@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "BatlleScene.h"
 #include "TitleScene.h"
+#include "TScene.h"
 #include "EndScene.h"
 #include "ModelManager.h"
 #include "PostEffect.h"
@@ -13,6 +14,7 @@ public:
 	enum SCENE
 	{
 		SCENE_NONE,
+		SCENE_T,
 		SCENE_TITLE,
 		SCENE_GAME,
 		SCENE_BATTLE,
@@ -34,6 +36,7 @@ public:
 	BatlleScene* batlleScene = nullptr;
 	TitleScene* titleScene = nullptr;
 	EndScene* endScene = nullptr;
+	TScene* tScene = nullptr;
 
 	int sceneNo = SCENE_NONE;
 
