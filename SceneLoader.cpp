@@ -90,7 +90,7 @@ void SceneLoader::Initialize(const std::string& fileName, std::list<std::shared_
 			DirectX::XMFLOAT3 rot;
 			DirectX::XMStoreFloat3(&rot, objectData.rotation);
 			if (objectData.isLoadObj) {
-				rot.z -= 40.5f;
+				rot.z -= 90.0f;
 			}
 			newObject->SetRotation(rot);
 			//スケーリング
@@ -215,6 +215,7 @@ void SceneLoader::Update()
 		object->Update();
 	}
 	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
+		if (itr->second->GetModel() == ModelManager::GetModel("kabe")) continue;
 		itr->second->Update();
 	}
 }

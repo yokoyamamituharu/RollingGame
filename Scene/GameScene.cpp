@@ -35,10 +35,6 @@ GameScene::~GameScene()
 	safe_delete(scene);
 	safe_delete(defenseTower);
 	safe_delete(player);
-	safe_delete(kabe1);
-	safe_delete(kabe2);
-	safe_delete(kabe3);
-	safe_delete(kabe4);
 	safe_delete(copyGround);
 	safe_delete(copyCastle);
 	safe_delete(copyDefenseTower);
@@ -61,7 +57,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	ObjectObj::SetCamera(gameCamera);
 
 	//スプライトの生成
-	spriteBG = Sprite::Create(SpriteManager::torisetu, { 0.0f,0.0f });	
+	spriteBG = Sprite::Create(SpriteManager::torisetu, { 0.0f,0.0f });
 	pose = Sprite::Create(SpriteManager::pose, { 0,0 });
 	//キャンバスの生成処理
 	canvas = new Canvas();
@@ -73,16 +69,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//3Dオブジェクトの生成
 	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-
-	kabe1->SetPosition({ 100,0,-100 });
-	kabe2->SetPosition({ -1000,0,-100 });
-	kabe3->SetPosition({ -100,0,-1000 });
-	kabe3->SetRotation({ 0,90,0 });
-	kabe4->SetPosition({ -100,0,00 });
-	kabe4->SetRotation({ 0,90,0 });
+	kabe1->SetPosition({ 0,-30,1015 });
 
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
@@ -124,7 +111,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize("level",&towers);
+	scene->Initialize("level", &towers);
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
@@ -141,19 +128,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	if (SceneManager::hitEnemyToPlayer || SceneManager::WinBattle) {
 		return;
 	}
-
 	if (Input::GetInstance()->TriggerKey(DIK_ESCAPE)) {
 		poseFlag = !poseFlag;
 	}
 	if (poseFlag == true) return;
-
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		if (enemy->GetHp() <= 0) {
 			Player::breakEnemy += 1;
 		}
 	}
 
-	//死亡フラグが立っている敵を消す
+	//死亡フラグが立っている敵を消す、その際に死亡時演出のパーティクルを発生させる
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		if (enemy->GetDead()) {
 			for (int i = 0; i < 5; i++) {
@@ -224,10 +209,11 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//敵と城
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
 			//当たったら負け
-			sceneNo = SceneManager::SCENE_END;
+			//sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
+	//敵と城が近い場合に警告文を出す
 	if (tikaiStack.size() > 0) {
 		isTikai = true;
 		tikaiTime++;
@@ -246,8 +232,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			tikaiStack.pop_front();
 		}
 	}
-
-	//プレイヤーとシーンオブジェクトの当たり判定
+	
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	defenseTower->Update(enemiesG);
@@ -276,21 +261,28 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	if (enemiesG.size() <= 0 && index >= 7) {
 		sceneNo = SceneManager::SCENE_KATI;
 	}
-	kabe1->Update();
-	kabe2->Update();
-	kabe3->Update();
-	kabe4->Update();
 
 	for (std::shared_ptr<DefenseTower>& tower : towers) {
 		tower->SetPlayer(player);
-		tower->Update(enemiesG);		
+		tower->Update(enemiesG);
 	}
+
+
 
 	gameCamera->Update();
 	gameCamera->UpdateView();
 	player->object->Update();
 	player->shadowObj->Update();
 	particleM->Update();
+
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+		kabe1->VecSetPosition({ 10,0,0 });
+	}
+	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+		kabe1->VecSetPosition({ -10,0,0 });
+	}
+
+	kabe1->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -320,9 +312,6 @@ void GameScene::Draw()
 	//defenseTower->Draw();
 	player->Draw();
 	kabe1->Draw();
-	kabe2->Draw();
-	kabe3->Draw();
-	kabe4->Draw();
 	particleM->Draw();
 	ObjectObj::PostDraw();
 
@@ -391,4 +380,12 @@ void GameScene::SpownEnemy()
 			}
 		}
 	}
+}
+
+void GameScene::CreaEffect()
+{
+}
+
+void GameScene::GameEndEffect()
+{
 }

@@ -34,12 +34,12 @@ void GameCamera::Update()
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
 	//ƒL[‚ÅƒJƒƒ‰‘€ì
-	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-		matRot *= XMMatrixRotationY(0.02f);
-	}
-	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-		matRot *= XMMatrixRotationY(-0.02f);
-	}
+	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+	//	matRot *= XMMatrixRotationY(0.02f);
+	//}
+	//else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+	//	matRot *= XMMatrixRotationY(-0.02f);
+	//}
 
 	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		matRot *= XMMatrixRotationX(0.02f);
