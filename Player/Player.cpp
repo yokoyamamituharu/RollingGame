@@ -717,7 +717,8 @@ void Player::ArrowSymbolUpdate()
 	}
 
 	//矢印スプライトの回転を上で求めた角度にする
-	XMVECTOR ppos1 = XMLoadFloat2(&arrowSymbolSprite->GetPosition()), ppos2 = XMLoadFloat2(&arrowSymbolSprite->GetPosition());
+	XMVECTOR ppos1 = XMLoadFloat2(&arrowSymbolSprite->GetPosition());
+	XMVECTOR ppos2 = XMLoadFloat2(&arrowSymbolSprite->GetPosition());
 	ppos2 += attackDirection * 6.0f;
 	const float direction = 180.0f;
 	XMFLOAT3 distance = Use::LoadXMVECTOR(ppos1 - ppos2);

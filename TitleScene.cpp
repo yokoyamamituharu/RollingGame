@@ -74,8 +74,8 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	tenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
 
 	std::list<std::shared_ptr<DefenseTower>>towers;
-	scene = new SceneLoader();
-	scene->Initialize("title", &towers);
+	//scene = new SceneLoader();
+	//scene->Initialize("title", &towers);
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
@@ -116,7 +116,7 @@ void TitleScene::Update(int& sceneNo, bool& initFlag)
 	titleObj->Update();
 	tenQ->Update();
 
-	scene->Update();
+	//scene->Update();
 
 	XMMATRIX mat = DirectX::XMMatrixIdentity();
 	mat = DirectX::XMMatrixMultiply(mat, XMMatrixRotationX(XMConvertToRadians(100.0f)));
@@ -130,7 +130,7 @@ void TitleScene::Draw()
 	ObjectObj::PreDraw(dxCommon->GetCmdList());
 	titleObj->Draw();
 	tenQ->Draw();
-	scene->Draw();
+	//scene->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());

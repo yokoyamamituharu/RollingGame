@@ -79,7 +79,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
 	player->SetHp(5);
-	player->object->SetPosition({ -822,Player::groundHeight,-884 });
+	player->object->SetPosition({ 0,Player::groundHeight,0 });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -200,17 +200,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 		//敵と城が近いかどうか
 		if (enemy->tikai == false) {
-			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
-				enemy->tikai = true;
-				isTikai = true;
-				tikaiStack.push_back(true);
-			}
+			//if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
+			//	enemy->tikai = true;
+			//	isTikai = true;
+			//	tikaiStack.push_back(true);
+			//}
 		}
 		//敵と城
-		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
-			//当たったら負け
-			//sceneNo = SceneManager::SCENE_END;
-		}
+		//if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
+		//	//当たったら負け
+		//	//sceneNo = SceneManager::SCENE_END;
+		//}
 	}
 
 	//敵と城が近い場合に警告文を出す

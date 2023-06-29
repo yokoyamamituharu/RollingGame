@@ -19,6 +19,7 @@ SceneManager::~SceneManager()
 		safe_delete(sceneEffect[i]);
 	}
 	safe_delete(post);
+	safe_delete(tScene);
 	safe_delete(titleScene);
 	safe_delete(endScene);
 	safe_delete(gameScene);

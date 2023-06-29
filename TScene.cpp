@@ -10,8 +10,6 @@
 #include "YowaiEnemy.h"
 #include "Route.h"
 
-DirectX::XMFLOAT3 initTarget = { 0,-10,20 };
-DirectX::XMFLOAT3 initEye = { 0,20,-25 };
 using namespace DirectX;
 
 TScene::TScene()
@@ -30,7 +28,7 @@ TScene::~TScene()
 	safe_delete(towerSprte);
 	safe_delete(miniMapPost);
 	//3Dオブジェクト解放
-	safe_delete(particleM);
+	//safe_delete(particleM);
 	safe_delete(scene);
 	safe_delete(defenseTower);
 	safe_delete(player);
@@ -51,8 +49,8 @@ void TScene::Initialize(DirectXCommon* dxCommon)
 
 	//カメラの初期位置、注視点
 	gameCamera = GameCamera::Create();
-	gameCamera->SetTarget(initTarget);
-	gameCamera->SetEye(initEye);
+	gameCamera->SetTarget({ 0,-10,20 });
+	gameCamera->SetEye({ 0,20,-25 });
 	ObjectObj::SetCamera(gameCamera);
 
 	//スプライトの生成
@@ -82,18 +80,6 @@ void TScene::Initialize(DirectXCommon* dxCommon)
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
-
-	index = 0;
-	dasu[0] = { 0,1 };
-	dasu[1] = { 0,2 };
-	dasu[2] = { 240,1 };
-	dasu[3] = { 200,1 };
-	dasu[4] = { 80,2 };
-	dasu[5] = { 230,2 };
-	dasu[6] = { 120,1 };
-	dasu[7] = { 180,2 };
-	dasu[8] = { 40,1 };
-	dasu[9] = { 80,1 };
 
 	//ミニマップ用カメラの生成
 	subCamera = Camera::Create();
@@ -153,7 +139,7 @@ void TScene::Update(int& sceneNo)
 				particle->velocity.x = rand() % (rndVel * 2) - rndVel;
 				particle->velocity.y = rand() % (rndVel * 2) - rndVel;
 				particle->velocity.z = rand() % (rndVel * 2) - rndVel;
-				particleM->Add(std::move(particle));
+				//particleM->Add(std::move(particle));
 			}
 		}
 	}
@@ -171,11 +157,11 @@ void TScene::Update(int& sceneNo)
 		//プレイヤーの足元に生成
 		particle->position = { player->object->GetPosition().x + rand() % 3 - 1, player->object->GetPosition().y - 4 ,player->object->GetPosition().z + rand() % 3 - 1 };
 		particle->end_frame = rand() % 5 + 10;
-		particleM->Add(std::move(particle));
+		//particleM->Add(std::move(particle));
 	}
 
 	//敵生成処理
-	SpownEnemy();
+	//SpownEnemy();
 
 	//敵の当たり判定
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
@@ -251,7 +237,7 @@ void TScene::Update(int& sceneNo)
 				particle->velocity.x = rand() % (rndVel * 2) - rndVel;
 				particle->velocity.y = rand() % (rndVel * 2) - rndVel;
 				particle->velocity.z = rand() % (rndVel * 2) - rndVel;
-				particleM->Add(std::move(particle));
+				//particleM->Add(std::move(particle));
 			}
 		}
 	}
@@ -270,7 +256,7 @@ void TScene::Update(int& sceneNo)
 	gameCamera->UpdateView();
 	player->object->Update();
 	player->shadowObj->Update();
-	particleM->Update();
+	//particleM->Update();
 
 	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		kabe1->VecSetPosition({ 10,0,0 });
@@ -309,7 +295,7 @@ void TScene::Draw()
 	//defenseTower->Draw();
 	player->Draw();
 	kabe1->Draw();
-	particleM->Draw();
+	//particleM->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
