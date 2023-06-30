@@ -20,7 +20,7 @@ SceneLoader::~SceneLoader()
 	touchObjects.clear();
 }
 
-void SceneLoader::Initialize(const std::string& fileName, std::list<std::shared_ptr<DefenseTower>>* towers)
+void SceneLoader::Initialize(const std::string& fileName)
 {
 	//パス
 	const std::string fullpath = std::string("Resources/levels/") + fileName + ".json";
@@ -60,51 +60,37 @@ void SceneLoader::Initialize(const std::string& fileName, std::list<std::shared_
 
 	//レベルデータからオブジェクトを生成、配置
 	for (auto& objectData : levelData->objects) {
-		//モデル名が取得できてなかったらスキップ
-		if (objectData.fileName == "")continue;
 		//ファイル名から登録済みモデルを検索
-		Model* model = ModelManager::GetModel(objectData.fileName);
-		if (objectData.isTower) {
-			std::shared_ptr<DefenseTower>tower = DefenseTower::CreateA();
-			//座標
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMStoreFloat3(&pos, objectData.translation);
-			tower->GetObjectObj()->SetPosition(pos);
-			//回転角
-			DirectX::XMFLOAT3 rot;
-			DirectX::XMStoreFloat3(&rot, objectData.rotation);
-			tower->GetObjectObj()->SetRotation(rot);
-			//スケーリング
-			DirectX::XMFLOAT3 scale;
-			DirectX::XMStoreFloat3(&scale, objectData.scaling);
-			tower->GetObjectObj()->SetScale(scale);
-			towers->emplace_back(std::move(tower));
-		}
-		else {
-			TouchableObject* newObject = TouchableObject::Create(model);
-			//座標
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMStoreFloat3(&pos, objectData.translation);
-			newObject->SetPosition(pos);
-			//回転角
-			DirectX::XMFLOAT3 rot;
-			DirectX::XMStoreFloat3(&rot, objectData.rotation);
-			if (objectData.isLoadObj) {
-				rot.z -= 90.0f;
-			}
-			newObject->SetRotation(rot);
-			//スケーリング
-			DirectX::XMFLOAT3 scale;
-			DirectX::XMStoreFloat3(&scale, objectData.scaling);
-			newObject->SetScale(scale);
-			//名前を登録
-			newObject->SetName(objectData.fileName);
-			//配列に登録
-			//touchObjects.insert(objectData.fileName,);
-			touchObjects[objectData.objectName] = newObject;
-		}
-	}
+		Model* model = nullptr;
+		//decltype(models)::iterator it = models.find(objectData.fileName);
+		//if (it != models.end()) { model = it->second; }
+		model = ModelManager::GetModel(objectData.fileName);
 
+		TouchableObject* newObject = TouchableObject::Create(model);
+		//座標
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMStoreFloat3(&pos, objectData.translation);
+		newObject->SetPosition(pos);
+		//回転角
+		DirectX::XMFLOAT3 rot;
+		DirectX::XMStoreFloat3(&rot, objectData.rotation);
+		if (objectData.fileName == "stage_1" || objectData.fileName == "stage_2" || objectData.fileName == "stage_3" ||
+			objectData.fileName == "stage_4" || objectData.fileName == "stage_5" || objectData.fileName == "stage_6" ||
+			objectData.fileName == "stage_7" || objectData.fileName == "stage_8" || objectData.fileName == "stage_9")
+		{
+			rot.y += 90;
+		}
+		newObject->SetRotation(rot);
+		//スケーリング
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMStoreFloat3(&scale, objectData.scaling);
+		newObject->SetScale(scale);
+		//名前を登録
+		newObject->SetName(objectData.fileName);
+		//配列に登録
+		//touchObjects.insert(objectData.fileName,);
+		touchObjects[objectData.objectName] = newObject;
+	}
 
 }
 
@@ -142,11 +128,12 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 			//回転角
 			objectData.rotation.m128_f32[0] = (float)-transform["rotation"][1];
 			objectData.rotation.m128_f32[1] = (float)-transform["rotation"][2];
-			objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];			
+			//objectData.rotation.m128_f32[2] = (float)transform["rotation"][0];
+			objectData.rotation.m128_f32[2] = 0.0f;
 			objectData.rotation.m128_f32[3] = 0.0f;
 			//スケーリング
-			objectData.scaling.m128_f32[0] = (float)transform["scaling"][1];
-			objectData.scaling.m128_f32[1] = (float)transform["scaling"][2];
+			objectData.scaling.m128_f32[0] = (float)transform["scaling"][2];
+			objectData.scaling.m128_f32[1] = (float)transform["scaling"][1];
 			objectData.scaling.m128_f32[2] = (float)transform["scaling"][0];
 			objectData.scaling.m128_f32[3] = 0.0f;
 
@@ -162,13 +149,6 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 				objectData.colliderScaling.m128_f32[1] = (float)transform["scaling"][2];
 				objectData.colliderScaling.m128_f32[2] = (float)transform["scaling"][0];
 				objectData.colliderScaling.m128_f32[3] = 0.0f;
-			}
-
-			if (object.contains("isTower")) {				
-				objectData.isTower = true;
-			}
-			if (object.contains("isLoadObj")) {
-				objectData.isLoadObj = true;
 			}
 		}
 
@@ -215,7 +195,6 @@ void SceneLoader::Update()
 		object->Update();
 	}
 	for (auto itr = touchObjects.begin(); itr != touchObjects.end(); itr++) {
-		if (itr->second->GetModel() == ModelManager::GetModel("kabe")) continue;
 		itr->second->Update();
 	}
 }

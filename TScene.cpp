@@ -95,8 +95,8 @@ void TScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->Initialize();
 	miniMapPost->SetSize({ 1,1 });
 
-	scene = new SceneLoader;
-	scene->Initialize("level", &towers);
+	//scene = new SceneLoader;
+	//scene->Initialize("level", &towers);
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
@@ -219,7 +219,7 @@ void TScene::Update(int& sceneNo)
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
 	defenseTower->Update(enemiesG);
-	scene->Update();
+	//scene->Update();
 	//touchGround->Update();
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
 		enemy->UpdateOut();
@@ -291,7 +291,7 @@ void TScene::Draw()
 	for (std::shared_ptr<DefenseTower>& tower : towers) {
 		tower->Draw();
 	}
-	scene->Draw();
+	//scene->Draw();
 	//defenseTower->Draw();
 	player->Draw();
 	kabe1->Draw();

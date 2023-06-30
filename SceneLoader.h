@@ -6,14 +6,13 @@
 #include <fstream>
 #include <json.hpp>
 #include "TouchableObject.h"
-#include "DefenseTower.h"
 
 class SceneLoader
 {
 public:	//サブクラス
 	struct LevelData {
 		//オブジェクト1個分のデータ
-		struct ObjectData {			
+		struct ObjectData {
 			std::string objectName;	//オブジェクトネーム
 			std::string fileName;	//ファイル名
 			DirectX::XMVECTOR translation;
@@ -21,8 +20,6 @@ public:	//サブクラス
 			DirectX::XMVECTOR scaling;
 			DirectX::XMVECTOR colliderTransla;
 			DirectX::XMVECTOR colliderScaling;
-			bool isTower = false;
-			bool isLoadObj = false;
 		};
 
 		//オブジェクトのコンテナ
@@ -38,7 +35,7 @@ public:
 	SceneLoader();
 	~SceneLoader();
 
-	void Initialize(const std::string& fileName, std::list<std::shared_ptr<DefenseTower>>*towers);
+	void Initialize(const std::string& fileName);
 
 	void ScanningObjects(nlohmann::json& transform);
 
@@ -46,7 +43,7 @@ public:
 
 	void Draw();
 
-	ObjectObj* GetObjectObj(const std::string &objectName);
+	ObjectObj* GetObjectObj(const std::string& objectName);
 private:
 
 	LevelData* levelData;
@@ -54,7 +51,7 @@ private:
 	//オブジェクトデータ	//プレイヤーと当たり判定を行わないオブジェクト
 	std::vector<ObjectObj*>notTouchObjects;
 	//オブジェクトデータ	//プレイヤーと当たり判定を行なうオブジェクト
-	std::map<std::string,TouchableObject*>touchObjects;
+	std::map<std::string, TouchableObject*>touchObjects;
 
 };
 

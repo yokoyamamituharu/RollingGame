@@ -79,7 +79,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
 	player->SetHp(5);
-	player->object->SetPosition({ 0,Player::groundHeight,0 });
+	player->object->SetPosition({ -822,Player::groundHeight,-884 });
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -111,7 +111,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize("level", &towers);
+	scene->Initialize("level");
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
