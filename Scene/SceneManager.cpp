@@ -50,7 +50,7 @@ void SceneManager::Initialize(DirectXCommon* dxCommon)
 	//batlleScene = new BatlleScene;
 	//batlleScene->Initialize(dxCommon);
 
-	sceneNo = SCENE_T;
+	sceneNo = SCENE_TITLE;
 	//sceneNo = SCENE_GAME;
 	//sceneNo = SCENE_BATTLE;
 	post = new PostEffect;

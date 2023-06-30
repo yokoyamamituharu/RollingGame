@@ -119,7 +119,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize("level");
+	scene->Initialize("level",&towers);
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
@@ -208,17 +208,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		}
 		//“G‚Æé‚ª‹ß‚¢‚©‚Ç‚¤‚©
 		if (enemy->tikai == false) {
-			//if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
-			//	enemy->tikai = true;
-			//	isTikai = true;
-			//	tikaiStack.push_back(true);
-			//}
+			if (Collision::CheckDistance(scene->GetObjectObj("castle")->GetPosition(), enemy->object->GetPosition()) < 200) {
+				enemy->tikai = true;
+				isTikai = true;
+				tikaiStack.push_back(true);
+			}
 		}
 		//“G‚Æé
-		//if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
-		//	//“–‚½‚Á‚½‚ç•‰‚¯
-		//	//sceneNo = SceneManager::SCENE_END;
-		//}
+		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
+			//“–‚½‚Á‚½‚ç•‰‚¯
+			//sceneNo = SceneManager::SCENE_END;
+		}
 	}
 
 	//“G‚Æé‚ª‹ß‚¢ê‡‚ÉŒx•¶‚ðo‚·
@@ -323,9 +323,9 @@ void GameScene::Draw()
 	//defenseTower->Draw();
 	player->Draw();
 	kabe1->Draw();
-	//kabe2->Draw();
+	kabe2->Draw();
 	kabe3->Draw();
-	//kabe4->Draw();
+	kabe4->Draw();
 	particleM->Draw();
 	ObjectObj::PostDraw();
 

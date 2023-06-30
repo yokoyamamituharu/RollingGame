@@ -6,6 +6,7 @@
 #include <fstream>
 #include <json.hpp>
 #include "TouchableObject.h"
+#include "DefenseTower.h"
 
 class SceneLoader
 {
@@ -15,11 +16,13 @@ public:	//サブクラス
 		struct ObjectData {
 			std::string objectName;	//オブジェクトネーム
 			std::string fileName;	//ファイル名
+			std::string isTower;
+			std::string power;
 			DirectX::XMVECTOR translation;
 			DirectX::XMVECTOR rotation;
 			DirectX::XMVECTOR scaling;
 			DirectX::XMVECTOR colliderTransla;
-			DirectX::XMVECTOR colliderScaling;
+			DirectX::XMVECTOR colliderScaling;			
 		};
 
 		//オブジェクトのコンテナ
@@ -35,7 +38,7 @@ public:
 	SceneLoader();
 	~SceneLoader();
 
-	void Initialize(const std::string& fileName);
+	void Initialize(const std::string& fileName, std::list<std::shared_ptr<DefenseTower>>* towers);
 
 	void ScanningObjects(nlohmann::json& transform);
 
