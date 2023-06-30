@@ -305,7 +305,7 @@ void Player::MoveOut()
 	//ˆÊ’u‚ÌXV
 	float speed = 0.8f;
 	if (Input::GetInstance()->PushKey(DIK_LSHIFT)) {
-		speed = 2.0f;
+		//speed = 2.0f;
 	}
 	move = { forwardvec.m128_f32[0] * speed,forwardvec.m128_f32[1] * speed,forwardvec.m128_f32[2] * speed };
 	object->SetPosition(object->GetPosition() + move);
@@ -346,7 +346,7 @@ void Player::RollingMoveOut()
 	if (isShoot == true) {
 		XMVECTOR forvardvec = {};
 		if (Input::GetInstance()->PushKey(DIK_LSHIFT)) {
-			forvardvec.m128_f32[2] += 4.0;
+			//forvardvec.m128_f32[2] += 4.0;
 		}
 		else {
 			forvardvec.m128_f32[2] += 2.0;

@@ -251,7 +251,7 @@ void BatlleScene::Update3D(int& sceneNo, GameScene* gameScene)
 		//キルコマンド
 		if (Input::GetInstance()->TriggerKey(DIK_K)) {
 			for (std::unique_ptr<BaseEnemy>& enemy : enemies->GetEnemies()) {
-				enemy->DamageIn(10000);
+				//enemy->DamageIn(10000);
 			}
 		}
 
