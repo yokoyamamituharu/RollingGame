@@ -94,6 +94,9 @@ private: // メンバ変数
 	std::list<std::shared_ptr<DefenseTower>>towers;
 
 	TouchableObject* kabe1 = nullptr;
+	TouchableObject* kabe2 = nullptr;
+	TouchableObject* kabe3 = nullptr;
+	TouchableObject* kabe4 = nullptr;
 
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;

@@ -69,8 +69,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 
 	//3Dオブジェクトの生成
 	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe1->SetPosition({ 0,-30,1015 });
+	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 
+	kabe1->SetPosition({ 100,0,-100 });
+	kabe2->SetPosition({ -1000,0,-100 });
+	kabe3->SetPosition({ -100,0,-1010 });
+	kabe3->SetRotation({ 0,90,0 });
+	kabe4->SetPosition({ -100,0,00 });
+	kabe4->SetRotation({ 0,90,0 });
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetObjectObj()->SetPosition({ 20,0,35 });
@@ -275,14 +283,17 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	player->shadowObj->Update();
 	particleM->Update();
 
-	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-		kabe1->VecSetPosition({ 10,0,0 });
-	}
-	else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-		kabe1->VecSetPosition({ -10,0,0 });
-	}
+	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+	//	kabe1->VecSetPosition({ 10,0,0 });
+	//}
+	//else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+	//	kabe1->VecSetPosition({ -10,0,0 });
+	//}
 
 	kabe1->Update();
+	kabe2->Update();
+	kabe3->Update();
+	kabe4->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -295,7 +306,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 void GameScene::Draw()
 {
 	if (Input::GetInstance()->TriggerKey(DIK_M)) {
-		mapFlag = !mapFlag;
+		//mapFlag = !mapFlag;
 	}
 	if (mapFlag == true) {
 		PostDraw();	//ミニマップの描画
@@ -312,6 +323,9 @@ void GameScene::Draw()
 	//defenseTower->Draw();
 	player->Draw();
 	kabe1->Draw();
+	//kabe2->Draw();
+	kabe3->Draw();
+	//kabe4->Draw();
 	particleM->Draw();
 	ObjectObj::PostDraw();
 
