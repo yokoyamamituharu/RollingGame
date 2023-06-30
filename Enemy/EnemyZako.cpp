@@ -27,6 +27,7 @@ std::shared_ptr<EnemyZako> EnemyZako::Create(bool isTarget, XMFLOAT2 route[])
 {
 	std::shared_ptr<EnemyZako> enemy = std::make_shared<EnemyZako>();
 	enemy->InitializeOut(isTarget, route);
+	enemy->object->SetRotation({ 0,0,0 });
 	enemy->CreateEnemy();
 	return enemy;
 }

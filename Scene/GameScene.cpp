@@ -381,11 +381,11 @@ void GameScene::SpownEnemy()
 		while (dasu[index].timer <= 0) {
 			if (dasu[index].hole == HOLE1) {
 				//ƒ^ƒ[‚ª‚ ‚é•û
-				std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(3));
+				std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(3));
 				enemiesG.push_back(std::move(newEnemy));
 			}
 			if (dasu[index].hole == HOLE2) {
-				std::shared_ptr<YowaiEnemy> newEnemy = YowaiEnemy::Create(true, Route::GetRoute(4));
+				std::shared_ptr<EnemyZako> newEnemy = EnemyZako::Create(true, Route::GetRoute(4));
 				enemiesG.push_back(std::move(newEnemy));
 			}
 			index++;

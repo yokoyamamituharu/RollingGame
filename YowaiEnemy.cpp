@@ -42,6 +42,7 @@ std::shared_ptr<YowaiEnemy> YowaiEnemy::Create(bool isTarget, XMFLOAT2 route[])
 {
 	std::shared_ptr<YowaiEnemy> enemy = std::make_shared<YowaiEnemy>();
 	enemy->InitializeOut(isTarget, route);
+	enemy->object->SetRotation({ 0,90,0 });
 	enemy->CreateEnemy();
 	return enemy;
 }
