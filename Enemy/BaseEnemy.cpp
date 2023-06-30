@@ -166,7 +166,7 @@ void BaseEnemy::InitializeIn()
 	object->SetCollider(new SphereCollider({ 0,0,0 }, 10.0f));
 	object->collider->SetAttribute(COLLISION_ATTR_ALLIES);
 
-	inhp = 5;
+	inhp = 3;
 }
 
 void BaseEnemy::UpdateOut()
@@ -348,7 +348,7 @@ void BaseEnemy::Move()
 
 void BaseEnemy::Attack()
 {
-	atodekesuROta.z = 90;
+	atodekesuROta.x = 90;
 	object->SetRotation(atodekesuROta);
 	//プレイヤーに突進しにいく処理
 	XMVECTOR pos;
@@ -396,7 +396,7 @@ void BaseEnemy::Reaction()
 
 void BaseEnemy::ViewpointPlayer(Player* player)
 {
-	const float direction = 90.0f;
+	const float direction = 0.0f;
 	XMFLOAT3 pos = object->GetPosition();
 	XMFLOAT3 playerPos = player->object->GetPosition();
 
