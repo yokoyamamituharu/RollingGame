@@ -37,6 +37,12 @@ public:
 
 private:
 	Sprite* titleSprite = nullptr;
+	Sprite* setumei1Sprite = nullptr;
+	Sprite* setumei2Sprite = nullptr;
+	Sprite* setumei3Sprite = nullptr;
+
+	int index = 0;
+
 	Sprite* black = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	float blackOutAlpha;
