@@ -247,6 +247,15 @@ void Player::UpdateIn()
 		garigariFlag = false;
 	}
 
+	//プレイヤーが突進する時足元に表示
+	ObjectObj* asimoto = ObjectObj::Create(ModelManager::GetModel("asimoto"));
+
+	XMFLOAT3 asimoto{};
+	XMFLOAT3 rotationAsi{};
+
+	//角度を求める
+	XMFLOAT3 pPosition = object->GetPosition();
+
 	object->SetPosition({
 		object->GetPosition().x + move.x,
 		object->GetPosition().y + move.y,
@@ -349,7 +358,7 @@ void Player::RollingMoveOut()
 			//forvardvec.m128_f32[2] += 4.0;
 		//}
 		//else {
-			forvardvec.m128_f32[2] += 2.0;
+		forvardvec.m128_f32[2] += 2.0;
 		//}
 		forvardvec = XMVector3TransformNormal(forvardvec, camera->matRot);
 		move = move + forvardvec;

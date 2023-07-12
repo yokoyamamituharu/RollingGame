@@ -56,10 +56,6 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	assert(dxCommon);
 	this->dxCommon = dxCommon;
 	titleSprite = Sprite::Create(SpriteManager::title, { 0,0 });
-	setumei1Sprite = Sprite::Create(SpriteManager::title, { 0,0 });
-	setumei2Sprite = Sprite::Create(SpriteManager::make, { 0,0 });
-	setumei3Sprite = Sprite::Create(SpriteManager::kati, { 0,0 });
-
 	black = Sprite::Create(SpriteManager::black, { 0,0 });
 	blackOutFlag = false;
 	blackOutAlpha = 0.0f;
@@ -85,21 +81,9 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
 	//ShowCursor(true);
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && index >= 3 || InputMouse::GetInstance()->PushMouse(M_LEFT) && index >= 3) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) || InputMouse::GetInstance()->PushMouse(M_LEFT)) {
 		SceneManager::blackStartFlag = true;
 	}
-
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && index == 0 || InputMouse::GetInstance()->PushMouse(M_LEFT) && index == 0) {
-		index++;
-	}
-
-	if (index > 0 && Input::GetInstance()->TriggerKey(DIK_D) && index < 3) {
-		index++;
-	}
-	if (index > 1 && Input::GetInstance()->TriggerKey(DIK_A)) {
-		index--;
-	}
-
 	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
 	//	blackInFlag = true;
 	//}
@@ -151,21 +135,12 @@ void TitleScene::Draw()
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
 	titleSprite->Draw();
-	if (index == 1) {
-		setumei1Sprite->Draw();
-	}
-	if (index == 2) {
-		setumei2Sprite->Draw();
-	}
-	if (index == 3) {
-		setumei3Sprite->Draw();
-	}
-	black->Draw();
+	black->Draw();	
 	if (effectFlag == true) {
 		sceneEffect[effectIndex]->Draw();
-	}
+	}	
 	Sprite::PostDraw();
-
+	
 }
 
 int TitleScene::BlackOut()

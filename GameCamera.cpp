@@ -33,19 +33,20 @@ void GameCamera::Update()
 		//matRot *= XMMatrixRotationX(0.8f * InputMouse::GetInstance()->MoveMouseVector('y') / 1000);
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
-	//キーでカメラ操作
-	//if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
-	//	matRot *= XMMatrixRotationY(0.02f);
-	//}
-	//else if (Input::GetInstance()->PushKey(DIK_LEFT)) {
-	//	matRot *= XMMatrixRotationY(-0.02f);
-	//}
 
-	if (Input::GetInstance()->PushKey(DIK_UP)) {
-		matRot *= XMMatrixRotationX(0.02f);
+	XMFLOAT3 rotation{};
+	//キーでカメラ操作
+	if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
+		rotation.y += 1.0f;
 	}
-	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
-		matRot *= XMMatrixRotationX(-0.02f);
+	if (Input::GetInstance()->PushKey(DIK_LEFT)) {
+		rotation.y -= 1.0f;
+	}
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
+		rotation.x += 1.0f;
+	}
+	if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+		rotation.x -= 1.0f;
 	}
 
 	if (Input::GetInstance()->TriggerKey(DIK_C)) {
@@ -59,8 +60,8 @@ void GameCamera::Update()
 	movement = XMVector3TransformNormal(movement, matRot);
 	movement *= XMVECTOR{ -1, -1, -1 };
 	SetEye(playerObj->GetPosition() + (movement * 20));
-	eye.y += 7;	
-	target = playerObj->GetPosition();	
+	eye.y += 7;
+	target = playerObj->GetPosition();
 	target.y += 3;
 
 
