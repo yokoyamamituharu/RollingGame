@@ -29,10 +29,13 @@ void GameCamera::Update()
 
 	//マウスでカメラ操作//ウィンドウがアクティブ状態なら処理
 	if (WinApp::GetInstance()->GetHwnd() == GetActiveWindow() && isSetMousePoint == true) {
-		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector().x / 1000);
-		//matRot *= XMMatrixRotationX(0.8f * InputMouse::GetInstance()->MoveMouseVector('y') / 1000);
+		matRot *= XMMatrixRotationY(0.8f * InputMouse::GetInstance()->MoveMouseVector().x / 1000);		
 		InputMouse::GetInstance()->SetCenterCoursolPos();
 	}
+	if (flag == true) {
+		matRot = XMMatrixIdentity();
+	}
+
 
 	XMFLOAT3 rotation{};
 	//キーでカメラ操作
@@ -59,7 +62,7 @@ void GameCamera::Update()
 	//XMMATRIX matRot = XMMatrixRotationY(XMConvertToRadians(rote.y));
 	movement = XMVector3TransformNormal(movement, matRot);
 	movement *= XMVECTOR{ -1, -1, -1 };
-	SetEye(playerObj->GetPosition() + (movement * 20));
+	SetEye(playerObj->GetPosition() + (movement * keisu));
 	eye.y += 7;
 	target = playerObj->GetPosition();
 	target.y += 3;

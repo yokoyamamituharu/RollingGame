@@ -107,7 +107,7 @@ void SceneManager::Update()
 
 	if (Input::GetInstance()->TriggerKey(DIK_B))
 	{
-		blackStartFlag = true;
+		//blackStartFlag = true;
 	}
 	static XMFLOAT3 color = { 0, 0, 0 };
 	//if (Input::GetInstance()->PushKey(DIK_UP)) {

@@ -98,6 +98,15 @@ private: // メンバ変数
 	TouchableObject* kabe3 = nullptr;
 	TouchableObject* kabe4 = nullptr;
 
+	ObjectObj* castle = nullptr;
+	ObjectObj* breakCastle = nullptr;
+	ObjectObj* breaktenQ = nullptr;
+	ObjectObj* breakGround = nullptr;
+	int breakTimer = 0;
+
+
+	bool isEvent = false;
+
 	//ミニマップ用オブジェクト
 	CopyObject* copyGround = nullptr;
 	CopyObject* copyCastle = nullptr;

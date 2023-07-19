@@ -43,6 +43,7 @@ GameScene::~GameScene()
 	dasu.clear();
 	safe_delete(gameCamera);
 	safe_delete(subCamera);
+	safe_delete(breakCastle);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon)
@@ -68,26 +69,39 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	collisionManager = CollisionManager::GetInstance();
 
 	//3Dオブジェクトの生成
-	kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
-	kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	//kabe1 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	//kabe2 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	//kabe3 = TouchableObject::Create(ModelManager::GetModel("kabe"));
+	//kabe4 = TouchableObject::Create(ModelManager::GetModel("kabe"));
 
-	kabe1->SetPosition({ 100,0,-100 });
-	kabe2->SetPosition({ -1000,0,-100 });
-	kabe3->SetPosition({ -100,0,-1010 });
-	kabe3->SetRotation({ 0,90,0 });
-	kabe4->SetPosition({ -100,0,00 });
-	kabe4->SetRotation({ 0,90,0 });
+	//kabe1->SetPosition({ 100,0,-100 });
+	//kabe2->SetPosition({ -1000,0,-100 });
+	//kabe3->SetPosition({ -100,0,-1010 });
+	//kabe3->SetRotation({ 0,90,0 });
+	//kabe4->SetPosition({ -100,0,00 });
+	//kabe4->SetRotation({ 0,90,0 });
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
 	defenseTower->GetObjectObj()->SetPosition({ 20,0,35 });
 	defenseTower->GetObjectObj()->SetScale({ 15,15,15 });
 
+	castle = ObjectObj::Create(ModelManager::GetModel("castle"));
+	castle->SetPosition({ 0,5,0 });
+	castle->SetScale({ 5,5,5 });
+	breakCastle = ObjectObj::Create(ModelManager::GetModel("tower1"));
+	breakCastle->SetPosition({ 0,5,0 });
+	breakCastle->SetScale({ 5,5,5 });
+	breaktenQ = ObjectObj::Create(ModelManager::GetModel("tenQ"));
+	breaktenQ->SetScale({ 10,10,10 });
+	breakGround = ObjectObj::Create(ModelManager::GetModel("ground"));
+	breakGround->SetScale({ 10,10,10 });
+	
+
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
 	player->SetHp(5);
-	player->object->SetPosition({ -822,Player::groundHeight,-884 });
+	player->object->SetPosition({ 0,Player::groundHeight,0 });
+	//敵の撃破数のリセット
 	Player::breakEnemy = 0;
 	//ゲームカメラにプレイヤーをセット
 	gameCamera->SetPlayer(player->object);
@@ -145,6 +159,42 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			Player::breakEnemy += 1;
 		}
 	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_B)) {
+		for (int i = 0; i < 15; i++) {
+			std::unique_ptr<ParticleTubu> particle = std::make_unique<ParticleTubu>();
+			particle->obj = std::make_unique<ObjectObj>();
+			particle->obj->Initialize(ModelManager::GetModel("particle"));
+			particle->obj->SetScale({ 5,5,5 });
+			particle->end_frame = rand() % 5 + 30;
+			particle->position = { 0,0,0 };
+			particle->position.z -= 30;
+			//tubu->scale = { 10,10,10 };
+			//const float rnd_vel = 0.1f;
+			int rndVel = 3.0f;
+			particle->velocity.x = rand() % (rndVel * 2) - rndVel;
+			particle->velocity.y = rand() % (rndVel * 2) - rndVel;
+			particle->velocity.z = rand() % (rndVel * 2) - rndVel;
+			particleM->Add(std::move(particle));
+		}
+		player->object->SetPosition({0, 0, 0});
+		isEvent = true;
+		gameCamera->SetKeisu(100);
+		gameCamera->SetFlag(true);
+		castle->Update();
+		breakCastle->Update();
+		breaktenQ->Update();
+		breakGround->Update();
+	}
+	if (isEvent) {
+		breakTimer++;
+		player->object->SetPosition({ 0, 0, 0 });
+	}
+	if (breakTimer > 50) {
+		breaktenQ->Update();
+		breakGround->Update();
+	}
+
 
 	//死亡フラグが立っている敵を消す、その際に死亡時演出のパーティクルを発生させる
 	for (std::shared_ptr<BaseEnemy>& enemy : enemiesG) {
@@ -290,10 +340,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 	//	kabe1->VecSetPosition({ -10,0,0 });
 	//}
 
-	kabe1->Update();
-	kabe2->Update();
-	kabe3->Update();
-	kabe4->Update();
+	//kabe1->Update();
+	//kabe2->Update();
+	//kabe3->Update();
+	//kabe4->Update();
 
 	//カメラのアップデート	
 	subCamera->Update();
@@ -319,27 +369,41 @@ void GameScene::Draw()
 	for (std::shared_ptr<DefenseTower>& tower : towers) {
 		tower->Draw();
 	}
-	scene->Draw();
+	if (isEvent == false) {
+		scene->Draw();
+	}
+	else {
+		if (breakTimer < 50) {
+			castle->Draw();
+		}
+		else {
+			breakCastle->Draw();
+		}
+		breaktenQ->Draw();
+		breakGround->Draw();
+	}
 	//defenseTower->Draw();
 	player->Draw();
-	kabe1->Draw();
-	kabe2->Draw();
-	kabe3->Draw();
-	kabe4->Draw();
+	//kabe1->Draw();
+	//kabe2->Draw();
+	//kabe3->Draw();
+	//kabe4->Draw();
 	particleM->Draw();
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	//spriteBG->Draw();
-	canvas->Draw();
-	if (poseFlag == true) {
-		pose->Draw();
-	}
-	if (isTikai) {
-		tikaiSprite->Draw();
-	}
-	if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
-		player->arrowSymbolSprite->Draw();
+	if (isEvent == false) {
+		//spriteBG->Draw();
+		canvas->Draw();
+		if (poseFlag == true) {
+			pose->Draw();
+		}
+		if (isTikai) {
+			tikaiSprite->Draw();
+		}
+		if (InputMouse::GetInstance()->PushMouse(MouseDIK::M_LEFT)) {
+			player->arrowSymbolSprite->Draw();
+		}
 	}
 
 	Sprite::PostDraw();
