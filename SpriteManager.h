@@ -42,6 +42,8 @@ public:
 		num8,
 		num9,
 		slash,
+		setumei1,
+		setumei2
 	};
 
 	SpriteManager();

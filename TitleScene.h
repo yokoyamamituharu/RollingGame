@@ -58,8 +58,11 @@ private:
 	ObjectObj* titleObj = nullptr;
 	ObjectObj* tenQ = nullptr;
 	SceneLoader* scene = nullptr;
+	
+	Sprite* setumei1 = nullptr;
+	Sprite* setumei2 = nullptr;
 
-
+	int setumeiNum = 0;
 
 	Camera* camera;
 };

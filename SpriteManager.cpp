@@ -49,4 +49,7 @@ void SpriteManager::StaticInitialize()
 	Sprite::LoadTexture(arrowSymbol, L"Resources/texture/UI/arrowSymbol.png");
 	Sprite::LoadTexture(sprite_0001, L"Resources/texture/UI/Sprite-0001.png");
 	Sprite::LoadTexture(sprite_0002, L"Resources/texture/UI/Sprite-0002.png");
+
+	Sprite::LoadTexture(setumei1, L"Resources/texture/setumei1.png");
+	Sprite::LoadTexture(setumei2, L"Resources/texture/setumei2.png");
 }

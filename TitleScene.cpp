@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "SceneManager.h"
 #include "safe_delete.h"
+#include "SpriteManager.h"
 
 //#include <D3dx9math.h>
 
@@ -76,12 +77,26 @@ void TitleScene::Initialize(DirectXCommon* dxCommon)
 	std::list<std::shared_ptr<DefenseTower>>towers;
 	//scene = new SceneLoader();
 	//scene->Initialize("title", &towers);
+
+	setumei1 = Sprite::Create(SpriteManager::setumei1, { 0,0 });
+	setumei2 = Sprite::Create(SpriteManager::setumei2, { 0,0 });
 }
 
 void TitleScene::Update(int& sceneNo, bool& initFlag)
 {
 	//ShowCursor(true);
-	if (Input::GetInstance()->TriggerKey(DIK_SPACE) || InputMouse::GetInstance()->PushMouse(M_LEFT)) {
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && setumeiNum == 0) {
+		setumeiNum = 1;
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_D) && setumeiNum == 1) {
+		setumeiNum = 2;
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_A) && setumeiNum == 2) {
+		setumeiNum = 1;
+	}
+
+	if (Input::GetInstance()->TriggerKey(DIK_SPACE) && setumeiNum >= 2) {
 		SceneManager::blackStartFlag = true;
 	}
 	//if (Input::GetInstance()->TriggerKey(DIK_0)) {
@@ -134,13 +149,21 @@ void TitleScene::Draw()
 	ObjectObj::PostDraw();
 
 	Sprite::PreDraw(dxCommon->GetCmdList());
-	titleSprite->Draw();
-	black->Draw();	
+	if (setumeiNum == 0) {
+		titleSprite->Draw();
+	}
+	else if (setumeiNum == 1) {
+		setumei1->Draw();
+	}
+	else if (setumeiNum == 2) {
+		setumei2->Draw();
+	}
+	black->Draw();
 	if (effectFlag == true) {
 		sceneEffect[effectIndex]->Draw();
-	}	
+	}
 	Sprite::PostDraw();
-	
+
 }
 
 int TitleScene::BlackOut()
