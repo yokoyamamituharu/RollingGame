@@ -248,7 +248,7 @@ void Player::UpdateIn()
 	}
 
 	//プレイヤーが突進する時足元に表示
-	ObjectObj* asimoto = ObjectObj::Create(ModelManager::GetModel("asimoto"));
+	//ObjectObj* asimoto = ObjectObj::Create(ModelManager::GetModel("asimoto"));
 
 	//XMFLOAT3 asimoto{};
 	XMFLOAT3 rotationAsi{};

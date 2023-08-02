@@ -137,6 +137,9 @@ void SceneLoader::ScanningObjects(nlohmann::json& deserialized)
 
 			//オブジェクト名
 			objectData.objectName = object["name"];
+			if (object.contains("isTower")) {
+				objectData.isTower = object["isTower"];
+			}
 
 			//トランスフォームのパロメータ読み込み
 			nlohmann::json& transform = object["transform"];

@@ -22,13 +22,13 @@ void Route::Set()
 	route[2][1] = { -100,0 };
 	route[2][2] = { 0,0 };
 
-	route[3][0] = { -554,-973 };
-	route[3][1] = { -554,-880 };
-	route[3][2] = { -900,-955 };
+	route[3][0] = { 350,-340 };
+	route[3][1] = { 450,-390 };
+	route[3][2] = { 480,-390 };
 
 	route[4][0] = { -794,-64 };
 	route[4][1] = { -764,-64 };
-	route[4][2] = { -900,-955 };
+	route[4][2] = { 450,-390 };
 }
 
 DirectX::XMFLOAT2* Route::GetRoute(const int index)

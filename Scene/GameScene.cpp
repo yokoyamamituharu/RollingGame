@@ -82,7 +82,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	//kabe4->SetRotation({ 0,90,0 });
 	//タワーの生成処理
 	defenseTower = DefenseTower::Create();
-	defenseTower->GetObjectObj()->SetPosition({ 20,0,35 });
+	defenseTower->GetObjectObj()->SetPosition({ 450,0,-350 });
 	defenseTower->GetObjectObj()->SetScale({ 15,15,15 });
 
 	castle = ObjectObj::Create(ModelManager::GetModel("castle"));
@@ -95,7 +95,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	breaktenQ->SetScale({ 10,10,10 });
 	breakGround = ObjectObj::Create(ModelManager::GetModel("ground"));
 	breakGround->SetScale({ 10,10,10 });
-	
+
 
 	//プレイヤーの生成処理
 	player = Player::Create(gameCamera, 1);
@@ -133,7 +133,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon)
 	miniMapPost->SetSize({ 1,1 });
 
 	scene = new SceneLoader;
-	scene->Initialize("level",&towers);
+	scene->Initialize("level", &towers);
 	playerSprte = Sprite::Create(SpriteManager::sprite_0001, { 0,0 });
 	towerSprte = Sprite::Create(SpriteManager::sprite_0002, { 0,0 });
 
@@ -177,7 +177,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			particle->velocity.z = rand() % (rndVel * 2) - rndVel;
 			particleM->Add(std::move(particle));
 		}
-		player->object->SetPosition({0, 0, 0});
+		player->object->SetPosition({ 0, 0, 0 });
 		isEvent = true;
 		gameCamera->SetKeisu(100);
 		gameCamera->SetFlag(true);
@@ -267,7 +267,7 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 		//敵と城
 		if (Collision::CheckBox2Box(enemy->object->GetPosition(), { 2.5,5,1 }, scene->GetObjectObj("castle")->GetPosition(), { 20,20,20 })) {
 			//当たったら負け
-			sceneNo = SceneManager::SCENE_END;
+			//sceneNo = SceneManager::SCENE_END;
 		}
 	}
 
@@ -290,9 +290,10 @@ void GameScene::Update(int& sceneNo, BatlleScene* batlleScene)
 			tikaiStack.pop_front();
 		}
 	}
-	
+
 	//3Dオブジェクト更新
 	player->UpdateOut(gameCamera);
+	defenseTower->SetPlayer(player);
 	defenseTower->Update(enemiesG);
 	scene->Update();
 	//touchGround->Update();
@@ -382,7 +383,7 @@ void GameScene::Draw()
 		breaktenQ->Draw();
 		breakGround->Draw();
 	}
-	//defenseTower->Draw();
+	defenseTower->Draw();
 	player->Draw();
 	//kabe1->Draw();
 	//kabe2->Draw();
