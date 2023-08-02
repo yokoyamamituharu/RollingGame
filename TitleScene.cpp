@@ -21,6 +21,8 @@ TitleScene::~TitleScene()
 	safe_delete(titleObj);
 	safe_delete(tenQ);
 	safe_delete(camera);
+	safe_delete(setumei1);
+	safe_delete(setumei2);
 }
 
 //void a(VECTOR4* pOut, VECTOR4* pV, DirectX::XMMATRIX* pM)
